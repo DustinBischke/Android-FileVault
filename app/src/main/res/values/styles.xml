@@ -6,6 +6,11 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="AppTheme.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
     <style name="File">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">60dp</item>
