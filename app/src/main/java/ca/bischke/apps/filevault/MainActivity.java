@@ -8,7 +8,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 
@@ -106,14 +105,13 @@ public class MainActivity extends AppCompatActivity
 
         for (File file : files)
         {
-            Button fileButton = new Button(this);
-            fileButton.setText(file.getName());
+            FileLayout fileLayout = new FileLayout(this, file);
 
             final File file1 = file;
             final boolean isDirectory = file.isDirectory();
             final String newPath = path + File.separator + file.getName();
 
-            fileButton.setOnClickListener(new View.OnClickListener()
+            fileLayout.setOnClickListener(new View.OnClickListener()
             {
                 @Override
                 public void onClick(View view)
@@ -129,7 +127,7 @@ public class MainActivity extends AppCompatActivity
                 }
             });
 
-            layoutFiles.addView(fileButton);
+            layoutFiles.addView(fileLayout);
         }
     }
 

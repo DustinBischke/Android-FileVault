@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/layout_file"
+            style="@style/File">
+
+            <ImageView
+                android:id="@+id/image_file_icon"
+                style="@style/FileIcon" />
+
+            <LinearLayout
+                android:id="@+id/layout_file_text"
+                style="@style/FileInner">
+
+                <TextView
+                    android:id="@+id/text_file_name"
+                    style="@style/TextFileName"
+                    android:text="@string/file" />
+
+                <TextView
+                    android:id="@+id/text_file_date"
+                    style="@style/TextFileDate"
+                    android:text="@string/date" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:background="@color/colorDivider" />
+
+    </LinearLayout>
+
+</android.support.constraint.ConstraintLayout>
