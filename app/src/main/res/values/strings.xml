@@ -3,4 +3,8 @@
     <string name="file_name">File Name</string>
     <string name="file_date">Date Modified</string>
     <string name="file_size">File Size</string>
+    <string name="settings">Settings</string>
+    <string name="sort">Sort</string>
+    <string name="by_name">By Name</string>
+    <string name="by_date">By Date</string>
 </resources>

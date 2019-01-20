@@ -32,6 +32,7 @@ import javax.crypto.spec.SecretKeySpec;
 public class MainActivity extends AppCompatActivity
 {
     private final String TAG = "FileVault";
+    private boolean sortByName = true;
     private final String STORAGE_ROOT = Environment.getExternalStorageDirectory().toString();
     private final String STORAGE_VAULT = STORAGE_ROOT + File.separator + "FileVault";
     private String currentDirectory;
@@ -70,6 +71,14 @@ public class MainActivity extends AppCompatActivity
         {
             case R.id.action_settings:
                 break;
+            case R.id.action_by_name:
+                sortByName = true;
+                listFiles(currentDirectory);
+                break;
+            case R.id.action_by_date:
+                sortByName = false;
+                listFiles(currentDirectory);
+                break;
             default:
                 break;
         }
@@ -81,6 +90,60 @@ public class MainActivity extends AppCompatActivity
     public void onBackPressed()
     {
         listFiles(getPreviousDirectory(currentDirectory));
+    }
+
+    private ArrayList<File> getSortedFiles(ArrayList<File> files)
+    {
+        if (sortByName)
+        {
+            return getFilesSortedByName(files);
+        }
+        else
+        {
+            return getFilesSortedByDate(files);
+        }
+    }
+
+    private ArrayList<File> getFilesSortedByName(ArrayList<File> files)
+    {
+        Collections.sort(files, new Comparator<File>()
+        {
+            @Override
+            public int compare(File file1, File file2)
+            {
+                return file1.getName().compareToIgnoreCase(file2.getName());
+            }
+        });
+
+        return files;
+    }
+
+    private ArrayList<File> getFilesSortedByDate(ArrayList<File> files)
+    {
+        Collections.sort(files, new Comparator<File>()
+        {
+            @Override
+            public int compare(File file1, File file2)
+            {
+                long f1 = file1.lastModified();
+                long f2 = file2.lastModified();
+
+                if (f1 > f2)
+                {
+                    return -1;
+                }
+                else if (f1 < f2)
+                {
+                    return 1;
+                }
+                else
+                {
+                    return 0;
+                }
+            }
+        });
+
+        return files;
     }
 
     private void listFiles(String path)
@@ -96,14 +159,7 @@ public class MainActivity extends AppCompatActivity
         ArrayList<File> files = new ArrayList<>(Arrays.asList(fileArray));
 
         // Sort Files Alphabetically
-        Collections.sort(files, new Comparator<File>()
-        {
-            @Override
-            public int compare(File file1, File file2)
-            {
-                return file1.getName().compareToIgnoreCase(file2.getName());
-            }
-        });
+        getSortedFiles(files);
 
         final LinearLayout layoutFiles = findViewById(R.id.layout_files);
 

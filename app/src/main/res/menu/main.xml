@@ -5,8 +5,22 @@
     <item
         android:id="@+id/action_settings"
         android:orderInCategory="100"
-        android:title="Settings"
-        android:visible="true"
+        android:title="@string/settings"
         app:showAsAction="never" />
 
+    <item
+        android:id="@+id/action_sort"
+        android:icon="@drawable/ic_sort_24dp"
+        android:title="@string/sort"
+        app:showAsAction="ifRoom">
+
+        <menu>
+            <item
+                android:id="@+id/action_by_name"
+                android:title="@string/by_name" />
+            <item
+                android:id="@+id/action_by_date"
+                android:title="@string/by_date" />
+        </menu>
+    </item>
 </menu>
