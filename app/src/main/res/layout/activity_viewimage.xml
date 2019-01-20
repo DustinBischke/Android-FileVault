@@ -6,26 +6,15 @@
     android:layout_height="match_parent">
 
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:id="@+id/layout_screen"
+        style="@style/LayoutScreen">
 
         <include
+            android:id="@+id/toolbar"
             layout="@layout/toolbar_main" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center">
-
-            <ImageView
-                android:id="@+id/image"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:adjustViewBounds="true"
-                android:scaleType="fitCenter"
-                app:srcCompat="@android:color/transparent" />
-        </LinearLayout>
+        <ImageView
+            android:id="@+id/image"
+            style="@style/ImageViewLarge" />
     </LinearLayout>
-
 </android.support.constraint.ConstraintLayout>

@@ -11,6 +11,23 @@
         <item name="windowNoTitle">true</item>
     </style>
 
+    <style name="LayoutScreen">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:orientation">vertical</item>
+    </style>
+
+    <style name="ScrollView">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+    </style>
+
+    <style name="LayoutFileList">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:orientation">vertical</item>
+    </style>
+
     <style name="LayoutFile">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">60dp</item>
@@ -20,7 +37,7 @@
         <item name="android:gravity">center</item>
     </style>
 
-    <style name="LayoutFileInner">
+    <style name="LayoutFileInfo">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_weight">1</item>
@@ -30,15 +47,33 @@
         <item name="android:paddingBottom">5dp</item>
     </style>
 
+    <style name="LayoutFileInfoSubtext">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:orientation">horizontal</item>
+    </style>
+
+    <style name="ViewDivider">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">1px</item>
+        <item name="android:background">@color/colorDivider</item>
+    </style>
+
     <style name="Image">
         <item name="android:adjustViewBounds">true</item>
+        <item name="android:scaleType">fitCenter</item>
+    </style>
+
+    <style name="ImageViewLarge" parent="Image">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:background">@android:color/transparent</item>
     </style>
 
     <style name="FileIcon" parent="Image">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:padding">12dp</item>
-        <item name="android:scaleType">fitCenter</item>
     </style>
 
     <style name="FileEncryptButton">
@@ -46,7 +81,6 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_marginLeft">12dp</item>
         <item name="android:padding">12dp</item>
-        <item name="android:scaleType">fitCenter</item>
         <item name="android:background">@android:color/transparent</item>
     </style>
 
@@ -67,22 +101,50 @@
     <style name="TextFileSubtext" parent="Text">
         <item name="android:textSize">12sp</item>
         <item name="android:textColor">@color/colorSubText</item>
+        <item name="android:layout_weight">1</item>
     </style>
 
-    <style name="LayoutLockScreen">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">match_parent</item>
-        <item name="android:orientation">vertical</item>
+    <style name="TextFileSubtextRight" parent="TextFileSubtext">
+        <item name="android:gravity">right</item>
+    </style>
+
+    <style name="LayoutLockScreen" parent="LayoutScreen">
         <item name="android:gravity">center</item>
         <item name="android:background">@color/colorPrimary</item>
     </style>
 
-    <style name="LayoutPin">
+    <style name="LayoutKeypad">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:paddingLeft">12dp</item>
         <item name="android:paddingRight">12dp</item>
         <item name="android:orientation">vertical</item>
+    </style>
+
+    <style name="LayoutKeypadRow">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:orientation">horizontal</item>
+    </style>
+
+    <style name="ButtonKeypad">
+        <item name="android:layout_height">72dp</item>
+        <item name="android:padding">6dp</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:textSize">40sp</item>
+        <item name="android:textColor">@color/colorWhite</item>
+        <item name="android:background">@color/colorPrimary</item>
+    </style>
+
+    <style name="ImageButtonBackspace" parent="ButtonKeypad">
+        <item name="android:scaleType">fitCenter</item>
+        <item name="android:adjustViewBounds">true</item>
+    </style>
+
+    <style name="SpaceKeypad">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_weight">1</item>
     </style>
 
     <style name="ImageLock">
@@ -97,25 +159,5 @@
         <item name="android:gravity">center</item>
         <item name="android:textSize">60sp</item>
         <item name="android:textColor">@color/colorWhite</item>
-    </style>
-
-    <style name="LayoutLockScreenButtonRow">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:orientation">horizontal</item>
-    </style>
-
-    <style name="ButtonLockScreen">
-        <item name="android:layout_height">72dp</item>
-        <item name="android:padding">6dp</item>
-        <item name="android:layout_weight">1</item>
-        <item name="android:textSize">40sp</item>
-        <item name="android:textColor">@color/colorWhite</item>
-        <item name="android:background">@color/colorPrimary</item>
-    </style>
-
-    <style name="ImageButtonBackspace" parent="ButtonLockScreen">
-        <item name="android:scaleType">fitCenter</item>
-        <item name="android:adjustViewBounds">true</item>
     </style>
 </resources>
