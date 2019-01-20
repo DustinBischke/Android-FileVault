@@ -2,4 +2,5 @@
     <string name="app_name">File Vault</string>
     <string name="file">File Name</string>
     <string name="date">Date Modified</string>
+    <string name="size">File Size</string>
 </resources>

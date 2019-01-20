@@ -1,5 +1,6 @@
 package ca.bischke.apps.filevault;
 
+import android.content.Intent;
 import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -38,9 +39,11 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
+        // Sets Activity Layout
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // Adds the Toolbar to the Layout
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -52,7 +55,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu)
     {
-        // Add Menu to the Action Bar
+        // Adds Menu to the Toolbar
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
     }
@@ -62,6 +65,7 @@ public class MainActivity extends AppCompatActivity
     {
         int id = item.getItemId();
 
+        // Handles Menu button click events
         switch(id)
         {
             case R.id.action_settings:
@@ -105,7 +109,7 @@ public class MainActivity extends AppCompatActivity
 
         for (File file : files)
         {
-            FileLayout fileLayout = new FileLayout(this, file);
+            final FileLayout fileLayout = new FileLayout(this, file);
 
             final File file1 = file;
             final boolean isDirectory = file.isDirectory();
@@ -122,13 +126,23 @@ public class MainActivity extends AppCompatActivity
                     }
                     else
                     {
-                        moveFileToVaultDirectory(file1);
+                        // TODO: CONFIGURE TO ONLY DO THIS IF IT IS AN IMAGE FILE
+                        startImageViewActivity(file1);
+
+                        // TODO: Setup Encrypt Button to execute moveFileToVaultDirectory(file1)
                     }
                 }
             });
 
             layoutFiles.addView(fileLayout);
         }
+    }
+
+    public void startImageViewActivity(File file)
+    {
+        Intent intent = new Intent(this, ViewImageActivity.class);
+        intent.putExtra("FILE_PATH", file.getAbsolutePath());
+        startActivity(intent);
     }
 
     private String getPreviousDirectory(String path)

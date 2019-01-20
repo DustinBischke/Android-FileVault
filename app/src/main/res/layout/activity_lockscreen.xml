@@ -10,12 +10,12 @@
         style="@style/LayoutLockScreen">
 
         <ImageView
-            android:id="@+id/imageView3"
+            android:id="@+id/image_lock"
             style="@style/ImageLock"
             app:srcCompat="@drawable/ic_lock_256dp" />
 
         <TextView
-            android:id="@+id/textView"
+            android:id="@+id/text_pin"
             style="@style/TextPinInput"
             android:text="••••" />
 
@@ -105,4 +105,5 @@
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>
+
 </android.support.constraint.ConstraintLayout>
