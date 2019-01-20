@@ -58,4 +58,54 @@
         <item name="android:textSize">14sp</item>
         <item name="android:textColor">@color/colorSubText</item>
     </style>
+
+    <style name="LayoutLockScreen">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:orientation">vertical</item>
+        <item name="android:gravity">center</item>
+        <item name="android:background">@color/colorPrimary</item>
+    </style>
+
+    <style name="LayoutPin">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:paddingLeft">12dp</item>
+        <item name="android:paddingRight">12dp</item>
+        <item name="android:orientation">vertical</item>
+    </style>
+
+    <style name="ImageLock">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">72dp</item>
+        <item name="android:layout_marginBottom">8dp</item>
+    </style>
+
+    <style name="TextPinInput">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textSize">60sp</item>
+        <item name="android:textColor">@color/colorWhite</item>
+    </style>
+
+    <style name="LayoutLockScreenButtonRow">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:orientation">horizontal</item>
+    </style>
+
+    <style name="ButtonLockScreen">
+        <item name="android:layout_height">72dp</item>
+        <item name="android:padding">6dp</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:textSize">40sp</item>
+        <item name="android:textColor">@color/colorWhite</item>
+        <item name="android:background">@color/colorPrimary</item>
+    </style>
+
+    <style name="ImageButtonBackspace" parent="ButtonLockScreen">
+        <item name="android:scaleType">fitCenter</item>
+        <item name="android:adjustViewBounds">true</item>
+    </style>
 </resources>

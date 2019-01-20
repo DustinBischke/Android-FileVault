@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:id="@+id/layout_lockscreen"
+        style="@style/LayoutLockScreen">
+
+        <ImageView
+            android:id="@+id/imageView3"
+            style="@style/ImageLock"
+            app:srcCompat="@drawable/ic_lock_256dp" />
+
+        <TextView
+            android:id="@+id/textView"
+            style="@style/TextPinInput"
+            android:text="••••" />
+
+        <LinearLayout
+            android:id="@+id/layout_pin"
+            style="@style/LayoutPin">
+
+            <LinearLayout
+                android:id="@+id/layout_buttons_row_1"
+                style="@style/LayoutLockScreenButtonRow">
+
+                <Button
+                    android:id="@+id/button1"
+                    style="@style/ButtonLockScreen"
+                    android:text="1" />
+
+                <Button
+                    android:id="@+id/button2"
+                    style="@style/ButtonLockScreen"
+                    android:text="2" />
+
+                <Button
+                    android:id="@+id/button3"
+                    style="@style/ButtonLockScreen"
+                    android:text="3" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/layout_buttons_row_2"
+                style="@style/LayoutLockScreenButtonRow">
+
+                <Button
+                    android:id="@+id/button4"
+                    style="@style/ButtonLockScreen"
+                    android:text="4" />
+
+                <Button
+                    android:id="@+id/button5"
+                    style="@style/ButtonLockScreen"
+                    android:text="5" />
+
+                <Button
+                    android:id="@+id/button6"
+                    style="@style/ButtonLockScreen"
+                    android:text="6" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/layout_buttons_row_3"
+                style="@style/LayoutLockScreenButtonRow">
+
+                <Button
+                    android:id="@+id/button7"
+                    style="@style/ButtonLockScreen"
+                    android:text="7" />
+
+                <Button
+                    android:id="@+id/button8"
+                    style="@style/ButtonLockScreen"
+                    android:text="8" />
+
+                <Button
+                    android:id="@+id/button9"
+                    style="@style/ButtonLockScreen"
+                    android:text="9" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/layout_buttons_row_4"
+                style="@style/LayoutLockScreenButtonRow">
+
+                <Space
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1" />
+
+                <Button
+                    android:id="@+id/button0"
+                    style="@style/ButtonLockScreen"
+                    android:text="0" />
+
+                <ImageButton
+                    android:id="@+id/image_button_backspace"
+                    style="@style/ButtonLockScreen"
+                    app:srcCompat="@drawable/ic_backspace_36dp" />
+
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+</android.support.constraint.ConstraintLayout>
