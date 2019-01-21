@@ -7,22 +7,35 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <LinearLayout
-        android:id="@+id/layout_screen"
-        style="@style/LayoutScreen">
+    <android.support.v4.widget.DrawerLayout
+        android:id="@+id/drawer_layout"
+        style="@style/DrawerLayout"
+        tools:openDrawer="start">
+
+        <LinearLayout
+            android:id="@+id/layout_screen"
+            style="@style/LayoutScreen">
+
+            <include
+                android:id="@+id/toolbar"
+                layout="@layout/toolbar_main" />
+
+            <ScrollView
+                android:id="@+id/scrollview"
+                style="@style/ScrollView">
+
+                <LinearLayout
+                    android:id="@+id/layout_files"
+                    style="@style/LayoutScreen" />
+
+            </ScrollView>
+
+        </LinearLayout>
 
         <include
-            android:id="@+id/toolbar"
-            layout="@layout/toolbar_main" />
+            android:id="@+id/nav_view"
+            layout="@layout/nav_view_main" />
 
-        <ScrollView
-            android:id="@+id/scrollview"
-            style="@style/ScrollView">
+    </android.support.v4.widget.DrawerLayout>
 
-            <LinearLayout
-                android:id="@+id/layout_files"
-                style="@style/LayoutScreen" />
-
-        </ScrollView>
-    </LinearLayout>
 </android.support.constraint.ConstraintLayout>

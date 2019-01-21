@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/nav_file_explorer"
+        android:icon="@drawable/ic_folder_24dp"
+        android:title="@string/file_explorer" />
+
+    <item
+        android:id="@+id/nav_settings"
+        android:icon="@drawable/ic_settings_24dp"
+        android:title="@string/settings" />
+
+</menu>

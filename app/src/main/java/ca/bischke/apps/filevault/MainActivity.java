@@ -2,6 +2,10 @@ package ca.bischke.apps.filevault;
 
 import android.content.Intent;
 import android.os.Environment;
+import android.support.design.widget.NavigationView;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -30,6 +34,7 @@ import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 
 public class MainActivity extends AppCompatActivity
+        implements NavigationView.OnNavigationItemSelectedListener
 {
     private final String TAG = "FileVault";
     private boolean sortByName = true;
@@ -47,6 +52,15 @@ public class MainActivity extends AppCompatActivity
         // Adds the Toolbar to the Layout
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.addDrawerListener(toggle);
+        toggle.syncState();
+
+        NavigationView navigationView = findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
 
         createVaultDirectory();
         encryptVaultDirectory();
@@ -66,7 +80,7 @@ public class MainActivity extends AppCompatActivity
     {
         int id = item.getItemId();
 
-        // Handles Menu button click events
+        // Handles Menu item clicks
         switch(id)
         {
             case R.id.action_settings:
@@ -87,9 +101,39 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
+    public boolean onNavigationItemSelected(MenuItem item)
+    {
+        int id = item.getItemId();
+
+        // Handles NavigationView item clicks
+        switch(id)
+        {
+            case R.id.nav_file_explorer:
+                break;
+            case R.id.nav_settings:
+                break;
+            default:
+                break;
+        }
+
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);
+        return true;
+    }
+
+    @Override
     public void onBackPressed()
     {
-        listFiles(getPreviousDirectory(currentDirectory));
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
+
+        if (drawer.isDrawerOpen(GravityCompat.START))
+        {
+            drawer.closeDrawer(GravityCompat.START);
+        }
+        else
+        {
+            listFiles(getPreviousDirectory(currentDirectory));
+        }
     }
 
     private ArrayList<File> getSortedFiles(ArrayList<File> files)
@@ -241,11 +285,11 @@ public class MainActivity extends AppCompatActivity
     {
         if (currentDirectory.equals(STORAGE_ROOT))
         {
-            setTitle("/");
+            setTitle(R.string.internal_storage);
             return;
         }
 
-        int startIndex = STORAGE_ROOT.length();
+        int startIndex = STORAGE_ROOT.length() + 1;
         String directory = currentDirectory.substring(startIndex, currentDirectory.length());
 
         setTitle(directory);
