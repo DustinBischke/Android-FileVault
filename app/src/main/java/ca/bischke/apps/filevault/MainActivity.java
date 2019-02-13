@@ -16,31 +16,38 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 
-import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.security.GeneralSecurityException;
+import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
+import java.security.spec.InvalidKeySpecException;
+import java.security.spec.KeySpec;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 
 import javax.crypto.Cipher;
-import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
-import javax.crypto.spec.SecretKeySpec;
+import javax.crypto.SecretKeyFactory;
+import javax.crypto.spec.IvParameterSpec;
+import javax.crypto.spec.PBEKeySpec;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener
 {
     private final String TAG = "FileVault";
-    private boolean sortByName = true;
     private final String STORAGE_ROOT = Environment.getExternalStorageDirectory().toString();
     private final String STORAGE_VAULT = STORAGE_ROOT + File.separator + "FileVault";
     private String currentDirectory;
+    private boolean sortByName = true;
+
+    private IvParameterSpec iv;
+    private byte[] salt;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -63,7 +70,7 @@ public class MainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
         createVaultDirectory();
-        encryptVaultDirectory();
+
         listFiles(STORAGE_ROOT);
     }
 
@@ -132,7 +139,7 @@ public class MainActivity extends AppCompatActivity
         }
         else
         {
-            listFiles(getPreviousDirectory(currentDirectory));
+            listFiles(getParentDirectory(currentDirectory));
         }
     }
 
@@ -245,7 +252,7 @@ public class MainActivity extends AppCompatActivity
         startActivity(intent);
     }
 
-    private String getPreviousDirectory(String path)
+    private String getParentDirectory(String path)
     {
         if (path.equals(STORAGE_ROOT))
         {
@@ -263,6 +270,19 @@ public class MainActivity extends AppCompatActivity
         }
 
         return STORAGE_ROOT;
+    }
+
+    private String getCurrentDirectory()
+    {
+        if (currentDirectory.equals(STORAGE_ROOT))
+        {
+            return getString(R.string.internal_storage);
+        }
+        else
+        {
+            int startIndex = currentDirectory.lastIndexOf('/') + 1;
+            return currentDirectory.substring(startIndex, currentDirectory.length());
+        }
     }
 
     private void clearLayoutFiles()
@@ -283,16 +303,7 @@ public class MainActivity extends AppCompatActivity
 
     private void displayCurrentDirectory()
     {
-        if (currentDirectory.equals(STORAGE_ROOT))
-        {
-            setTitle(R.string.internal_storage);
-            return;
-        }
-
-        int startIndex = STORAGE_ROOT.length() + 1;
-        String directory = currentDirectory.substring(startIndex, currentDirectory.length());
-
-        setTitle(directory);
+        setTitle(getCurrentDirectory());
     }
 
     private void createVaultDirectory()
@@ -338,72 +349,6 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    private void encryptVaultDirectory()
-    {
-        File directory = new File(STORAGE_VAULT);
-
-        if (!directory.exists())
-        {
-            createVaultDirectory();
-        }
-
-        if (directory.listFiles().length > 0)
-        {
-            for (File file : directory.listFiles())
-            {
-                encryptFile(file);
-            }
-        }
-        else
-        {
-            Log.d(TAG, "No files in Vault Directory to encrypt");
-        }
-    }
-
-    private byte[] getSecureKey()
-    {
-        byte[] key = null;
-
-        try
-        {
-            KeyGenerator keyGenerator = KeyGenerator.getInstance("AES");
-            SecureRandom secureRandom = SecureRandom.getInstance("SHA1PRNG");
-
-            keyGenerator.init(128, secureRandom);
-            SecretKey secretKey = keyGenerator.generateKey();
-            key = secretKey.getEncoded();
-        }
-        catch (Exception e)
-        {
-            Log.d(TAG, "Exception when generating key" + e.getMessage());
-        }
-
-        return key;
-    }
-
-    private void encryptFile(File file)
-    {
-        try
-        {
-            byte[] key = getSecureKey();
-            SecretKeySpec secretKey = new SecretKeySpec(key, "AES");
-            Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
-            cipher.init(Cipher.ENCRYPT_MODE, secretKey);
-
-            byte[] fileContent = getFileContent(file);
-            byte[] encrypted = cipher.doFinal(fileContent);
-
-            BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(file));
-            bos.write(encrypted);
-            bos.flush();
-            bos.close();
-        }
-        catch (Exception e)
-        {
-            Log.d(TAG, "Exception when encrypting file" + e.getMessage());
-        }
-    }
-
     private byte[] getFileContent(File file)
     {
         FileInputStream fileInputStream = null;
@@ -440,5 +385,81 @@ public class MainActivity extends AppCompatActivity
         }
 
         return fileContent;
+    }
+
+    private IvParameterSpec getIV()
+    {
+        if (iv == null)
+        {
+            iv = new IvParameterSpec(generateRandomByteArray(16));
+        }
+
+        return iv;
+    }
+
+    private byte[] getSalt()
+    {
+        if (salt == null)
+        {
+            salt = generateRandomByteArray(16);
+        }
+
+        return salt;
+    }
+
+    private byte[] generateRandomByteArray(int size)
+    {
+        SecureRandom random = new SecureRandom();
+        byte[] randomByteArray = new byte[size];
+        random.nextBytes(randomByteArray);
+
+        return randomByteArray;
+    }
+
+    private SecretKey generateKey(String password, byte[] salt)
+            throws NoSuchAlgorithmException, InvalidKeySpecException
+    {
+        int iterations = 10000;
+        int outputLength = 128;
+
+        char[] passwordArray = password.toCharArray();
+        KeySpec keySpec = new PBEKeySpec(passwordArray, salt, iterations, outputLength);
+
+        SecretKeyFactory secretKeyFactory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
+        SecretKey secretKey = secretKeyFactory.generateSecret(keySpec);
+
+        return secretKey;
+    }
+
+    public void encrypt(String password, File inputFile, File outputFile)
+            throws GeneralSecurityException, IOException
+    {
+        doCrypto(Cipher.ENCRYPT_MODE, password, inputFile, outputFile);
+    }
+
+    public void decrypt(String password, File inputFile, File outputFile)
+            throws GeneralSecurityException, IOException
+    {
+        doCrypto(Cipher.DECRYPT_MODE, password, inputFile, outputFile);
+    }
+
+    public void doCrypto(int cipherMode, String password, File inputFile, File outputFile)
+            throws GeneralSecurityException, IOException
+    {
+        SecretKey secretKey = generateKey(password, getSalt());
+        Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
+        cipher.init(cipherMode, secretKey, getIV());
+
+        FileInputStream inputStream = new FileInputStream(inputFile);
+        byte[] inputBytes = new byte[(int) inputFile.length()];
+        inputStream.read(inputBytes);
+
+        byte[] outputBytes = cipher.doFinal(inputBytes);
+
+        FileOutputStream outputStream = new FileOutputStream(outputFile);
+        outputStream.write(outputBytes);
+
+        inputStream.close();
+        outputStream.close();
     }
 }
