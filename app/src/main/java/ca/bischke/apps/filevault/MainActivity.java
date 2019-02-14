@@ -1,6 +1,7 @@
 package ca.bischke.apps.filevault;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Environment;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -70,6 +71,16 @@ public class MainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
         createVaultDirectory();
+
+        try
+        {
+            encrypt("SHIBA", new File(STORAGE_VAULT + "/corgi.jpg"), new File(STORAGE_VAULT + "/corgi2.jpg"));
+            decrypt("SHIBA", new File(STORAGE_VAULT + "/corgi2.jpg"), new File(STORAGE_VAULT + "/corgi3.jpg"));
+        }
+        catch (Exception ex)
+        {
+            Log.d(TAG, ex.getMessage());
+        }
 
         listFiles(STORAGE_ROOT);
     }
@@ -391,7 +402,27 @@ public class MainActivity extends AppCompatActivity
     {
         if (iv == null)
         {
-            iv = new IvParameterSpec(generateRandomByteArray(16));
+            String ivPreference = "FV-IV";
+            SharedPreferences sharedPreferences = getSharedPreferences(TAG, MODE_PRIVATE);
+
+            // if SharedPreference already exists
+            if (sharedPreferences.contains(ivPreference))
+            {
+                String ivString = sharedPreferences.getString(ivPreference, null);
+                byte[] ivBytes = ivString.getBytes();
+
+                iv = new IvParameterSpec(ivBytes);
+                return iv;
+            }
+
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            byte[] ivBytes = generateRandomByteArray(16);
+            String ivString = new String(ivBytes);
+            editor.putString(ivPreference, ivString);
+            editor.apply();
+
+            iv = new IvParameterSpec(ivBytes);
+            return iv;
         }
 
         return iv;
@@ -401,7 +432,25 @@ public class MainActivity extends AppCompatActivity
     {
         if (salt == null)
         {
+            String saltPreference = "FV-Salt";
+            SharedPreferences sharedPreferences = getSharedPreferences(TAG, MODE_PRIVATE);
+
+            // if SharedPreference already exists
+            if (sharedPreferences.contains(saltPreference))
+            {
+                String saltString = sharedPreferences.getString(saltPreference, null);
+                salt = saltString.getBytes();
+
+                return salt;
+            }
+
+            SharedPreferences.Editor editor = sharedPreferences.edit();
             salt = generateRandomByteArray(16);
+            String saltString = new String(salt);
+            editor.putString(saltPreference, saltString);
+            editor.apply();
+
+            return salt;
         }
 
         return salt;
