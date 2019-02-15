@@ -24,20 +24,15 @@ import javax.crypto.spec.PBEKeySpec;
 public class FileEncryption
 {
     private final String TAG = "FileVault";
-    private final String STORAGE_ROOT = Environment.getExternalStorageDirectory().toString();
-    private final String STORAGE_VAULT = STORAGE_ROOT + File.separator + "FileVault";
     private Context context;
+    private SharedPreferences sharedPreferences;
     private IvParameterSpec iv;
     private byte[] salt;
 
     public FileEncryption(Context context)
     {
         this.context = context;
-    }
-
-    public String getSTORAGE_VAULT()
-    {
-        return STORAGE_VAULT;
+        sharedPreferences = context.getSharedPreferences(TAG, Context.MODE_PRIVATE);
     }
 
     private byte[] getByteArrayFromString(String string)
@@ -59,31 +54,45 @@ public class FileEncryption
         return randomByteArray;
     }
 
+    private boolean sharedPreferenceExists(String key)
+    {
+        return sharedPreferences.contains(key);
+    }
+
+    private byte[] getSharedPreference(String key)
+    {
+        if (sharedPreferenceExists(key))
+        {
+            String valueString = sharedPreferences.getString(key, null);
+            return getByteArrayFromString(valueString);
+        }
+
+        return null;
+    }
+
+    private void saveSharedPreference(String key, byte[] valueBytes)
+    {
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+
+        String value = getStringFromByteArray(valueBytes);
+        editor.putString(key, value);
+        editor.apply();
+    }
+
     private IvParameterSpec getIV()
     {
         if (iv == null)
         {
-            String ivPreference = "FV-IV";
-            SharedPreferences sharedPreferences = context.getSharedPreferences(TAG, Context.MODE_PRIVATE);
+            String key = context.getString(R.string.preference_iv);
+            byte[] ivBytes = getSharedPreference(key);
 
-            // if SharedPreference already exists
-            if (sharedPreferences.contains(ivPreference))
+            if (ivBytes == null)
             {
-                String ivString = sharedPreferences.getString(ivPreference, null);
-                byte[] ivBytes = getByteArrayFromString(ivString);
-
-                iv = new IvParameterSpec(ivBytes);
-                return iv;
+                ivBytes = getRandomByteArray(16);
+                saveSharedPreference(key, ivBytes);
             }
 
-            SharedPreferences.Editor editor = sharedPreferences.edit();
-            byte[] ivBytes = getRandomByteArray(16);
-            String ivString = getStringFromByteArray(ivBytes);
-            editor.putString(ivPreference, ivString);
-            editor.apply();
-
             iv = new IvParameterSpec(ivBytes);
-            return iv;
         }
 
         return iv;
@@ -93,25 +102,16 @@ public class FileEncryption
     {
         if (salt == null)
         {
-            String saltPreference = "FV-Salt";
-            SharedPreferences sharedPreferences = context.getSharedPreferences(TAG, Context.MODE_PRIVATE);
+            String key = context.getString(R.string.preference_salt);
+            byte[] saltBytes = getSharedPreference(key);
 
-            // if SharedPreference already exists
-            if (sharedPreferences.contains(saltPreference))
+            if (saltBytes == null)
             {
-                String saltString = sharedPreferences.getString(saltPreference, null);
-                salt = getByteArrayFromString(saltString);
-
-                return salt;
+                saltBytes = getRandomByteArray(16);
+                saveSharedPreference(key, saltBytes);
             }
 
-            SharedPreferences.Editor editor = sharedPreferences.edit();
-            salt = getRandomByteArray(16);
-            String saltString = getStringFromByteArray(salt);
-            editor.putString(saltPreference, saltString);
-            editor.apply();
-
-            return salt;
+            salt = saltBytes;
         }
 
         return salt;
