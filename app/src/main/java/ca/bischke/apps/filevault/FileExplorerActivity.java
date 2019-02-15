@@ -1,7 +1,6 @@
 package ca.bischke.apps.filevault;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Environment;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -18,27 +17,12 @@ import android.widget.LinearLayout;
 import android.widget.ScrollView;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.security.GeneralSecurityException;
-import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
-import java.security.spec.InvalidKeySpecException;
-import java.security.spec.KeySpec;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 
-import javax.crypto.Cipher;
-import javax.crypto.SecretKey;
-import javax.crypto.SecretKeyFactory;
-import javax.crypto.spec.IvParameterSpec;
-import javax.crypto.spec.PBEKeySpec;
-
-public class MainActivity extends AppCompatActivity
+public class FileExplorerActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener
 {
     private final String TAG = "FileVault";
@@ -47,15 +31,14 @@ public class MainActivity extends AppCompatActivity
     private String currentDirectory;
     private boolean sortByName = true;
 
-    private IvParameterSpec iv;
-    private byte[] salt;
+    private FileEncryption fileEncryption;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         // Sets Activity Layout
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_fileexplorer);
 
         // Adds the Toolbar to the Layout
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -72,10 +55,13 @@ public class MainActivity extends AppCompatActivity
 
         createVaultDirectory();
 
+        fileEncryption = new FileEncryption(this);
+
+        // Test data for file Encryption
         try
         {
-            encrypt("SHIBA", new File(STORAGE_VAULT + "/corgi.jpg"), new File(STORAGE_VAULT + "/corgi2.jpg"));
-            decrypt("SHIBA", new File(STORAGE_VAULT + "/corgi2.jpg"), new File(STORAGE_VAULT + "/corgi3.jpg"));
+            fileEncryption.encrypt("SHIBA", new File(STORAGE_VAULT + "/corgi.jpg"), new File(STORAGE_VAULT + "/corgi2.jpg"));
+            fileEncryption.decrypt("SHIBA", new File(STORAGE_VAULT + "/corgi2.jpg"), new File(STORAGE_VAULT + "/corgi3.jpg"));
         }
         catch (Exception ex)
         {
@@ -83,6 +69,22 @@ public class MainActivity extends AppCompatActivity
         }
 
         listFiles(STORAGE_ROOT);
+    }
+
+    @Override
+    protected void onPause()
+    {
+        super.onPause();
+
+        // Test data for file Encryption
+        /*try
+        {
+            fileEncryption.encrypt(this, "SHIBA", new File(STORAGE_VAULT + "/corgi.jpg"), new File(STORAGE_VAULT + "/corgi2.jpg"));
+        }
+        catch (Exception ex)
+        {
+            Log.d(TAG, ex.getMessage());
+        }*/
     }
 
     @Override
@@ -358,157 +360,5 @@ public class MainActivity extends AppCompatActivity
         {
             Log.d(TAG, fileName + " could not be moved");
         }
-    }
-
-    private byte[] getFileContent(File file)
-    {
-        FileInputStream fileInputStream = null;
-        byte[] fileContent = null;
-
-        try
-        {
-            fileInputStream = new FileInputStream(file);
-
-            fileContent = new byte[(int)file.length()];
-            fileInputStream.read(fileContent);
-        }
-        catch (FileNotFoundException e)
-        {
-            Log.d(TAG, "File not found");
-        }
-        catch (IOException e)
-        {
-            Log.d(TAG, "Exception when reading file");
-        }
-        finally
-        {
-            if (fileInputStream != null)
-            {
-                try
-                {
-                    fileInputStream.close();
-                }
-                catch (IOException e)
-                {
-                    Log.d(TAG, "Exception when closing FileInputStream");
-                }
-            }
-        }
-
-        return fileContent;
-    }
-
-    private IvParameterSpec getIV()
-    {
-        if (iv == null)
-        {
-            String ivPreference = "FV-IV";
-            SharedPreferences sharedPreferences = getSharedPreferences(TAG, MODE_PRIVATE);
-
-            // if SharedPreference already exists
-            if (sharedPreferences.contains(ivPreference))
-            {
-                String ivString = sharedPreferences.getString(ivPreference, null);
-                byte[] ivBytes = ivString.getBytes();
-
-                iv = new IvParameterSpec(ivBytes);
-                return iv;
-            }
-
-            SharedPreferences.Editor editor = sharedPreferences.edit();
-            byte[] ivBytes = generateRandomByteArray(16);
-            String ivString = new String(ivBytes);
-            editor.putString(ivPreference, ivString);
-            editor.apply();
-
-            iv = new IvParameterSpec(ivBytes);
-            return iv;
-        }
-
-        return iv;
-    }
-
-    private byte[] getSalt()
-    {
-        if (salt == null)
-        {
-            String saltPreference = "FV-Salt";
-            SharedPreferences sharedPreferences = getSharedPreferences(TAG, MODE_PRIVATE);
-
-            // if SharedPreference already exists
-            if (sharedPreferences.contains(saltPreference))
-            {
-                String saltString = sharedPreferences.getString(saltPreference, null);
-                salt = saltString.getBytes();
-
-                return salt;
-            }
-
-            SharedPreferences.Editor editor = sharedPreferences.edit();
-            salt = generateRandomByteArray(16);
-            String saltString = new String(salt);
-            editor.putString(saltPreference, saltString);
-            editor.apply();
-
-            return salt;
-        }
-
-        return salt;
-    }
-
-    private byte[] generateRandomByteArray(int size)
-    {
-        SecureRandom random = new SecureRandom();
-        byte[] randomByteArray = new byte[size];
-        random.nextBytes(randomByteArray);
-
-        return randomByteArray;
-    }
-
-    private SecretKey generateKey(String password, byte[] salt)
-            throws NoSuchAlgorithmException, InvalidKeySpecException
-    {
-        int iterations = 10000;
-        int outputLength = 128;
-
-        char[] passwordArray = password.toCharArray();
-        KeySpec keySpec = new PBEKeySpec(passwordArray, salt, iterations, outputLength);
-
-        SecretKeyFactory secretKeyFactory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
-        SecretKey secretKey = secretKeyFactory.generateSecret(keySpec);
-
-        return secretKey;
-    }
-
-    public void encrypt(String password, File inputFile, File outputFile)
-            throws GeneralSecurityException, IOException
-    {
-        doCrypto(Cipher.ENCRYPT_MODE, password, inputFile, outputFile);
-    }
-
-    public void decrypt(String password, File inputFile, File outputFile)
-            throws GeneralSecurityException, IOException
-    {
-        doCrypto(Cipher.DECRYPT_MODE, password, inputFile, outputFile);
-    }
-
-    public void doCrypto(int cipherMode, String password, File inputFile, File outputFile)
-            throws GeneralSecurityException, IOException
-    {
-        SecretKey secretKey = generateKey(password, getSalt());
-        Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
-        cipher.init(cipherMode, secretKey, getIV());
-
-        FileInputStream inputStream = new FileInputStream(inputFile);
-        byte[] inputBytes = new byte[(int) inputFile.length()];
-        inputStream.read(inputBytes);
-
-        byte[] outputBytes = cipher.doFinal(inputBytes);
-
-        FileOutputStream outputStream = new FileOutputStream(outputFile);
-        outputStream.write(outputBytes);
-
-        inputStream.close();
-        outputStream.close();
     }
 }
