@@ -1,5 +1,15 @@
 <resources>
     <string name="app_name">File Vault</string>
+    <string name="welcome_title">Welcome to FileVault!</string>
+    <string name="welcome_description">FileVault allows to encrypt your photos, videos, and personal files on your device</string>
+    <string name="welcome_start">Let\'s get started!</string>
+    <string name="set_password_title">Set your password</string>
+    <string name="set_password">Set password</string>
+    <string name="enter_password">Enter your password</string>
+    <string name="unlock">Unlock</string>
+    <string name="permissions_title">FileVault needs access to your file storage</string>
+    <string name="permissions_description">This allows FileVault to access and encrypt your photos, videos, and personal files</string>
+    <string name="grant_access">Grant Access</string>
     <string name="internal_storage">Internal Storage</string>
     <string name="file_name">File Name</string>
     <string name="file_date">Date Modified</string>
@@ -13,8 +23,5 @@
     <string name="navigation_drawer_close">Close Navigation Drawer</string>
     <string name="preference_iv">FileVault-IV</string>
     <string name="preference_salt">FileVault-Salt</string>
-    <string name="permissions_title">FileVault needs access to your file storage</string>
-    <string name="permissions_description">This allows FileVault to access and encrypt your personal files</string>
-    <string name="grant_access">Grant Access</string>
     <string name="exit">Exit</string>
 </resources>

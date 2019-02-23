@@ -2,7 +2,6 @@ package ca.bischke.apps.filevault;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.os.Environment;
 import android.util.Base64;
 
 import java.io.File;
@@ -54,7 +53,7 @@ public class FileEncryption
         return randomByteArray;
     }
 
-    private boolean sharedPreferenceExists(String key)
+    public boolean sharedPreferenceExists(String key)
     {
         return sharedPreferences.contains(key);
     }
@@ -76,6 +75,23 @@ public class FileEncryption
 
         String value = getStringFromByteArray(valueBytes);
         editor.putString(key, value);
+        editor.apply();
+    }
+
+    private void removeSharedPreference(String key)
+    {
+        if (sharedPreferenceExists(key))
+        {
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.remove(key);
+            editor.apply();
+        }
+    }
+
+    private void clearSharedPreferences()
+    {
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.clear();
         editor.apply();
     }
 

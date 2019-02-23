@@ -97,14 +97,18 @@
     </style>
 
     <style name="TextLargeWhite" parent="Text">
+        <item name="android:layout_width">match_parent</item>
         <item name="android:layout_marginBottom">16dp</item>
         <item name="android:textSize">24sp</item>
         <item name="android:textColor">@color/colorWhite</item>
+        <item name="android:gravity">center_horizontal</item>
     </style>
 
     <style name="TextSmallLight" parent="Text">
+        <item name="android:layout_width">match_parent</item>
         <item name="android:textSize">16sp</item>
         <item name="android:textColor">@color/colorPrimaryLight</item>
+        <item name="android:gravity">center_horizontal</item>
     </style>
 
     <style name="TextFileName" parent="Text">
@@ -166,7 +170,6 @@
     <style name="ImageLock">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">72dp</item>
-        <item name="android:layout_marginBottom">8dp</item>
     </style>
 
     <style name="TextPinInput">
@@ -174,6 +177,14 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:gravity">center</item>
         <item name="android:textSize">60sp</item>
+        <item name="android:textColor">@color/colorWhite</item>
+    </style>
+
+    <style name="TextPinInput2">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textSize">48sp</item>
         <item name="android:textColor">@color/colorWhite</item>
     </style>
 </resources>
