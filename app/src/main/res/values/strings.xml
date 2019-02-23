@@ -13,6 +13,8 @@
     <string name="navigation_drawer_close">Close Navigation Drawer</string>
     <string name="preference_iv">FileVault-IV</string>
     <string name="preference_salt">FileVault-Salt</string>
+    <string name="permissions_title">FileVault needs access to your file storage</string>
+    <string name="permissions_description">This allows FileVault to access and encrypt your personal files</string>
     <string name="grant_access">Grant Access</string>
     <string name="exit">Exit</string>
 </resources>

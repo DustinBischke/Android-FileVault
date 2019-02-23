@@ -19,12 +19,17 @@ public class PermissionsActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
+        super.onCreate(savedInstanceState);
+
+        // Switch to FileExplorer if permissions already granted
         if (hasPermissions())
         {
             startFileExplorerActivity();
+            finish();
+            return;
         }
 
-        super.onCreate(savedInstanceState);
+        // Sets Activity Layout
         setContentView(R.layout.activity_permissions);
     }
 
@@ -35,6 +40,7 @@ public class PermissionsActivity extends AppCompatActivity
         {
             case STORAGE_PERMISSION_CODE:
             {
+                // If permissions have been granted
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED)
                 {
                     startFileExplorerActivity();
@@ -49,6 +55,7 @@ public class PermissionsActivity extends AppCompatActivity
         {
             if (!hasPermissions())
             {
+                // Request the permissions
                 ActivityCompat.requestPermissions(this, permissions, STORAGE_PERMISSION_CODE);
             }
         }
@@ -69,6 +76,7 @@ public class PermissionsActivity extends AppCompatActivity
     {
         for (String permission : permissions)
         {
+            // Checks if each permission has been granted
             if (ContextCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED)
             {
                 return false;

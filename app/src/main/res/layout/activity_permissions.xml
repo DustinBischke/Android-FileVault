@@ -8,27 +8,53 @@
     tools:context=".PermissionsActivity">
 
     <LinearLayout
-        android:id="@+id/layout_lockscreen"
-        style="@style/LayoutLockScreen">
+        android:id="@+id/layout_permissions"
+        style="@style/LayoutFullColor">
 
-        <ImageView
-            android:id="@+id/image_lock"
-            style="@style/ImageLock"
-            app:srcCompat="@drawable/ic_lock_256dp" />
-
-        <Button
-            android:id="@+id/button_grant_access"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:onClick="buttonRequestPermissions"
-            android:text="@string/grant_access" />
+            android:orientation="vertical"
+            android:paddingLeft="32dp"
+            android:paddingRight="32dp">
 
-        <Button
-            android:id="@+id/button_exit"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:onClick="buttonExit"
-            android:text="@string/exit" />
+            <ImageView
+                android:id="@+id/image_lock"
+                style="@style/ImageLock"
+                app:srcCompat="@drawable/ic_lock_256dp" />
 
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="48dp" />
+
+            <TextView
+                android:id="@+id/text_permissions_title"
+                style="@style/TextLargeWhite"
+                android:text="@string/permissions_title" />
+
+            <TextView
+                android:id="@+id/text_permissions_description"
+                style="@style/TextSmallLight"
+                android:text="@string/permissions_description" />
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="24dp" />
+
+            <Button
+                android:id="@+id/button_grant_access"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:onClick="buttonRequestPermissions"
+                android:text="@string/grant_access" />
+
+            <Button
+                android:id="@+id/button_exit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:onClick="buttonExit"
+                android:text="@string/exit" />
+
+        </LinearLayout>
     </LinearLayout>
 </android.support.constraint.ConstraintLayout>

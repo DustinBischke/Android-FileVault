@@ -96,6 +96,17 @@
         <item name="android:textColor">@color/colorText</item>
     </style>
 
+    <style name="TextLargeWhite" parent="Text">
+        <item name="android:layout_marginBottom">16dp</item>
+        <item name="android:textSize">24sp</item>
+        <item name="android:textColor">@color/colorWhite</item>
+    </style>
+
+    <style name="TextSmallLight" parent="Text">
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">@color/colorPrimaryLight</item>
+    </style>
+
     <style name="TextFileName" parent="Text">
         <item name="android:layout_marginBottom">4dp</item>
         <item name="android:textSize">16sp</item>
@@ -113,7 +124,7 @@
         <item name="android:gravity">right</item>
     </style>
 
-    <style name="LayoutLockScreen" parent="LayoutScreen">
+    <style name="LayoutFullColor" parent="LayoutScreen">
         <item name="android:gravity">center</item>
         <item name="android:background">@color/colorPrimary</item>
     </style>

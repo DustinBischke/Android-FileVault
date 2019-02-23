@@ -7,7 +7,7 @@
 
     <LinearLayout
         android:id="@+id/layout_lockscreen"
-        style="@style/LayoutLockScreen">
+        style="@style/LayoutFullColor">
 
         <ImageView
             android:id="@+id/image_lock"

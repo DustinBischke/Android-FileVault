@@ -45,6 +45,7 @@ public class FileExplorerActivity extends AppCompatActivity
         if (!hasPermissions())
         {
             startPermissionsActivity();
+            finish();
             return;
         }
 
