@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">File Vault</string>
     <string name="welcome_title">Welcome to FileVault!</string>
-    <string name="welcome_description">FileVault allows to encrypt your photos, videos, and personal files on your device</string>
+    <string name="welcome_description">FileVault allows you to encrypt your photos, videos, and personal files on your device</string>
     <string name="welcome_start">Let\'s get started!</string>
     <string name="set_password_title">Set your password</string>
     <string name="set_password">Set password</string>
