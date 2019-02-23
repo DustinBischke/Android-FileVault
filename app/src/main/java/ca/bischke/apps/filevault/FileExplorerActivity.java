@@ -1,8 +1,12 @@
 package ca.bischke.apps.filevault;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Environment;
 import android.support.design.widget.NavigationView;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -36,8 +40,15 @@ public class FileExplorerActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
-        // Sets Activity Layout
         super.onCreate(savedInstanceState);
+
+        if (!hasPermissions())
+        {
+            startPermissionsActivity();
+            return;
+        }
+
+        // Sets Activity Layout
         setContentView(R.layout.activity_fileexplorer);
 
         // Adds the Toolbar to the Layout
@@ -154,6 +165,29 @@ public class FileExplorerActivity extends AppCompatActivity
         {
             listFiles(getParentDirectory(currentDirectory));
         }
+    }
+
+    private boolean hasPermissions()
+    {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED)
+        {
+            return false;
+        }
+
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED)
+        {
+            return false;
+        }
+
+        return true;
+    }
+
+    private void startPermissionsActivity()
+    {
+        Intent intent = new Intent(this, PermissionsActivity.class);
+        startActivity(intent);
     }
 
     private ArrayList<File> getSortedFiles(ArrayList<File> files)
