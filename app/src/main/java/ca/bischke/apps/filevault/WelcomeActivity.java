@@ -8,8 +8,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 
-import java.util.concurrent.locks.Lock;
-
 public class WelcomeActivity extends AppCompatActivity
 {
     private FileEncryption fileEncryption;
@@ -30,11 +28,12 @@ public class WelcomeActivity extends AppCompatActivity
         fileEncryption = new FileEncryption(this);
 
         // If IV and Salt already exist, switch to Lockscreen
-        if (fileEncryption.sharedPreferenceExists(getString(R.string.preference_iv)) &&
-                fileEncryption.sharedPreferenceExists(getString(R.string.preference_salt)))
+        if (fileEncryption.sharedPreferenceExists(getString(R.string.preference_pass)))
         {
             Intent intent = new Intent(this, LockScreenActivity.class);
             startActivity(intent);
+            finish();
+            return;
         }
 
         // Sets Activity Layout

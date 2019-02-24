@@ -36,6 +36,24 @@ public class SetPasswordActivity extends AppCompatActivity
     {
         EditText textPassword = findViewById(R.id.text_password);
         String password = textPassword.getText().toString();
+
+        if (!password.equals(""))
+        {
+            try
+            {
+                String key = getString(R.string.preference_pass);
+                byte[] hashPassword = SHA.getHashBytes(password);
+
+                fileEncryption.saveSharedPreference(key, hashPassword);
+
+                Intent intent = new Intent(this, SetupCompleteActivity.class);
+                startActivity(intent);
+            }
+            catch (Exception ex)
+            {
+                // TODO Log error
+            }
+        }
     }
 
     private boolean hasPermissions()

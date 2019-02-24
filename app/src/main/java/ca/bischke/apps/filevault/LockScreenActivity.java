@@ -8,6 +8,9 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.Toast;
+
+import java.util.Arrays;
 
 public class LockScreenActivity extends AppCompatActivity
 {
@@ -36,6 +39,32 @@ public class LockScreenActivity extends AppCompatActivity
     {
         EditText textPassword = findViewById(R.id.text_password);
         String password = textPassword.getText().toString();
+
+        if (!password.equals(""))
+        {
+            try
+            {
+                String key = getString(R.string.preference_pass);
+                byte[] hashPassword = SHA.getHashBytes(password);
+
+                byte[] savedPassword = fileEncryption.getSharedPreference(key);
+
+                if (Arrays.equals(hashPassword, savedPassword))
+                {
+                    Intent intent = new Intent(this, FileExplorerActivity.class);
+                    startActivity(intent);
+                }
+                else
+                {
+                    Toast toast = Toast.makeText(this, getString(R.string.incorrect_password), Toast.LENGTH_SHORT);
+                    toast.show();
+                }
+            }
+            catch (Exception ex)
+            {
+                // TODO Log error
+            }
+        }
     }
 
     private boolean hasPermissions()

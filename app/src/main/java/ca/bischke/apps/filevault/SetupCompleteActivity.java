@@ -31,6 +31,7 @@ public class SetupCompleteActivity extends AppCompatActivity
     {
         Intent intent = new Intent(this, FileExplorerActivity.class);
         startActivity(intent);
+        finish();
     }
 
     private boolean hasPermissions()
