@@ -2,106 +2,52 @@
 <android.support.constraint.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    tools:context=".LockScreenActivity">
 
     <LinearLayout
         android:id="@+id/layout_lockscreen"
         style="@style/LayoutFullColor">
 
-        <ImageView
-            android:id="@+id/image_lock"
-            style="@style/ImageLock"
-            app:srcCompat="@drawable/ic_lock_256dp" />
-
-        <TextView
-            android:id="@+id/text_pin"
-            style="@style/TextPinInput"
-            android:text="••••" />
-
         <LinearLayout
-            android:id="@+id/layout_keypad"
-            style="@style/LayoutKeypad">
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingLeft="32dp"
+            android:paddingRight="32dp">
 
-            <LinearLayout
-                android:id="@+id/layout_keypad_row1"
-                style="@style/LayoutKeypadRow">
+            <ImageView
+                android:id="@+id/image_lock"
+                style="@style/ImageLock"
+                app:srcCompat="@drawable/ic_lock_256dp" />
 
-                <Button
-                    android:id="@+id/button1"
-                    style="@style/ButtonKeypad"
-                    android:text="1" />
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="48dp" />
 
-                <Button
-                    android:id="@+id/button2"
-                    style="@style/ButtonKeypad"
-                    android:text="2" />
+            <TextView
+                android:id="@+id/text_enter_password"
+                style="@style/TextLargeWhite"
+                android:text="@string/enter_password" />
 
-                <Button
-                    android:id="@+id/button3"
-                    style="@style/ButtonKeypad"
-                    android:text="3" />
-            </LinearLayout>
+            <EditText
+                android:id="@+id/text_password"
+                style="@style/TextPinInput2"
+                android:inputType="textPassword" />
 
-            <LinearLayout
-                android:id="@+id/layout_keypad_row2"
-                style="@style/LayoutKeypadRow">
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="24dp" />
 
-                <Button
-                    android:id="@+id/button4"
-                    style="@style/ButtonKeypad"
-                    android:text="4" />
+            <Button
+                android:id="@+id/button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:onClick="buttonUnlock"
+                android:text="@string/unlock" />
 
-                <Button
-                    android:id="@+id/button5"
-                    style="@style/ButtonKeypad"
-                    android:text="5" />
-
-                <Button
-                    android:id="@+id/button6"
-                    style="@style/ButtonKeypad"
-                    android:text="6" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/layout_keypad_row3"
-                style="@style/LayoutKeypadRow">
-
-                <Button
-                    android:id="@+id/button7"
-                    style="@style/ButtonKeypad"
-                    android:text="7" />
-
-                <Button
-                    android:id="@+id/button8"
-                    style="@style/ButtonKeypad"
-                    android:text="8" />
-
-                <Button
-                    android:id="@+id/button9"
-                    style="@style/ButtonKeypad"
-                    android:text="9" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/layout_keypad_row4"
-                style="@style/LayoutKeypadRow">
-
-                <Space
-                    android:id="@+id/space_keypad"
-                    style="@style/SpaceKeypad" />
-
-                <Button
-                    android:id="@+id/button0"
-                    style="@style/ButtonKeypad"
-                    android:text="0" />
-
-                <ImageButton
-                    android:id="@+id/image_button_backspace"
-                    style="@style/ButtonKeypad"
-                    app:srcCompat="@drawable/ic_backspace_36dp" />
-
-            </LinearLayout>
         </LinearLayout>
     </LinearLayout>
 </android.support.constraint.ConstraintLayout>
