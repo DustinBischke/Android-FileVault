@@ -2,7 +2,6 @@ package ca.bischke.apps.filevault;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.util.Base64;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -34,16 +33,6 @@ public class FileEncryption
         sharedPreferences = context.getSharedPreferences(TAG, Context.MODE_PRIVATE);
     }
 
-    private byte[] getByteArrayFromString(String string)
-    {
-        return Base64.decode(string, Base64.DEFAULT);
-    }
-
-    private String getStringFromByteArray(byte[] bytes)
-    {
-        return Base64.encodeToString(bytes, Base64.DEFAULT);
-    }
-
     private byte[] getRandomByteArray(int size)
     {
         SecureRandom random = new SecureRandom();
@@ -58,22 +47,22 @@ public class FileEncryption
         return sharedPreferences.contains(key);
     }
 
-    private byte[] getSharedPreference(String key)
+    public byte[] getSharedPreference(String key)
     {
         if (sharedPreferenceExists(key))
         {
             String valueString = sharedPreferences.getString(key, null);
-            return getByteArrayFromString(valueString);
+            return Convert.getByteArrayFromString(valueString);
         }
 
         return null;
     }
 
-    private void saveSharedPreference(String key, byte[] valueBytes)
+    public void saveSharedPreference(String key, byte[] valueBytes)
     {
         SharedPreferences.Editor editor = sharedPreferences.edit();
 
-        String value = getStringFromByteArray(valueBytes);
+        String value = Convert.getStringFromByteArray(valueBytes);
         editor.putString(key, value);
         editor.apply();
     }
