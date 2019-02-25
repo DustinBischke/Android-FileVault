@@ -11,6 +11,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -23,6 +24,10 @@ import java.util.Comparator;
 public class VaultActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener
 {
+    private Encryption encryption;
+    private final String TAG = "FileVault";
+    private final String STORAGE_ROOT = Environment.getExternalStorageDirectory().toString();
+    private final String STORAGE_VAULT = STORAGE_ROOT + File.separator + "FileVault";
     private boolean sortByName = true;
 
     @Override
@@ -56,7 +61,18 @@ public class VaultActivity extends AppCompatActivity
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+        encryption = new Encryption(this);
+
+        decryptVault();
         listFiles();
+    }
+
+    @Override
+    public void onPause()
+    {
+        super.onPause();
+        encryptVault();
+        finish();
     }
 
     @Override
@@ -180,7 +196,6 @@ public class VaultActivity extends AppCompatActivity
 
     private void listFiles()
     {
-        String STORAGE_VAULT = Environment.getExternalStorageDirectory().toString() + File.separator + "FileVault";
         File directory = new File(STORAGE_VAULT);
         File[] fileArray = directory.listFiles();
         ArrayList<File> files = new ArrayList<>(Arrays.asList(fileArray));
@@ -202,5 +217,31 @@ public class VaultActivity extends AppCompatActivity
 
         FileAdapter fileAdapter = new FileAdapter(this, fileDataList);
         recyclerView.setAdapter(fileAdapter);
+    }
+
+    private void encryptVault()
+    {
+        try
+        {
+            File vault = new File(STORAGE_VAULT);
+            encryption.encryptDirectory("SHIBA", vault);
+        }
+        catch (Exception ex)
+        {
+            Log.d(TAG, ex.getMessage());
+        }
+    }
+
+    private void decryptVault()
+    {
+        try
+        {
+            File vault = new File(STORAGE_VAULT);
+            encryption.decryptDirectory("SHIBA", vault);
+        }
+        catch (Exception ex)
+        {
+            Log.d(TAG, ex.getMessage());
+        }
     }
 }

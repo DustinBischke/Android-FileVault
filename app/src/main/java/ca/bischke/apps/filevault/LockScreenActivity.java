@@ -48,7 +48,7 @@ public class LockScreenActivity extends AppCompatActivity
 
                 if (Arrays.equals(hashPassword, savedPassword))
                 {
-                    Intent intent = new Intent(this, FileExplorerActivity.class);
+                    Intent intent = new Intent(this, VaultActivity.class);
                     startActivity(intent);
                 }
                 else

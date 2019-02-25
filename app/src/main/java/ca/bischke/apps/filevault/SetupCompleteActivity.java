@@ -28,7 +28,7 @@ public class SetupCompleteActivity extends AppCompatActivity
 
     public void buttonContinue(View view)
     {
-        Intent intent = new Intent(this, FileExplorerActivity.class);
+        Intent intent = new Intent(this, VaultActivity.class);
         startActivity(intent);
         finish();
     }

@@ -33,8 +33,6 @@ public class FileExplorerActivity extends AppCompatActivity
     private String currentDirectory;
     private boolean sortByName = true;
 
-    //private FileEncryption fileEncryption;
-
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -67,37 +65,15 @@ public class FileExplorerActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
         createVaultDirectory();
-
-        /*encryption = new Encryption(this);
-
-        // Test data for file Encryption
-        try
-        {
-            encryption.encrypt("SHIBA", new File(STORAGE_VAULT + "/corgi.jpg"), new File(STORAGE_VAULT + "/corgi2.jpg"));
-            encryption.decrypt("SHIBA", new File(STORAGE_VAULT + "/corgi2.jpg"), new File(STORAGE_VAULT + "/corgi3.jpg"));
-        }
-        catch (Exception ex)
-        {
-            Log.d(TAG, ex.getMessage());
-        }*/
-
         listFiles(STORAGE_ROOT);
     }
 
     @Override
-    protected void onPause()
+    public void onPause()
     {
         super.onPause();
-
-        // Test data for file Encryption
-        /*try
-        {
-            fileEncryption.encrypt(this, "SHIBA", new File(STORAGE_VAULT + "/corgi.jpg"), new File(STORAGE_VAULT + "/corgi2.jpg"));
-        }
-        catch (Exception ex)
-        {
-            Log.d(TAG, ex.getMessage());
-        }*/
+        encryptVault();
+        finish();
     }
 
     @Override
@@ -372,6 +348,19 @@ public class FileExplorerActivity extends AppCompatActivity
         else
         {
             Log.d(TAG, fileName + " could not be moved");
+        }
+    }
+
+    private void encryptVault()
+    {
+        try
+        {
+            File vault = new File(STORAGE_VAULT);
+            encryption.encryptDirectory("SHIBA", vault);
+        }
+        catch (Exception ex)
+        {
+            Log.d(TAG, ex.getMessage());
         }
     }
 }
