@@ -5,12 +5,11 @@ import android.content.SharedPreferences;
 
 public class KeyStore
 {
-    private final String file;
     private SharedPreferences sharedPreferences;
 
     public KeyStore(Context context)
     {
-        file = context.getString(R.string.app_name);
+        String file = context.getString(R.string.app_name);
         sharedPreferences = context.getSharedPreferences(file, Context.MODE_PRIVATE);
     }
 

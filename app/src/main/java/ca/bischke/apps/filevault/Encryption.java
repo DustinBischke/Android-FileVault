@@ -22,8 +22,6 @@ public class Encryption
 {
     private Context context;
     private KeyStore keyStore;
-    private final String keyAlgorithm = "PBKDF2WithHmacSHA1";
-    private final String cipherAlgorithm = "AES/CBC/PKCS5Padding";
     private IvParameterSpec iv;
     private byte[] salt;
 
@@ -89,7 +87,8 @@ public class Encryption
         char[] passwordArray = password.toCharArray();
         KeySpec keySpec = new PBEKeySpec(passwordArray, salt, iterations, outputLength);
 
-        SecretKeyFactory secretKeyFactory = SecretKeyFactory.getInstance(keyAlgorithm);
+        String algorithm = "PBKDF2WithHmacSHA1";
+        SecretKeyFactory secretKeyFactory = SecretKeyFactory.getInstance(algorithm);
         SecretKey secretKey = secretKeyFactory.generateSecret(keySpec);
 
         return secretKey;
@@ -99,7 +98,8 @@ public class Encryption
             throws GeneralSecurityException, IOException
     {
         SecretKey secretKey = getSecretKey(password, getSalt());
-        Cipher cipher = Cipher.getInstance(cipherAlgorithm);
+        String algorithm = "AES/CBC/PKCS5Padding";
+        Cipher cipher = Cipher.getInstance(algorithm);
         cipher.init(cipherMode, secretKey, getIV());
 
         FileInputStream inputStream = new FileInputStream(inputFile);
