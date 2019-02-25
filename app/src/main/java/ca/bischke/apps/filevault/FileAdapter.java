@@ -35,7 +35,7 @@ public class FileAdapter extends RecyclerView.Adapter<FileViewHolder>
 
         if (fileDataList.get(i).getFileIcon() != null)
         {
-            fileViewHolder.fileIcon.setImageURI(fileDataList.get(i).getFileIcon());
+            fileViewHolder.fileIcon.setImageBitmap(fileDataList.get(i).getFileIcon());
         }
     }
 

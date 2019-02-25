@@ -1,13 +1,15 @@
 package ca.bischke.apps.filevault;
 
-import android.net.Uri;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.media.ThumbnailUtils;
 
 import java.io.File;
 
 public class FileData
 {
     private String fileName;
-    private Uri fileIcon;
+    private Bitmap fileIcon;
 
     private String[] imageFormats = new String[] {".jpg", ".jpeg", ".png", ".gif", ".bmp", ".webp"};
 
@@ -19,7 +21,9 @@ public class FileData
         {
             if (file.getName().endsWith(format))
             {
-                fileIcon = Uri.fromFile(file);
+                int size = 512;
+                Bitmap bitmap = BitmapFactory.decodeFile(file.getPath());
+                fileIcon = ThumbnailUtils.extractThumbnail(bitmap, size, size);
             }
         }
     }
@@ -29,7 +33,7 @@ public class FileData
         return fileName;
     }
 
-    public Uri getFileIcon()
+    public Bitmap getFileIcon()
     {
         return fileIcon;
     }

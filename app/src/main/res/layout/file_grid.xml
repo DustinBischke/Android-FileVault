@@ -28,7 +28,7 @@
                 android:adjustViewBounds="true"
                 android:background="@color/colorWhite"
                 android:scaleType="centerCrop"
-                app:srcCompat="@drawable/ic_image_24dp" />
+                app:srcCompat="@drawable/ic_file_24dp" />
 
             <TextView
                 android:id="@+id/text_file_name"
