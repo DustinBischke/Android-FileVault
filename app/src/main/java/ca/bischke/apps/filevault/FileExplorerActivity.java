@@ -1,12 +1,8 @@
 package ca.bischke.apps.filevault;
 
-import android.Manifest;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.os.Build;
 import android.os.Environment;
 import android.support.design.widget.NavigationView;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -29,24 +25,29 @@ import java.util.Comparator;
 public class FileExplorerActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener
 {
+    private Permissions permissions;
+    private Encryption encryption;
     private final String TAG = "FileVault";
     private final String STORAGE_ROOT = Environment.getExternalStorageDirectory().toString();
     private final String STORAGE_VAULT = STORAGE_ROOT + File.separator + "FileVault";
     private String currentDirectory;
     private boolean sortByName = true;
 
-    private FileEncryption fileEncryption;
+    //private FileEncryption fileEncryption;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
 
-        if (!hasPermissions())
+        permissions = new Permissions(this);
+
+        // Switch to PermissionsActivity if permissions are not granted
+        if (!permissions.hasPermissions())
         {
-            startPermissionsActivity();
+            Intent intent = new Intent(this, PermissionsActivity.class);
+            startActivity(intent);
             finish();
-            return;
         }
 
         // Sets Activity Layout
@@ -67,18 +68,18 @@ public class FileExplorerActivity extends AppCompatActivity
 
         createVaultDirectory();
 
-        fileEncryption = new FileEncryption(this);
+        /*encryption = new Encryption(this);
 
         // Test data for file Encryption
         try
         {
-            fileEncryption.encrypt("SHIBA", new File(STORAGE_VAULT + "/corgi.jpg"), new File(STORAGE_VAULT + "/corgi2.jpg"));
-            fileEncryption.decrypt("SHIBA", new File(STORAGE_VAULT + "/corgi2.jpg"), new File(STORAGE_VAULT + "/corgi3.jpg"));
+            encryption.encrypt("SHIBA", new File(STORAGE_VAULT + "/corgi.jpg"), new File(STORAGE_VAULT + "/corgi2.jpg"));
+            encryption.decrypt("SHIBA", new File(STORAGE_VAULT + "/corgi2.jpg"), new File(STORAGE_VAULT + "/corgi3.jpg"));
         }
         catch (Exception ex)
         {
             Log.d(TAG, ex.getMessage());
-        }
+        }*/
 
         listFiles(STORAGE_ROOT);
     }
@@ -166,29 +167,6 @@ public class FileExplorerActivity extends AppCompatActivity
         {
             listFiles(getParentDirectory(currentDirectory));
         }
-    }
-
-    private boolean hasPermissions()
-    {
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
-                != PackageManager.PERMISSION_GRANTED)
-        {
-            return false;
-        }
-
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                != PackageManager.PERMISSION_GRANTED)
-        {
-            return false;
-        }
-
-        return true;
-    }
-
-    private void startPermissionsActivity()
-    {
-        Intent intent = new Intent(this, PermissionsActivity.class);
-        startActivity(intent);
     }
 
     private ArrayList<File> getSortedFiles(ArrayList<File> files)
