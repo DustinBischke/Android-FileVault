@@ -24,7 +24,7 @@ public class KeyStore
         if (exists(key))
         {
             String valueString = sharedPreferences.getString(key, null);
-            return Convert.getByteArrayFromString(valueString);
+            return Converter.getByteArrayFromString(valueString);
         }
 
         return null;
@@ -34,7 +34,7 @@ public class KeyStore
     {
         SharedPreferences.Editor editor = sharedPreferences.edit();
 
-        String value = Convert.getStringFromByteArray(valueBytes);
+        String value = Converter.getStringFromByteArray(valueBytes);
         editor.putString(key, value);
         editor.apply();
     }

@@ -2,7 +2,7 @@ package ca.bischke.apps.filevault;
 
 import android.util.Base64;
 
-public class Convert
+public class Converter
 {
     public static byte[] getByteArrayFromString(String string)
     {
