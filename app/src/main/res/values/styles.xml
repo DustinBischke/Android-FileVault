@@ -112,6 +112,12 @@
         <item name="android:gravity">center_horizontal</item>
     </style>
 
+    <style name="TextSmallAccent" parent="Text">
+        <item name="android:layout_marginBottom">4dp</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">@color/colorAccent</item>
+    </style>
+
     <style name="TextSmallLight" parent="Text">
         <item name="android:layout_width">match_parent</item>
         <item name="android:textSize">16sp</item>
@@ -190,6 +196,7 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:gravity">center</item>
+        <item name="android:inputType">textPassword</item>
         <item name="android:textSize">42sp</item>
         <item name="android:textColor">@color/colorWhite</item>
         <item name="android:textCursorDrawable">@drawable/edittext_password_cursor</item>

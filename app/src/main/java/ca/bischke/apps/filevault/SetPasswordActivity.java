@@ -5,6 +5,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.Toast;
 
 public class SetPasswordActivity extends AppCompatActivity
 {
@@ -29,25 +30,35 @@ public class SetPasswordActivity extends AppCompatActivity
 
     public void buttonSetPassword(View view)
     {
-        EditText textPassword = findViewById(R.id.text_password);
+        EditText textPassword = findViewById(R.id.edittext_password);
         String password = textPassword.getText().toString();
+        EditText textPassword2 = findViewById(R.id.edittext_confirm_password);
+        String password2 = textPassword2.getText().toString();
 
-        if (!password.equals(""))
+        if (!password.equals("") && !password2.equals(""))
         {
-            try
+            if (password.equals(password2))
             {
-                String key = getString(R.string.preference_pass);
-                byte[] hashPassword = Hash.getHashBytes(password);
+                try
+                {
+                    String key = getString(R.string.preference_pass);
+                    byte[] hashPassword = Hash.getHashBytes(password);
 
-                KeyStore keyStore = new KeyStore(this);
-                keyStore.setBytes(key, hashPassword);
+                    KeyStore keyStore = new KeyStore(this);
+                    keyStore.setBytes(key, hashPassword);
 
-                Intent intent = new Intent(this, SetupCompleteActivity.class);
-                startActivity(intent);
+                    Intent intent = new Intent(this, SetupCompleteActivity.class);
+                    startActivity(intent);
+                }
+                catch (Exception ex)
+                {
+                    // TODO Log error
+                }
             }
-            catch (Exception ex)
+            else
             {
-                // TODO Log error
+                Toast toast = Toast.makeText(this, getString(R.string.password_no_match), Toast.LENGTH_SHORT);
+                toast.show();
             }
         }
     }
