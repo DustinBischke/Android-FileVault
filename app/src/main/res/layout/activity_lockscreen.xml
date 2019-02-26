@@ -34,7 +34,7 @@
 
             <EditText
                 android:id="@+id/text_password"
-                style="@style/TextPinInput2"
+                style="@style/TextPinInput"
                 android:inputType="textPassword" />
 
             <Space

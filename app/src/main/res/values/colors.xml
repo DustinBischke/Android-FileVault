@@ -2,8 +2,7 @@
 <resources>
     <color name="colorPrimary">#008577</color>
     <color name="colorPrimaryDark">#00574B</color>
-    <color name="colorPrimaryLight">#80CBC4</color>
-    <color name="colorAccent">#D81B60</color>
+    <color name="colorAccent">#80CBC4</color>
 
     <color name="colorWhite">#FFFFFF</color>
     <color name="colorText">#4C4C4C</color>
@@ -12,4 +11,5 @@
     <color name="colorFileGrid">#FAFAFA</color>
     <color name="colorBackground">#EEEEEE</color>
     <color name="colorHighlight">#B1DEDA</color>
+    <color name="colorEdittext">#016558</color>
 </resources>
