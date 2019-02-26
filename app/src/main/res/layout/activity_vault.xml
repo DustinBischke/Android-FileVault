@@ -14,7 +14,8 @@
 
         <LinearLayout
             android:id="@+id/layout_screen"
-            style="@style/LayoutScreen">
+            style="@style/LayoutScreen"
+            android:background="@color/colorBackground">
 
             <include
                 android:id="@+id/toolbar"
@@ -24,6 +25,8 @@
                 android:id="@+id/recycler_view"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_marginLeft="@dimen/grid_margin"
+                android:layout_marginRight="@dimen/grid_margin"
                 android:scrollbars="vertical" />
 
         </LinearLayout>

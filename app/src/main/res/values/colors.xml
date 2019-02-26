@@ -9,5 +9,7 @@
     <color name="colorText">#4C4C4C</color>
     <color name="colorSubText">#757575</color>
     <color name="colorDivider">#BDBDBD</color>
+    <color name="colorFileGrid">#FAFAFA</color>
+    <color name="colorBackground">#EEEEEE</color>
     <color name="colorHighlight">#B1DEDA</color>
 </resources>

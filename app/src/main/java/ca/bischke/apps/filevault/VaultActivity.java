@@ -208,6 +208,10 @@ public class VaultActivity extends AppCompatActivity
         GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 2);
         recyclerView.setLayoutManager(gridLayoutManager);
 
+        // Add margin between all RecyclerView items
+        GridMarginDecoration itemDecoration = new GridMarginDecoration(this, R.dimen.grid_margin);
+        recyclerView.addItemDecoration(itemDecoration);
+
         ArrayList<FileData> fileDataList = new ArrayList<>();
 
         for (File file : files)
