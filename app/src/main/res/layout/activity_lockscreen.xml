@@ -34,7 +34,7 @@
 
             <EditText
                 android:id="@+id/text_password"
-                style="@style/TextPinInput"
+                style="@style/EditTextPassword"
                 android:inputType="textPassword" />
 
             <Space
@@ -43,8 +43,7 @@
 
             <Button
                 android:id="@+id/button"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                style="@style/ButtonWhite"
                 android:onClick="buttonUnlock"
                 android:text="@string/unlock" />
 

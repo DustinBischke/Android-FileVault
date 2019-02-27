@@ -43,15 +43,13 @@
 
             <Button
                 android:id="@+id/button_grant_access"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                style="@style/ButtonWhite"
                 android:onClick="buttonRequestPermissions"
                 android:text="@string/grant_access" />
 
             <Button
                 android:id="@+id/button_exit"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                style="@style/ButtonWhite"
                 android:onClick="buttonExit"
                 android:text="@string/exit" />
 

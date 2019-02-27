@@ -148,6 +148,16 @@
         <item name="android:gravity">right</item>
     </style>
 
+    <style name="ButtonWhite">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginBottom">16dp</item>
+        <item name="android:padding">8dp</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:textColor">@color/colorBlack</item>
+        <item name="android:background">@drawable/button_white</item>
+    </style>
+
     <style name="LayoutFullColor" parent="LayoutScreen">
         <item name="android:gravity">center</item>
         <item name="android:background">@color/colorPrimary</item>
@@ -192,14 +202,18 @@
         <item name="android:layout_height">72dp</item>
     </style>
 
-    <style name="TextPinInput">
+    <style name="EditTextPassword">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:gravity">center</item>
-        <item name="android:inputType">textPassword</item>
+        <item name="android:paddingTop">4dp</item>
+        <item name="android:paddingBottom">4dp</item>
+        <item name="android:paddingLeft">8dp</item>
+        <item name="android:paddingRight">8dp</item>
         <item name="android:textSize">42sp</item>
         <item name="android:textColor">@color/colorWhite</item>
-        <item name="android:textCursorDrawable">@drawable/edittext_password_cursor</item>
+        <item name="android:gravity">center</item>
+        <item name="android:inputType">textPassword</item>
         <item name="android:background">@drawable/edittext_password</item>
+        <item name="android:textCursorDrawable">@drawable/edittext_password_cursor</item>
     </style>
 </resources>
