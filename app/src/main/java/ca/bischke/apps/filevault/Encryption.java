@@ -132,26 +132,29 @@ public class Encryption
     {
         if (directory.isDirectory())
         {
-            SecretKey secretKey = getSecretKey(password, getSalt());
-            String algorithm = "AES/CBC/PKCS5Padding";
-            Cipher cipher = Cipher.getInstance(algorithm);
-            cipher.init(Cipher.ENCRYPT_MODE, secretKey, getIV());
-
-            File[] fileArray = directory.listFiles();
-
-            for (File file : fileArray)
+            if (directory.listFiles().length > 0)
             {
-                FileInputStream inputStream = new FileInputStream(file);
-                byte[] inputBytes = new byte[(int) file.length()];
-                inputStream.read(inputBytes);
+                SecretKey secretKey = getSecretKey(password, getSalt());
+                String algorithm = "AES/CBC/PKCS5Padding";
+                Cipher cipher = Cipher.getInstance(algorithm);
+                cipher.init(Cipher.ENCRYPT_MODE, secretKey, getIV());
 
-                byte[] outputBytes = cipher.doFinal(inputBytes);
+                File[] fileArray = directory.listFiles();
 
-                FileOutputStream outputStream = new FileOutputStream(file);
-                outputStream.write(outputBytes);
+                for (File file : fileArray)
+                {
+                    FileInputStream inputStream = new FileInputStream(file);
+                    byte[] inputBytes = new byte[(int) file.length()];
+                    inputStream.read(inputBytes);
 
-                inputStream.close();
-                outputStream.close();
+                    byte[] outputBytes = cipher.doFinal(inputBytes);
+
+                    FileOutputStream outputStream = new FileOutputStream(file);
+                    outputStream.write(outputBytes);
+
+                    inputStream.close();
+                    outputStream.close();
+                }
             }
         }
     }
@@ -161,26 +164,29 @@ public class Encryption
     {
         if (directory.isDirectory())
         {
-            SecretKey secretKey = getSecretKey(password, getSalt());
-            String algorithm = "AES/CBC/PKCS5Padding";
-            Cipher cipher = Cipher.getInstance(algorithm);
-            cipher.init(Cipher.DECRYPT_MODE, secretKey, getIV());
-
-            File[] fileArray = directory.listFiles();
-
-            for (File file : fileArray)
+            if (directory.listFiles().length > 0)
             {
-                FileInputStream inputStream = new FileInputStream(file);
-                byte[] inputBytes = new byte[(int) file.length()];
-                inputStream.read(inputBytes);
+                SecretKey secretKey = getSecretKey(password, getSalt());
+                String algorithm = "AES/CBC/PKCS5Padding";
+                Cipher cipher = Cipher.getInstance(algorithm);
+                cipher.init(Cipher.DECRYPT_MODE, secretKey, getIV());
 
-                byte[] outputBytes = cipher.doFinal(inputBytes);
+                File[] fileArray = directory.listFiles();
 
-                FileOutputStream outputStream = new FileOutputStream(file);
-                outputStream.write(outputBytes);
+                for (File file : fileArray)
+                {
+                    FileInputStream inputStream = new FileInputStream(file);
+                    byte[] inputBytes = new byte[(int) file.length()];
+                    inputStream.read(inputBytes);
 
-                inputStream.close();
-                outputStream.close();
+                    byte[] outputBytes = cipher.doFinal(inputBytes);
+
+                    FileOutputStream outputStream = new FileOutputStream(file);
+                    outputStream.write(outputBytes);
+
+                    inputStream.close();
+                    outputStream.close();
+                }
             }
         }
     }
