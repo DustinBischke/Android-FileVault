@@ -9,7 +9,7 @@ public class Permissions
 {
     private Context context;
     private final String[] permissions = new String[]
-            {Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE};
+            { Manifest.permission.WRITE_EXTERNAL_STORAGE };
 
     public Permissions(Context context)
     {
