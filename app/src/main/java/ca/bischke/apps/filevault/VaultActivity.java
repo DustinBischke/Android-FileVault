@@ -14,6 +14,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -63,6 +64,24 @@ public class VaultActivity extends AppCompatActivity
 
         encryption = new Encryption(this);
 
+        runOnUiThread(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                //decryptVault();
+                listFiles();
+            }
+        });
+
+        //decryptVault();
+        //listFiles();
+    }
+
+    /*@Override
+    public void onResume()
+    {
+        super.onResume();
         decryptVault();
         listFiles();
     }
@@ -73,6 +92,18 @@ public class VaultActivity extends AppCompatActivity
         super.onPause();
         encryptVault();
         finish();
+    }
+
+    /*@Override
+    public void onStop()
+    {
+        super.onStop();
+        encryptVault();
+    }*/
+
+    public void buttonStartFileExplorer(View view)
+    {
+        startFileExplorer();
     }
 
     @Override
@@ -91,6 +122,9 @@ public class VaultActivity extends AppCompatActivity
         // Handles Menu item clicks
         switch(id)
         {
+            case R.id.action_lock:
+                encryptVault();
+                finish();
             case R.id.action_settings:
                 break;
             case R.id.action_by_name:
@@ -117,6 +151,7 @@ public class VaultActivity extends AppCompatActivity
         switch(id)
         {
             case R.id.nav_file_explorer:
+                startFileExplorer();
                 break;
             case R.id.nav_settings:
                 break;
@@ -208,6 +243,11 @@ public class VaultActivity extends AppCompatActivity
         GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 2);
         recyclerView.setLayoutManager(gridLayoutManager);
 
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setItemViewCacheSize(12);
+        recyclerView.setDrawingCacheEnabled(true);
+        recyclerView.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
+
         // Add margin between all RecyclerView items
         GridMarginDecoration itemDecoration = new GridMarginDecoration(this, R.dimen.grid_margin);
         recyclerView.addItemDecoration(itemDecoration);
@@ -220,6 +260,7 @@ public class VaultActivity extends AppCompatActivity
         }
 
         FileAdapter fileAdapter = new FileAdapter(this, fileDataList);
+        fileAdapter.setHasStableIds(true);
         recyclerView.setAdapter(fileAdapter);
     }
 
@@ -247,5 +288,12 @@ public class VaultActivity extends AppCompatActivity
         {
             Log.d(TAG, ex.getMessage());
         }
+    }
+
+    private void startFileExplorer()
+    {
+        Intent intent = new Intent(this, FileExplorerActivity.class);
+        startActivity(intent);
+        finish();
     }
 }

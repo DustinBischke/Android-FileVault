@@ -2,11 +2,18 @@ package ca.bischke.apps.filevault;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import java.io.File;
 import java.util.Arrays;
 
 public class LockScreenActivity extends AppCompatActivity
@@ -48,8 +55,26 @@ public class LockScreenActivity extends AppCompatActivity
 
                 if (Arrays.equals(hashPassword, savedPassword))
                 {
-                    Intent intent = new Intent(this, VaultActivity.class);
-                    startActivity(intent);
+                    LinearLayout layout = findViewById(R.id.layout_decrypting);
+                    Animation fadeIn = AnimationUtils.loadAnimation(this, R.anim.fade_in);
+                    layout.setVisibility(View.VISIBLE);
+                    layout.startAnimation(fadeIn);
+
+                    ImageView image = findViewById(R.id.image_decrypting);
+                    Animation rotate = AnimationUtils.loadAnimation(this, R.anim.rotate);
+                    image.startAnimation(rotate);
+
+                    new Thread(new Runnable()
+                    {
+                        @Override
+                        public void run()
+                        {
+                            decryptVault();
+                            Intent intent = new Intent(LockScreenActivity.this, VaultActivity.class);
+                            startActivity(intent);
+                            finish();
+                        }
+                    }).start();
                 }
                 else
                 {
@@ -61,6 +86,24 @@ public class LockScreenActivity extends AppCompatActivity
             {
                 // TODO Log error
             }
+        }
+    }
+
+    private void decryptVault()
+    {
+        String STORAGE_ROOT = Environment.getExternalStorageDirectory().toString();
+        String STORAGE_VAULT = STORAGE_ROOT + File.separator + "FileVault";
+
+        Encryption encryption = new Encryption(this);
+
+        try
+        {
+            File vault = new File(STORAGE_VAULT);
+            encryption.decryptDirectory("SHIBA", vault);
+        }
+        catch (Exception ex)
+        {
+            Log.d("ASDF", ex.getMessage());
         }
     }
 }

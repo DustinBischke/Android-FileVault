@@ -7,34 +7,52 @@
     android:layout_height="match_parent"
     tools:context=".VaultActivity">
 
-    <android.support.v4.widget.DrawerLayout
-        android:id="@+id/drawer_layout"
-        style="@style/DrawerLayout"
-        tools:openDrawer="start">
+    <android.support.design.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-        <LinearLayout
-            android:id="@+id/layout_screen"
-            style="@style/LayoutScreen"
-            android:background="@color/colorBackground">
+        <android.support.v4.widget.DrawerLayout
+            android:id="@+id/drawer_layout"
+            style="@style/DrawerLayout"
+            tools:openDrawer="start">
+
+            <LinearLayout
+                android:id="@+id/layout_screen"
+                style="@style/LayoutScreen"
+                android:background="@color/colorBackground">
+
+                <include
+                    android:id="@+id/toolbar"
+                    layout="@layout/toolbar_main" />
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/recycler_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="@dimen/grid_margin"
+                    android:layout_marginRight="@dimen/grid_margin"
+                    android:scrollbars="vertical" />
+
+            </LinearLayout>
 
             <include
-                android:id="@+id/toolbar"
-                layout="@layout/toolbar_main" />
+                android:id="@+id/nav_view"
+                layout="@layout/nav_view_main" />
 
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/recycler_view"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginLeft="@dimen/grid_margin"
-                android:layout_marginRight="@dimen/grid_margin"
-                android:scrollbars="vertical" />
+        </android.support.v4.widget.DrawerLayout>
 
-        </LinearLayout>
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/floating_action_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end|bottom"
+            android:layout_margin="16dp"
+            android:focusable="true"
+            android:clickable="true"
+            android:onClick="buttonStartFileExplorer"
+            app:backgroundTint="@color/colorPrimary"
+            app:srcCompat="@drawable/ic_add_24dp" />
 
-        <include
-            android:id="@+id/nav_view"
-            layout="@layout/nav_view_main" />
-
-    </android.support.v4.widget.DrawerLayout>
+    </android.support.design.widget.CoordinatorLayout>
 
 </android.support.constraint.ConstraintLayout>

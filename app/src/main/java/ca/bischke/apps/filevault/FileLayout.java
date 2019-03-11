@@ -1,7 +1,6 @@
 package ca.bischke.apps.filevault;
 
 import android.content.Context;
-import android.net.Uri;
 import android.text.format.Formatter;
 import android.view.View;
 import android.widget.ImageButton;
@@ -15,12 +14,14 @@ import java.util.Date;
 
 public class FileLayout extends LinearLayout
 {
+    private File file;
     private String[] imageFormats = new String[] {".jpg", ".jpeg", ".png", ".gif", ".bmp", ".webp"};
 
     public FileLayout(Context context, File file)
     {
         // Instantiates File Layout XML
         super(context);
+        this.file = file;
         inflate(context, R.layout.file, this);
 
         // Displays File name
@@ -76,5 +77,20 @@ public class FileLayout extends LinearLayout
         }
 
         return false;
+    }
+
+    public File getFile()
+    {
+        return file;
+    }
+
+    public String getFileName()
+    {
+        return file.getName();
+    }
+
+    public ImageButton getImageButton()
+    {
+        return findViewById(R.id.button_file_encrypt);
     }
 }

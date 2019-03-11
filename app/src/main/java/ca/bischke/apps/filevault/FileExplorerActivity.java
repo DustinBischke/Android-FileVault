@@ -15,6 +15,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
+import android.widget.Toast;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -72,8 +73,8 @@ public class FileExplorerActivity extends AppCompatActivity
     public void onPause()
     {
         super.onPause();
-        encryptVault();
-        finish();
+        /*encryptVault();
+        finish();*/
     }
 
     @Override
@@ -92,6 +93,9 @@ public class FileExplorerActivity extends AppCompatActivity
         // Handles Menu item clicks
         switch(id)
         {
+            case R.id.action_lock:
+                encryptVault();
+                finish();
             case R.id.action_settings:
                 break;
             case R.id.action_by_name:
@@ -117,6 +121,11 @@ public class FileExplorerActivity extends AppCompatActivity
         // Handles NavigationView item clicks
         switch(id)
         {
+            case R.id.nav_file_vault:
+                Intent intent = new Intent(this, VaultActivity.class);
+                startActivity(intent);
+                finish();
+                break;
             case R.id.nav_file_explorer:
                 break;
             case R.id.nav_settings:
@@ -243,6 +252,18 @@ public class FileExplorerActivity extends AppCompatActivity
                 }
             });
 
+            if (fileLayout.getImageButton().getVisibility() == View.VISIBLE)
+            {
+                fileLayout.getImageButton().setOnClickListener(new View.OnClickListener()
+                {
+                    @Override
+                    public void onClick(View view)
+                    {
+                        moveFileToVaultDirectory(fileLayout, fileLayout.getFile());
+                    }
+                });
+            }
+
             layoutFiles.addView(fileLayout);
         }
     }
@@ -329,7 +350,7 @@ public class FileExplorerActivity extends AppCompatActivity
         }
     }
 
-    private void moveFileToVaultDirectory(File file)
+    private void moveFileToVaultDirectory(FileLayout fileLayout, File file)
     {
         File directory = new File(STORAGE_VAULT);
 
@@ -343,6 +364,10 @@ public class FileExplorerActivity extends AppCompatActivity
 
         if (file.renameTo(to))
         {
+            fileLayout.setVisibility(View.GONE);
+            Toast toast = Toast.makeText(this, file.getName() + " moved to Vault", Toast.LENGTH_SHORT);
+            toast.show();
+
             Log.d(TAG, fileName + " moved to Vault Directory");
         }
         else
