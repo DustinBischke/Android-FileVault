@@ -40,6 +40,17 @@ public class FileAdapter extends RecyclerView.Adapter<FileViewHolder>
             fileViewHolder.fileIcon.setScaleType(ImageView.ScaleType.CENTER_CROP);
             fileViewHolder.fileIcon.setImageBitmap(fileDataList.get(i).getFileIcon());
         }
+
+        fileViewHolder.fileIcon.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                Intent intent = new Intent(context, ViewImageActivity.class);
+                intent.putExtra("FILE_PATH", fileDataList.get(fileViewHolder.getAdapterPosition()).getFilePath());
+                context.startActivity(intent);
+            }
+        });
     }
 
     @Override

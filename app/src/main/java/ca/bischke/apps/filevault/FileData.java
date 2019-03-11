@@ -9,6 +9,7 @@ import java.io.File;
 public class FileData
 {
     private String fileName;
+    private String filePath;
     private Bitmap fileIcon;
 
     private String[] imageFormats = new String[] {".jpg", ".jpeg", ".png", ".gif", ".bmp", ".webp"};
@@ -16,6 +17,7 @@ public class FileData
     public FileData(File file)
     {
         fileName = file.getName();
+        filePath = file.getAbsolutePath();
 
         for (String format : imageFormats)
         {
@@ -31,6 +33,11 @@ public class FileData
     public String getFileName()
     {
         return fileName;
+    }
+
+    public String getFilePath()
+    {
+        return filePath;
     }
 
     public Bitmap getFileIcon()
