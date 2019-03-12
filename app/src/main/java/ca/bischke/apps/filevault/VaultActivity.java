@@ -2,7 +2,6 @@ package ca.bischke.apps.filevault;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Environment;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -18,17 +17,13 @@ import android.view.View;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
 
 public class VaultActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener
 {
+    private FileManager fileManager;
     private Encryption encryption;
     private final String TAG = "FileVault";
-    private final String STORAGE_ROOT = Environment.getExternalStorageDirectory().toString();
-    private final String STORAGE_VAULT = STORAGE_ROOT + File.separator + "FileVault";
     private boolean sortByName = true;
 
     @Override
@@ -62,6 +57,7 @@ public class VaultActivity extends AppCompatActivity
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+        fileManager = new FileManager();
         encryption = new Encryption(this);
 
         runOnUiThread(new Runnable()
@@ -175,70 +171,14 @@ public class VaultActivity extends AppCompatActivity
         }
     }
 
-    private ArrayList<File> getSortedFiles(ArrayList<File> files)
-    {
-        if (sortByName)
-        {
-            return getFilesSortedByName(files);
-        }
-        else
-        {
-            return getFilesSortedByDate(files);
-        }
-    }
-
-    private ArrayList<File> getFilesSortedByName(ArrayList<File> files)
-    {
-        Collections.sort(files, new Comparator<File>()
-        {
-            @Override
-            public int compare(File file1, File file2)
-            {
-                return file1.getName().compareToIgnoreCase(file2.getName());
-            }
-        });
-
-        return files;
-    }
-
-    private ArrayList<File> getFilesSortedByDate(ArrayList<File> files)
-    {
-        Collections.sort(files, new Comparator<File>()
-        {
-            @Override
-            public int compare(File file1, File file2)
-            {
-                long f1 = file1.lastModified();
-                long f2 = file2.lastModified();
-
-                if (f1 > f2)
-                {
-                    return -1;
-                }
-                else if (f1 < f2)
-                {
-                    return 1;
-                }
-                else
-                {
-                    return 0;
-                }
-            }
-        });
-
-        return files;
-    }
-
     private void listFiles()
     {
-        File directory = new File(STORAGE_VAULT);
-        File[] fileArray = directory.listFiles();
-        ArrayList<File> files = new ArrayList<>(Arrays.asList(fileArray));
+        // Get Files in Directory and Sort them
+        File vault = fileManager.getVaultDirectory();
+        ArrayList<File> files = fileManager.getFilesInDirectory(vault);
+        files = fileManager.getSortedFiles(files, sortByName);
 
-        // Sort Files Alphabetically
-        getSortedFiles(files);
-
-        // Setting up Adapter
+        // Set up Adapter
         RecyclerView recyclerView = findViewById(R.id.recycler_view);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 2);
         recyclerView.setLayoutManager(gridLayoutManager);
@@ -268,7 +208,7 @@ public class VaultActivity extends AppCompatActivity
     {
         try
         {
-            File vault = new File(STORAGE_VAULT);
+            File vault = fileManager.getVaultDirectory();
             encryption.encryptDirectory("SHIBA", vault);
         }
         catch (Exception ex)
@@ -281,7 +221,7 @@ public class VaultActivity extends AppCompatActivity
     {
         try
         {
-            File vault = new File(STORAGE_VAULT);
+            File vault = fileManager.getVaultDirectory();
             encryption.decryptDirectory("SHIBA", vault);
         }
         catch (Exception ex)
