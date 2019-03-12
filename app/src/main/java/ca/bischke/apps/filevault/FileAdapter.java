@@ -46,9 +46,18 @@ public class FileAdapter extends RecyclerView.Adapter<FileViewHolder>
             @Override
             public void onClick(View view)
             {
-                Intent intent = new Intent(context, ViewImageActivity.class);
-                intent.putExtra("FILE_PATH", fileDataList.get(fileViewHolder.getAdapterPosition()).getFilePath());
-                context.startActivity(intent);
+                if (fileDataList.get(fileViewHolder.getAdapterPosition()).isImage())
+                {
+                    Intent intent = new Intent(context, ViewImageActivity.class);
+                    intent.putExtra("FILE_PATH", fileDataList.get(fileViewHolder.getAdapterPosition()).getFilePath());
+                    context.startActivity(intent);
+                }
+                else if (fileDataList.get(fileViewHolder.getAdapterPosition()).isVideo())
+                {
+                    Intent intent = new Intent(context, VideoPlayerActivity.class);
+                    intent.putExtra("FILE_PATH", fileDataList.get(fileViewHolder.getAdapterPosition()).getFilePath());
+                    context.startActivity(intent);
+                }
             }
         });
     }
