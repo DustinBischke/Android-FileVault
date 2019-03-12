@@ -1,7 +1,6 @@
 package ca.bischke.apps.filevault;
 
 import android.content.Intent;
-import android.os.Environment;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -15,23 +14,16 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
-import android.widget.Toast;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
 
 public class FileExplorerActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener
 {
-    private Permissions permissions;
+    private FileManager fileManager;
     private Encryption encryption;
     private final String TAG = "FileVault";
-    private final String STORAGE_ROOT = Environment.getExternalStorageDirectory().toString();
-    private final String STORAGE_VAULT = STORAGE_ROOT + File.separator + "FileVault";
-    private String currentDirectory;
     private boolean sortByName = true;
 
     @Override
@@ -39,7 +31,7 @@ public class FileExplorerActivity extends AppCompatActivity
     {
         super.onCreate(savedInstanceState);
 
-        permissions = new Permissions(this);
+        Permissions permissions = new Permissions(this);
 
         // Switch to PermissionsActivity if permissions are not granted
         if (!permissions.hasPermissions())
@@ -65,8 +57,11 @@ public class FileExplorerActivity extends AppCompatActivity
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        createVaultDirectory();
-        listFiles(STORAGE_ROOT);
+        fileManager = new FileManager();
+        fileManager.createVault();
+        listFiles(fileManager.getCurrentDirectory());
+
+        encryption = new Encryption(this);
     }
 
     @Override
@@ -100,11 +95,11 @@ public class FileExplorerActivity extends AppCompatActivity
                 break;
             case R.id.action_by_name:
                 sortByName = true;
-                listFiles(currentDirectory);
+                listFiles(fileManager.getCurrentDirectory());
                 break;
             case R.id.action_by_date:
                 sortByName = false;
-                listFiles(currentDirectory);
+                listFiles(fileManager.getCurrentDirectory());
                 break;
             default:
                 break;
@@ -150,78 +145,24 @@ public class FileExplorerActivity extends AppCompatActivity
         }
         else
         {
-            listFiles(getParentDirectory(currentDirectory));
-        }
-    }
-
-    private ArrayList<File> getSortedFiles(ArrayList<File> files)
-    {
-        if (sortByName)
-        {
-            return getFilesSortedByName(files);
-        }
-        else
-        {
-            return getFilesSortedByDate(files);
-        }
-    }
-
-    private ArrayList<File> getFilesSortedByName(ArrayList<File> files)
-    {
-        Collections.sort(files, new Comparator<File>()
-        {
-            @Override
-            public int compare(File file1, File file2)
+            if (!fileManager.currentDirectoryIsRoot())
             {
-                return file1.getName().compareToIgnoreCase(file2.getName());
+                listFiles(fileManager.getParentDirectory());
             }
-        });
-
-        return files;
+        }
     }
 
-    private ArrayList<File> getFilesSortedByDate(ArrayList<File> files)
+    private void listFiles(File directory)
     {
-        Collections.sort(files, new Comparator<File>()
-        {
-            @Override
-            public int compare(File file1, File file2)
-            {
-                long f1 = file1.lastModified();
-                long f2 = file2.lastModified();
-
-                if (f1 > f2)
-                {
-                    return -1;
-                }
-                else if (f1 < f2)
-                {
-                    return 1;
-                }
-                else
-                {
-                    return 0;
-                }
-            }
-        });
-
-        return files;
-    }
-
-    private void listFiles(String path)
-    {
-        Log.d(TAG, "Listing Files in " + path);
-        currentDirectory = path;
+        Log.d(TAG, "Listing Files in " + directory.getAbsolutePath());
+        fileManager.setCurrentDirectory(directory);
+        displayCurrentDirectory();
         clearLayoutFiles();
         scrollToTop();
-        displayCurrentDirectory();
 
-        File directory = new File(path);
-        File[] fileArray = directory.listFiles();
-        ArrayList<File> files = new ArrayList<>(Arrays.asList(fileArray));
-
-        // Sort Files Alphabetically
-        getSortedFiles(files);
+        // Get Files in Directory and Sort them
+        ArrayList<File> files = fileManager.getFilesInDirectory(directory);
+        files = fileManager.getSortedFiles(files, sortByName);
 
         final LinearLayout layoutFiles = findViewById(R.id.layout_files);
 
@@ -231,7 +172,8 @@ public class FileExplorerActivity extends AppCompatActivity
 
             final File file1 = file;
             final boolean isDirectory = file.isDirectory();
-            final String newPath = path + File.separator + file.getName();
+            String currentPath = fileManager.getCurrentDirectory().getAbsolutePath();
+            final File childDirectory = new File(currentPath + File.separator + file.getName());
 
             fileLayout.setOnClickListener(new View.OnClickListener()
             {
@@ -240,18 +182,17 @@ public class FileExplorerActivity extends AppCompatActivity
                 {
                     if (isDirectory)
                     {
-                        listFiles(newPath);
+                        listFiles(childDirectory);
                     }
                     else
                     {
                         // TODO: CONFIGURE TO ONLY DO THIS IF IT IS AN IMAGE FILE
                         startImageViewActivity(file1);
-
-                        // TODO: Setup Encrypt Button to execute moveFileToVaultDirectory(file1)
                     }
                 }
             });
 
+            // TODO: Setup Encrypt Button to run moveFileToVault()
             if (fileLayout.getImageButton().getVisibility() == View.VISIBLE)
             {
                 fileLayout.getImageButton().setOnClickListener(new View.OnClickListener()
@@ -259,7 +200,7 @@ public class FileExplorerActivity extends AppCompatActivity
                     @Override
                     public void onClick(View view)
                     {
-                        moveFileToVaultDirectory(fileLayout, fileLayout.getFile());
+                        //moveFileToVaultDirectory(fileLayout, fileLayout.getFile());
                     }
                 });
             }
@@ -268,44 +209,15 @@ public class FileExplorerActivity extends AppCompatActivity
         }
     }
 
-    public void startImageViewActivity(File file)
+    private void displayCurrentDirectory()
     {
-        Intent intent = new Intent(this, ViewImageActivity.class);
-        intent.putExtra("FILE_PATH", file.getAbsolutePath());
-        startActivity(intent);
-    }
-
-    private String getParentDirectory(String path)
-    {
-        if (path.equals(STORAGE_ROOT))
+        if (fileManager.currentDirectoryIsRoot())
         {
-            return STORAGE_ROOT;
+            setTitle(getString(R.string.internal_storage));
+            return;
         }
 
-        if (path.length() > 0)
-        {
-            int endIndex = path.lastIndexOf('/');
-
-            if (endIndex != -1)
-            {
-                return path.substring(0, endIndex);
-            }
-        }
-
-        return STORAGE_ROOT;
-    }
-
-    private String getCurrentDirectory()
-    {
-        if (currentDirectory.equals(STORAGE_ROOT))
-        {
-            return getString(R.string.internal_storage);
-        }
-        else
-        {
-            int startIndex = currentDirectory.lastIndexOf('/') + 1;
-            return currentDirectory.substring(startIndex, currentDirectory.length());
-        }
+        setTitle(fileManager.getCurrentDirectory().getName());
     }
 
     private void clearLayoutFiles()
@@ -324,63 +236,18 @@ public class FileExplorerActivity extends AppCompatActivity
         scrollView.scrollTo(0, 0);
     }
 
-    private void displayCurrentDirectory()
+    public void startImageViewActivity(File file)
     {
-        setTitle(getCurrentDirectory());
-    }
-
-    private void createVaultDirectory()
-    {
-        File directory = new File(STORAGE_VAULT);
-
-        if (!directory.exists())
-        {
-            if (directory.mkdirs())
-            {
-                Log.d(TAG, "Vault Directory created");
-            }
-            else
-            {
-                Log.d(TAG, "Vault Directory could not be created");
-            }
-        }
-        else
-        {
-            Log.d(TAG, "Vault Directory already exists");
-        }
-    }
-
-    private void moveFileToVaultDirectory(FileLayout fileLayout, File file)
-    {
-        File directory = new File(STORAGE_VAULT);
-
-        if (!directory.exists())
-        {
-            createVaultDirectory();
-        }
-
-        String fileName = file.getName();
-        File to = new File(directory.toString() + File.separator + fileName);
-
-        if (file.renameTo(to))
-        {
-            fileLayout.setVisibility(View.GONE);
-            Toast toast = Toast.makeText(this, file.getName() + " moved to Vault", Toast.LENGTH_SHORT);
-            toast.show();
-
-            Log.d(TAG, fileName + " moved to Vault Directory");
-        }
-        else
-        {
-            Log.d(TAG, fileName + " could not be moved");
-        }
+        Intent intent = new Intent(this, ViewImageActivity.class);
+        intent.putExtra("FILE_PATH", file.getAbsolutePath());
+        startActivity(intent);
     }
 
     private void encryptVault()
     {
         try
         {
-            File vault = new File(STORAGE_VAULT);
+            File vault = fileManager.getVaultDirectory();
             encryption.encryptDirectory("SHIBA", vault);
         }
         catch (Exception ex)

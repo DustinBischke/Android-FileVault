@@ -43,6 +43,11 @@ public class FileManager
         currentDirectory = directory;
     }
 
+    public boolean currentDirectoryIsRoot()
+    {
+        return currentDirectory.equals(rootDirectory);
+    }
+
     public File getParentDirectory()
     {
         String path = currentDirectory.getAbsolutePath();
