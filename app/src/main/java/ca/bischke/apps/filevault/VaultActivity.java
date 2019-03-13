@@ -2,11 +2,13 @@ package ca.bischke.apps.filevault;
 
 import android.content.ContentValues;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -28,11 +30,13 @@ import java.util.Locale;
 public class VaultActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener
 {
+    private Permissions permissions;
     private FileManager fileManager;
     private Encryption encryption;
     private final String TAG = "FileVault";
     private boolean sortByName = true;
     private Uri cameraImageUri;
+    private final int CAMERA_PERMISSION_CODE = 22;
     private final int REQUEST_IMAGE_CAPTURE = 23;
 
     @Override
@@ -40,10 +44,10 @@ public class VaultActivity extends AppCompatActivity
     {
         super.onCreate(savedInstanceState);
 
-        Permissions permissions = new Permissions(this);
+        permissions = new Permissions(this);
 
         // Switch to PermissionsActivity if permissions are not granted
-        if (!permissions.hasPermissions())
+        if (!permissions.hasStoragePermission())
         {
             Intent intent = new Intent(this, PermissionsActivity.class);
             startActivity(intent);
@@ -106,49 +110,6 @@ public class VaultActivity extends AppCompatActivity
         encryptVault();
     }*/
 
-    public void buttonStartFileExplorer(View view)
-    {
-        startFileExplorer();
-    }
-
-    public void buttonStartCamera(View view)
-    {
-        ContentValues contentValues = new ContentValues();
-        cameraImageUri = getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues);
-
-        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        intent.putExtra(MediaStore.EXTRA_OUTPUT, cameraImageUri);
-        startActivityForResult(intent, REQUEST_IMAGE_CAPTURE);
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data)
-    {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK)
-        {
-            // Get path of captured picture
-            String[] projection = { MediaStore.Images.Media.DATA };
-            Cursor cursor = managedQuery(cameraImageUri, projection, null, null, null);
-            int columnIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-            cursor.moveToFirst();
-            String cameraImagePath = cursor.getString(columnIndex);
-
-            // Set new file name
-            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMdd_HHmss", Locale.getDefault());
-            String date = simpleDateFormat.format(new Date());
-            String fileName = "IMG_" + date + ".jpg";
-
-            // Move picture into Vault
-            File picture = new File(cameraImagePath);
-            fileManager.moveFileToVault(picture, fileName);
-
-            // TODO Optimize adding of file
-            listFiles();
-        }
-    }
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu)
     {
@@ -208,6 +169,50 @@ public class VaultActivity extends AppCompatActivity
     }
 
     @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK)
+        {
+            // Get path of captured picture
+            String[] projection = { MediaStore.Images.Media.DATA };
+            Cursor cursor = managedQuery(cameraImageUri, projection, null, null, null);
+            int columnIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+            cursor.moveToFirst();
+            String cameraImagePath = cursor.getString(columnIndex);
+
+            // Set new file name
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMdd_HHmss", Locale.getDefault());
+            String date = simpleDateFormat.format(new Date());
+            String fileName = "IMG_" + date + ".jpg";
+
+            // Move picture into Vault
+            File picture = new File(cameraImagePath);
+            fileManager.moveFileToVault(picture, fileName);
+
+            // TODO Optimize adding of file
+            listFiles();
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults)
+    {
+        switch (requestCode)
+        {
+            case CAMERA_PERMISSION_CODE:
+            {
+                // If permissions have been granted
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED)
+                {
+                    startCamera();
+                }
+            }
+        }
+    }
+
+    @Override
     public void onBackPressed()
     {
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
@@ -215,6 +220,27 @@ public class VaultActivity extends AppCompatActivity
         if (drawer.isDrawerOpen(GravityCompat.START))
         {
             drawer.closeDrawer(GravityCompat.START);
+        }
+    }
+
+    public void buttonStartFileExplorer(View view)
+    {
+        startFileExplorer();
+    }
+
+    public void buttonStartCamera(View view)
+    {
+        if (AndroidVersion.isM())
+        {
+            if (permissions.hasCameraPermission())
+            {
+                startCamera();
+            }
+            else
+            {
+                // Request the permissions
+                ActivityCompat.requestPermissions(this, permissions.getCameraPermission(), CAMERA_PERMISSION_CODE);
+            }
         }
     }
 
@@ -282,5 +308,15 @@ public class VaultActivity extends AppCompatActivity
         Intent intent = new Intent(this, FileExplorerActivity.class);
         startActivity(intent);
         finish();
+    }
+
+    private void startCamera()
+    {
+        ContentValues contentValues = new ContentValues();
+        cameraImageUri = getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues);
+
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, cameraImageUri);
+        startActivityForResult(intent, REQUEST_IMAGE_CAPTURE);
     }
 }

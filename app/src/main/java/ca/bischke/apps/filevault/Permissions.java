@@ -8,7 +8,9 @@ import android.support.v4.content.ContextCompat;
 public class Permissions
 {
     private Context context;
-    private final String[] permissions = new String[]
+    private final String[] cameraPermission = new String[]
+            { Manifest.permission.CAMERA };
+    private final String[] storagePermission = new String[]
             { Manifest.permission.WRITE_EXTERNAL_STORAGE };
 
     public Permissions(Context context)
@@ -16,14 +18,33 @@ public class Permissions
         this.context = context;
     }
 
-    public String[] getPermissions()
+    public String[] getCameraPermission()
     {
-        return permissions;
+        return cameraPermission;
     }
 
-    public boolean hasPermissions()
+    public String[] getStoragePermission()
     {
-        for (String permission : permissions)
+        return storagePermission;
+    }
+
+    public boolean hasCameraPermission()
+    {
+        for (String permission : cameraPermission)
+        {
+            // Checks if each permission has been granted
+            if (ContextCompat.checkSelfPermission(context, permission) != PackageManager.PERMISSION_GRANTED)
+            {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    public boolean hasStoragePermission()
+    {
+        for (String permission : storagePermission)
         {
             // Checks if each permission has been granted
             if (ContextCompat.checkSelfPermission(context, permission) != PackageManager.PERMISSION_GRANTED)

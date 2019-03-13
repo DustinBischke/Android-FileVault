@@ -1,13 +1,11 @@
 package ca.bischke.apps.filevault;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.ImageView;
 import android.widget.MediaController;
 import android.widget.VideoView;
 
@@ -20,6 +18,17 @@ public class VideoPlayerActivity extends AppCompatActivity
     {
         // Sets Activity Layout
         super.onCreate(savedInstanceState);
+
+        Permissions permissions = new Permissions(this);
+
+        // Switch to PermissionsActivity if permissions are not granted
+        if (!permissions.hasStoragePermission())
+        {
+            Intent intent = new Intent(this, PermissionsActivity.class);
+            startActivity(intent);
+            finish();
+        }
+
         setContentView(R.layout.activity_videoplayer);
 
         // Adds the Toolbar to the Layout

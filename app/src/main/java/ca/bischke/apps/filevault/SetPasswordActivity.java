@@ -17,7 +17,7 @@ public class SetPasswordActivity extends AppCompatActivity
         Permissions permissions = new Permissions(this);
 
         // Switch to PermissionsActivity if permissions are not granted
-        if (!permissions.hasPermissions())
+        if (!permissions.hasStoragePermission())
         {
             Intent intent = new Intent(this, PermissionsActivity.class);
             startActivity(intent);

@@ -20,7 +20,7 @@ public class PermissionsActivity extends AppCompatActivity
         permissions = new Permissions(this);
 
         // Switch to FileExplorer if permissions already granted
-        if (permissions.hasPermissions())
+        if (permissions.hasStoragePermission())
         {
             startWelcomeActivity();
             finish();
@@ -50,10 +50,10 @@ public class PermissionsActivity extends AppCompatActivity
     {
         if (AndroidVersion.isM())
         {
-            if (!permissions.hasPermissions())
+            if (!permissions.hasStoragePermission())
             {
                 // Request the permissions
-                ActivityCompat.requestPermissions(this, permissions.getPermissions(), STORAGE_PERMISSION_CODE);
+                ActivityCompat.requestPermissions(this, permissions.getStoragePermission(), STORAGE_PERMISSION_CODE);
             }
         }
     }

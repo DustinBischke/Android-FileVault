@@ -18,6 +18,17 @@ public class ViewImageActivity extends AppCompatActivity
     {
         // Sets Activity Layout
         super.onCreate(savedInstanceState);
+
+        Permissions permissions = new Permissions(this);
+
+        // Switch to PermissionsActivity if permissions are not granted
+        if (!permissions.hasStoragePermission())
+        {
+            Intent intent = new Intent(this, PermissionsActivity.class);
+            startActivity(intent);
+            finish();
+        }
+
         setContentView(R.layout.activity_viewimage);
 
         // Adds the Toolbar to the Layout
