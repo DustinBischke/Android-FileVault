@@ -161,12 +161,17 @@ public class FileManager
 
     public void moveFileToVault(File file)
     {
+        String fileName = file.getName();
+        moveFileToVault(file, fileName);
+    }
+
+    public void moveFileToVault(File file, String fileName)
+    {
         if (!vaultExists())
         {
             createVault();
         }
 
-        String fileName = file.getName();
         File to = new File(vaultPath + File.separator + fileName);
 
         if (file.renameTo(to))

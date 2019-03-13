@@ -1,7 +1,11 @@
 package ca.bischke.apps.filevault;
 
+import android.content.ContentValues;
 import android.content.Intent;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -16,7 +20,10 @@ import android.view.MenuItem;
 import android.view.View;
 
 import java.io.File;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Locale;
 
 public class VaultActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener
@@ -25,6 +32,8 @@ public class VaultActivity extends AppCompatActivity
     private Encryption encryption;
     private final String TAG = "FileVault";
     private boolean sortByName = true;
+    private Uri cameraImageUri;
+    private final int REQUEST_IMAGE_CAPTURE = 23;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -100,6 +109,44 @@ public class VaultActivity extends AppCompatActivity
     public void buttonStartFileExplorer(View view)
     {
         startFileExplorer();
+    }
+
+    public void buttonStartCamera(View view)
+    {
+        ContentValues contentValues = new ContentValues();
+        cameraImageUri = getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues);
+
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, cameraImageUri);
+        startActivityForResult(intent, REQUEST_IMAGE_CAPTURE);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK)
+        {
+            // Get path of captured picture
+            String[] projection = { MediaStore.Images.Media.DATA };
+            Cursor cursor = managedQuery(cameraImageUri, projection, null, null, null);
+            int columnIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+            cursor.moveToFirst();
+            String cameraImagePath = cursor.getString(columnIndex);
+
+            // Set new file name
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMdd_HHmss", Locale.getDefault());
+            String date = simpleDateFormat.format(new Date());
+            String fileName = "IMG_" + date + ".jpg";
+
+            // Move picture into Vault
+            File picture = new File(cameraImagePath);
+            fileManager.moveFileToVault(picture, fileName);
+
+            // TODO Optimize adding of file
+            listFiles();
+        }
     }
 
     @Override

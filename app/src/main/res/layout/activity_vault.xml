@@ -41,17 +41,43 @@
 
         </android.support.v4.widget.DrawerLayout>
 
-        <android.support.design.widget.FloatingActionButton
-            android:id="@+id/floating_action_button"
-            android:layout_width="match_parent"
+        <LinearLayout
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="end|bottom"
-            android:layout_margin="16dp"
-            android:focusable="true"
-            android:clickable="true"
-            android:onClick="buttonStartFileExplorer"
-            app:backgroundTint="@color/colorPrimary"
-            app:srcCompat="@drawable/ic_add_24dp" />
+            android:orientation="vertical"
+            android:layout_gravity="end|bottom">
+
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/fab_camera"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="16dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:onClick="buttonStartCamera"
+                app:backgroundTint="@color/colorPrimary"
+                app:srcCompat="@drawable/ic_camera_24dp" />
+
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/fab_importfile"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="16dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:onClick="buttonStartFileExplorer"
+                app:backgroundTint="@color/colorPrimary"
+                app:srcCompat="@drawable/ic_add_24dp" />
+        </LinearLayout>
 
     </android.support.design.widget.CoordinatorLayout>
 
