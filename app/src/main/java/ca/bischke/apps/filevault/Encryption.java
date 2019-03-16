@@ -94,7 +94,7 @@ public class Encryption
         return secretKey;
     }
 
-    private void doCrypto(int cipherMode, String password, File inputFile, File outputFile)
+    private void encodeFile(int cipherMode, String password, File inputFile, File outputFile)
             throws GeneralSecurityException, IOException
     {
         SecretKey secretKey = getSecretKey(password, getSalt());
@@ -118,76 +118,56 @@ public class Encryption
     public void encryptFile(String password, File inputFile, File outputFile)
             throws GeneralSecurityException, IOException
     {
-        doCrypto(Cipher.ENCRYPT_MODE, password, inputFile, outputFile);
+        encodeFile(Cipher.ENCRYPT_MODE, password, inputFile, outputFile);
     }
 
     public void decryptFile(String password, File inputFile, File outputFile)
             throws GeneralSecurityException, IOException
     {
-        doCrypto(Cipher.DECRYPT_MODE, password, inputFile, outputFile);
+        encodeFile(Cipher.DECRYPT_MODE, password, inputFile, outputFile);
+    }
+
+    public void encodeDirectory(int cipherMode, String password, File directory)
+            throws GeneralSecurityException, IOException
+    {
+        if (directory.isDirectory())
+        {
+            if (directory.listFiles().length > 0)
+            {
+                SecretKey secretKey = getSecretKey(password, getSalt());
+                String algorithm = "AES/CBC/PKCS5Padding";
+                Cipher cipher = Cipher.getInstance(algorithm);
+                cipher.init(cipherMode, secretKey, getIV());
+
+                File[] fileArray = directory.listFiles();
+
+                for (File file : fileArray)
+                {
+                    FileInputStream inputStream = new FileInputStream(file);
+                    byte[] inputBytes = new byte[(int) file.length()];
+                    inputStream.read(inputBytes);
+
+                    byte[] outputBytes = cipher.doFinal(inputBytes);
+
+                    FileOutputStream outputStream = new FileOutputStream(file);
+                    outputStream.write(outputBytes);
+
+                    inputStream.close();
+                    outputStream.close();
+                }
+            }
+        }
     }
 
     public void encryptDirectory(String password, File directory)
             throws GeneralSecurityException, IOException
     {
-        if (directory.isDirectory())
-        {
-            if (directory.listFiles().length > 0)
-            {
-                SecretKey secretKey = getSecretKey(password, getSalt());
-                String algorithm = "AES/CBC/PKCS5Padding";
-                Cipher cipher = Cipher.getInstance(algorithm);
-                cipher.init(Cipher.ENCRYPT_MODE, secretKey, getIV());
-
-                File[] fileArray = directory.listFiles();
-
-                for (File file : fileArray)
-                {
-                    FileInputStream inputStream = new FileInputStream(file);
-                    byte[] inputBytes = new byte[(int) file.length()];
-                    inputStream.read(inputBytes);
-
-                    byte[] outputBytes = cipher.doFinal(inputBytes);
-
-                    FileOutputStream outputStream = new FileOutputStream(file);
-                    outputStream.write(outputBytes);
-
-                    inputStream.close();
-                    outputStream.close();
-                }
-            }
-        }
+        encodeDirectory(Cipher.ENCRYPT_MODE, password, directory);
     }
 
     public void decryptDirectory(String password, File directory)
             throws GeneralSecurityException, IOException
     {
-        if (directory.isDirectory())
-        {
-            if (directory.listFiles().length > 0)
-            {
-                SecretKey secretKey = getSecretKey(password, getSalt());
-                String algorithm = "AES/CBC/PKCS5Padding";
-                Cipher cipher = Cipher.getInstance(algorithm);
-                cipher.init(Cipher.DECRYPT_MODE, secretKey, getIV());
-
-                File[] fileArray = directory.listFiles();
-
-                for (File file : fileArray)
-                {
-                    FileInputStream inputStream = new FileInputStream(file);
-                    byte[] inputBytes = new byte[(int) file.length()];
-                    inputStream.read(inputBytes);
-
-                    byte[] outputBytes = cipher.doFinal(inputBytes);
-
-                    FileOutputStream outputStream = new FileOutputStream(file);
-                    outputStream.write(outputBytes);
-
-                    inputStream.close();
-                    outputStream.close();
-                }
-            }
-        }
+        encodeDirectory(Cipher.DECRYPT_MODE, password, directory);
     }
 }
