@@ -33,29 +33,31 @@ public class FileAdapter extends RecyclerView.Adapter<FileViewHolder>
     @Override
     public void onBindViewHolder(@NonNull final FileViewHolder fileViewHolder, int i)
     {
-        fileViewHolder.fileName.setText(fileDataList.get(i).getFileName());
+        final FileData fileData = fileDataList.get(i);
+
+        fileViewHolder.getTextFileName().setText(fileData.getFileName());
 
         if (fileDataList.get(i).getFileIcon() != null)
         {
-            fileViewHolder.fileIcon.setScaleType(ImageView.ScaleType.CENTER_CROP);
-            fileViewHolder.fileIcon.setImageBitmap(fileDataList.get(i).getFileIcon());
+            fileViewHolder.getImageFileIcon().setScaleType(ImageView.ScaleType.CENTER_CROP);
+            fileViewHolder.getImageFileIcon().setImageBitmap(fileDataList.get(i).getFileIcon());
         }
 
-        fileViewHolder.fileIcon.setOnClickListener(new View.OnClickListener()
+        fileViewHolder.getImageFileIcon().setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View view)
             {
-                if (fileDataList.get(fileViewHolder.getAdapterPosition()).isImage())
+                if (fileData.isImage())
                 {
                     Intent intent = new Intent(context, ViewImageActivity.class);
-                    intent.putExtra("FILE_PATH", fileDataList.get(fileViewHolder.getAdapterPosition()).getFilePath());
+                    intent.putExtra("FILE_PATH", fileData.getFilePath());
                     context.startActivity(intent);
                 }
-                else if (fileDataList.get(fileViewHolder.getAdapterPosition()).isVideo())
+                else if (fileData.isVideo())
                 {
                     Intent intent = new Intent(context, VideoPlayerActivity.class);
-                    intent.putExtra("FILE_PATH", fileDataList.get(fileViewHolder.getAdapterPosition()).getFilePath());
+                    intent.putExtra("FILE_PATH", fileData.getFilePath());
                     context.startActivity(intent);
                 }
             }

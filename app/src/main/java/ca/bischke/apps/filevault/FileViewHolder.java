@@ -7,14 +7,24 @@ import android.widget.TextView;
 
 public class FileViewHolder extends RecyclerView.ViewHolder
 {
-    TextView fileName;
-    ImageView fileIcon;
+    TextView textFileName;
+    ImageView imageFileIcon;
 
     public FileViewHolder(View view)
     {
         super(view);
 
-        fileName = view.findViewById(R.id.text_file_name);
-        fileIcon = view.findViewById(R.id.image_file_icon);
+        textFileName = view.findViewById(R.id.text_file_name);
+        imageFileIcon = view.findViewById(R.id.image_file_icon);
+    }
+
+    public TextView getTextFileName()
+    {
+        return textFileName;
+    }
+
+    public ImageView getImageFileIcon()
+    {
+        return imageFileIcon;
     }
 }
