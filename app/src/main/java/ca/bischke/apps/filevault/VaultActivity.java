@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.design.widget.NavigationView;
@@ -30,14 +31,17 @@ import java.util.Locale;
 public class VaultActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener
 {
+    private final String TAG = "FileVault";
     private Permissions permissions;
     private FileManager fileManager;
     private Encryption encryption;
-    private final String TAG = "FileVault";
+    private RecyclerView recyclerView;
+    private ArrayList<FileData> fileDataList;
+    private FileAdapter fileAdapter;
     private boolean sortByName = true;
-    private Uri cameraImageUri;
     private final int CAMERA_PERMISSION_CODE = 22;
     private final int REQUEST_IMAGE_CAPTURE = 23;
+    private Uri cameraImageUri;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -57,34 +61,46 @@ public class VaultActivity extends AppCompatActivity
         // Sets Activity Layout
         setContentView(R.layout.activity_vault);
 
-        // Adds the Toolbar to the Layout
+        // Sets Toolbar
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        // Sets Drawer Layout
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
+        // Sets Navigation View
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
         fileManager = new FileManager();
         encryption = new Encryption(this);
 
-        runOnUiThread(new Runnable()
-        {
-            @Override
-            public void run()
-            {
-                //decryptVault();
-                listFiles();
-            }
-        });
+        // Setup Recycler View
+        recyclerView = findViewById(R.id.recycler_view);
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 2);
+        recyclerView.setLayoutManager(gridLayoutManager);
 
-        //decryptVault();
-        //listFiles();
+        // Add Margin between all RecyclerView Items
+        GridMarginDecoration itemDecoration = new GridMarginDecoration(this, R.dimen.grid_margin);
+        recyclerView.addItemDecoration(itemDecoration);
+
+        // Recycler View Caching
+        //recyclerView.setHasFixedSize(true);
+        recyclerView.setItemViewCacheSize(100);
+        recyclerView.setDrawingCacheEnabled(true);
+        recyclerView.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
+
+        // Setup File Adapter
+        fileDataList = new ArrayList<>();
+        fileAdapter = new FileAdapter(this, fileDataList);
+        fileAdapter.setHasStableIds(true);
+        recyclerView.setAdapter(fileAdapter);
+
+        listFiles();
     }
 
     /*@Override
@@ -178,9 +194,9 @@ public class VaultActivity extends AppCompatActivity
             // Get path of captured picture
             String[] projection = { MediaStore.Images.Media.DATA };
             Cursor cursor = managedQuery(cameraImageUri, projection, null, null, null);
-            int columnIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+            int dataIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
             cursor.moveToFirst();
-            String cameraImagePath = cursor.getString(columnIndex);
+            String cameraImagePath = cursor.getString(dataIndex);
 
             // Set new file name
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMdd_HHmss", Locale.getDefault());
@@ -188,11 +204,10 @@ public class VaultActivity extends AppCompatActivity
             String fileName = "IMG_" + date + ".jpg";
 
             // Move picture into Vault
-            File picture = new File(cameraImagePath);
-            fileManager.moveFileToVault(picture, fileName);
+            File file = new File(cameraImagePath);
+            fileManager.moveFileToVault(file, fileName);
 
-            // TODO Optimize adding of file
-            listFiles();
+            displayFile(file);
         }
     }
 
@@ -246,35 +261,18 @@ public class VaultActivity extends AppCompatActivity
 
     private void listFiles()
     {
-        // Get Files in Directory and Sort them
         File vault = fileManager.getVaultDirectory();
-        ArrayList<File> files = fileManager.getFilesInDirectory(vault);
-        files = fileManager.getSortedFiles(files, sortByName);
-
-        // Set up Adapter
-        RecyclerView recyclerView = findViewById(R.id.recycler_view);
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 2);
-        recyclerView.setLayoutManager(gridLayoutManager);
-
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setItemViewCacheSize(12);
-        recyclerView.setDrawingCacheEnabled(true);
-        recyclerView.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
-
-        // Add margin between all RecyclerView items
-        GridMarginDecoration itemDecoration = new GridMarginDecoration(this, R.dimen.grid_margin);
-        recyclerView.addItemDecoration(itemDecoration);
-
-        ArrayList<FileData> fileDataList = new ArrayList<>();
+        ArrayList<File> files = fileManager.getSortedFiles(fileManager.getFilesInDirectory(vault), sortByName);
 
         for (File file : files)
         {
-            fileDataList.add(new FileData(file));
+            displayFile(file);
         }
+    }
 
-        FileAdapter fileAdapter = new FileAdapter(this, fileDataList);
-        fileAdapter.setHasStableIds(true);
-        recyclerView.setAdapter(fileAdapter);
+    private void displayFile(File file)
+    {
+        new FileAsyncTask(file).execute();
     }
 
     private void encryptVault()
@@ -318,5 +316,29 @@ public class VaultActivity extends AppCompatActivity
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         intent.putExtra(MediaStore.EXTRA_OUTPUT, cameraImageUri);
         startActivityForResult(intent, REQUEST_IMAGE_CAPTURE);
+    }
+
+    private class FileAsyncTask extends AsyncTask<Void, Void, Void>
+    {
+        File file;
+
+        FileAsyncTask(File file)
+        {
+            this.file = file;
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids)
+        {
+            fileDataList.add(new FileData(file));
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid)
+        {
+            fileAdapter.notifyDataSetChanged();
+        }
     }
 }
