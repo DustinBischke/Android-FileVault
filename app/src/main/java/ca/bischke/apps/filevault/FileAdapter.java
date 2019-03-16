@@ -15,11 +15,13 @@ public class FileAdapter extends RecyclerView.Adapter<FileViewHolder>
 {
     private Context context;
     private List<FileData> fileDataList;
+    private FileGridListener fileGridListener;
 
-    public FileAdapter(Context context, List<FileData> fileDataList)
+    public FileAdapter(Context context, List<FileData> fileDataList, FileGridListener fileGridListener)
     {
         this.context = context;
         this.fileDataList = fileDataList;
+        this.fileGridListener = fileGridListener;
     }
 
     @NonNull
@@ -27,7 +29,7 @@ public class FileAdapter extends RecyclerView.Adapter<FileViewHolder>
     public FileViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i)
     {
         View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.file_grid, viewGroup, false);
-        return new FileViewHolder(view);
+        return new FileViewHolder(view, fileGridListener);
     }
 
     @Override
@@ -42,31 +44,16 @@ public class FileAdapter extends RecyclerView.Adapter<FileViewHolder>
             fileViewHolder.getImageFileIcon().setScaleType(ImageView.ScaleType.CENTER_CROP);
             fileViewHolder.getImageFileIcon().setImageBitmap(fileDataList.get(i).getFileIcon());
         }
-
-        fileViewHolder.getImageFileIcon().setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View view)
-            {
-                if (fileData.isImage())
-                {
-                    Intent intent = new Intent(context, ImageViewerActivity.class);
-                    intent.putExtra("FILE_PATH", fileData.getFilePath());
-                    context.startActivity(intent);
-                }
-                else if (fileData.isVideo())
-                {
-                    Intent intent = new Intent(context, VideoPlayerActivity.class);
-                    intent.putExtra("FILE_PATH", fileData.getFilePath());
-                    context.startActivity(intent);
-                }
-            }
-        });
     }
 
     @Override
     public int getItemCount()
     {
         return fileDataList.size();
+    }
+
+    public FileData getDataFromPosition(int position)
+    {
+        return fileDataList.get(position);
     }
 }

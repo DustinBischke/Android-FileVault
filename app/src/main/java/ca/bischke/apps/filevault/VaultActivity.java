@@ -29,7 +29,7 @@ import java.util.Date;
 import java.util.Locale;
 
 public class VaultActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener
+        implements NavigationView.OnNavigationItemSelectedListener, FileGridListener
 {
     private final String TAG = "FileVault";
     private Permissions permissions;
@@ -97,7 +97,7 @@ public class VaultActivity extends AppCompatActivity
 
         // Setup File Adapter
         fileDataList = new ArrayList<>();
-        fileAdapter = new FileAdapter(this, fileDataList);
+        fileAdapter = new FileAdapter(this, fileDataList, this);
         fileAdapter.setHasStableIds(true);
         recyclerView.setAdapter(fileAdapter);
 
@@ -317,6 +317,26 @@ public class VaultActivity extends AppCompatActivity
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         intent.putExtra(MediaStore.EXTRA_OUTPUT, cameraImageUri);
         startActivityForResult(intent, REQUEST_IMAGE_CAPTURE);
+    }
+
+    @Override
+    public void onFileClick(int position)
+    {
+        FileData fileData = fileAdapter.getDataFromPosition(position);
+        String filePath = fileData.getFilePath();
+
+        if (fileData.isImage())
+        {
+            Intent intent = new Intent(this, ImageViewerActivity.class);
+            intent.putExtra("FILE_PATH", filePath);
+            startActivity(intent);
+        }
+        else if (fileData.isVideo())
+        {
+            Intent intent = new Intent(this, VideoPlayerActivity.class);
+            intent.putExtra("FILE_PATH", filePath);
+            startActivity(intent);
+        }
     }
 
     private class FileAsyncTask extends AsyncTask<Void, Void, Void>
