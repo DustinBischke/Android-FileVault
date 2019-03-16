@@ -35,7 +35,7 @@ public class LockScreenActivity extends AppCompatActivity
         }
 
         // Sets Activity Layout
-        setContentView(R.layout.activity_lockscreen);
+        setContentView(R.layout.activity_lock_screen);
     }
 
     public void buttonUnlock(View view)

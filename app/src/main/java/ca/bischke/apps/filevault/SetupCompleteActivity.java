@@ -23,7 +23,7 @@ public class SetupCompleteActivity extends AppCompatActivity
         }
 
         // Sets Activity Layout
-        setContentView(R.layout.activity_setupcomplete);
+        setContentView(R.layout.activity_setup_complete);
     }
 
     public void buttonContinue(View view)

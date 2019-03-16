@@ -29,7 +29,7 @@ public class ImageViewerActivity extends AppCompatActivity
             finish();
         }
 
-        setContentView(R.layout.activity_imageviewer);
+        setContentView(R.layout.activity_image_viewer);
 
         // Adds the Toolbar to the Layout
         Toolbar toolbar = findViewById(R.id.toolbar);

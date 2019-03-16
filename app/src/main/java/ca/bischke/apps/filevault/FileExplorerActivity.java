@@ -42,7 +42,7 @@ public class FileExplorerActivity extends AppCompatActivity
         }
 
         // Sets Activity Layout
-        setContentView(R.layout.activity_fileexplorer);
+        setContentView(R.layout.activity_file_explorer);
 
         // Adds the Toolbar to the Layout
         Toolbar toolbar = findViewById(R.id.toolbar);

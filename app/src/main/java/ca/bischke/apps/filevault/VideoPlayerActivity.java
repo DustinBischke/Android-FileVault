@@ -29,7 +29,7 @@ public class VideoPlayerActivity extends AppCompatActivity
             finish();
         }
 
-        setContentView(R.layout.activity_videoplayer);
+        setContentView(R.layout.activity_video_player);
 
         // Adds the Toolbar to the Layout
         Toolbar toolbar = findViewById(R.id.toolbar);

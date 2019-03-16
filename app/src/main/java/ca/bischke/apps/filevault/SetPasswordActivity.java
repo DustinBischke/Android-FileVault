@@ -25,7 +25,7 @@ public class SetPasswordActivity extends AppCompatActivity
         }
 
         // Sets Activity Layout
-        setContentView(R.layout.activity_setpassword);
+        setContentView(R.layout.activity_set_password);
     }
 
     public void buttonSetPassword(View view)
