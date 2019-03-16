@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -8,24 +9,16 @@
 
     <ImageView
         android:id="@+id/image_file_icon"
-        android:layout_width="match_parent"
-        android:layout_height="150dp"
-        android:adjustViewBounds="true"
-        android:scaleType="centerInside"
+        style="@style/ImageFileGridIcon"
         app:srcCompat="@drawable/ic_file_72dp" />
 
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="35dp"
-        android:background="@color/colorFileGrid"
-        android:gravity="center_vertical|center_horizontal"
-        android:orientation="horizontal"
-        android:paddingLeft="8dp"
-        android:paddingRight="8dp">
+        android:id="@+id/layout_text_file_name"
+        style="@style/LayoutFileGridName">
 
         <TextView
             android:id="@+id/text_file_name"
-            style="@style/TextFileGrid"
+            style="@style/TextFileGridName"
             android:text="@string/file_name" />
 
     </LinearLayout>

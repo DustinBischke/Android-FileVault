@@ -27,11 +27,7 @@
 
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/recycler_view"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginLeft="@dimen/grid_margin"
-                    android:layout_marginRight="@dimen/grid_margin"
-                    android:scrollbars="vertical" />
+                    style="@style/RecyclerView" />
 
             </LinearLayout>
 
@@ -42,43 +38,23 @@
         </android.support.v4.widget.DrawerLayout>
 
         <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_gravity="end|bottom">
+            android:id="@+id/layout_fab"
+            style="@style/LayoutFloatingActionButtons">
 
             <android.support.design.widget.FloatingActionButton
                 android:id="@+id/fab_camera"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="16dp"
-                android:layout_marginStart="16dp"
-                android:layout_marginRight="16dp"
-                android:layout_marginEnd="16dp"
-                android:layout_marginTop="16dp"
-                android:layout_marginBottom="16dp"
-                android:clickable="true"
-                android:focusable="true"
+                style="@style/FloatingActionButton"
                 android:onClick="buttonStartCamera"
                 app:backgroundTint="@color/colorPrimary"
                 app:srcCompat="@drawable/ic_camera_24dp" />
 
             <android.support.design.widget.FloatingActionButton
-                android:id="@+id/fab_importfile"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="16dp"
-                android:layout_marginStart="16dp"
-                android:layout_marginRight="16dp"
-                android:layout_marginEnd="16dp"
-                android:layout_marginBottom="16dp"
-                android:clickable="true"
-                android:focusable="true"
+                android:id="@+id/fab_add_file"
+                style="@style/FloatingActionButton"
                 android:onClick="buttonStartFileExplorer"
                 app:backgroundTint="@color/colorPrimary"
                 app:srcCompat="@drawable/ic_add_24dp" />
+
         </LinearLayout>
-
     </android.support.design.widget.CoordinatorLayout>
-
 </android.support.constraint.ConstraintLayout>

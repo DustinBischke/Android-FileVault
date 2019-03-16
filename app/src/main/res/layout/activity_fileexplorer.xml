@@ -29,7 +29,6 @@
                     style="@style/LayoutScreen" />
 
             </ScrollView>
-
         </LinearLayout>
 
         <include
@@ -37,5 +36,4 @@
             layout="@layout/nav_view_main" />
 
     </android.support.v4.widget.DrawerLayout>
-
 </android.support.constraint.ConstraintLayout>

@@ -11,6 +11,7 @@
     <string name="enter_password">Enter your password</string>
     <string name="incorrect_password">Incorrect password</string>
     <string name="unlock">Unlock</string>
+    <string name="decrypting">Decrypting Files…</string>
     <string name="permissions_title">FileVault needs access to your file storage</string>
     <string name="permissions_description">This allows FileVault to access and encrypt your photos, videos, and personal files</string>
     <string name="grant_access">Grant Access</string>

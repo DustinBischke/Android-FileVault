@@ -9,51 +9,41 @@
 
     <LinearLayout
         android:id="@+id/layout_lockscreen"
-        style="@style/LayoutFullColor">
+        style="@style/LayoutScreenColor">
 
-        <LinearLayout
+        <ImageView
+            android:id="@+id/image_lock"
+            style="@style/ImageLock"
+            app:srcCompat="@drawable/ic_lock_256dp" />
+
+        <Space
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingLeft="32dp"
-            android:paddingRight="32dp">
+            android:layout_height="48dp" />
 
-            <ImageView
-                android:id="@+id/image_lock"
-                style="@style/ImageLock"
-                app:srcCompat="@drawable/ic_lock_256dp" />
+        <TextView
+            android:id="@+id/text_enter_password"
+            style="@style/TextLargeWhite"
+            android:text="@string/enter_password" />
 
-            <Space
-                android:layout_width="match_parent"
-                android:layout_height="48dp" />
+        <EditText
+            android:id="@+id/text_password"
+            style="@style/EditTextPassword" />
 
-            <TextView
-                android:id="@+id/text_enter_password"
-                style="@style/TextLargeWhite"
-                android:text="@string/enter_password" />
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="24dp" />
 
-            <EditText
-                android:id="@+id/text_password"
-                style="@style/EditTextPassword"
-                android:inputType="textPassword" />
+        <Button
+            android:id="@+id/button"
+            style="@style/ButtonWhite"
+            android:onClick="buttonUnlock"
+            android:text="@string/unlock" />
 
-            <Space
-                android:layout_width="match_parent"
-                android:layout_height="24dp" />
-
-            <Button
-                android:id="@+id/button"
-                style="@style/ButtonWhite"
-                android:onClick="buttonUnlock"
-                android:text="@string/unlock" />
-
-        </LinearLayout>
     </LinearLayout>
 
     <LinearLayout
         android:id="@+id/layout_decrypting"
-        style="@style/LayoutFullColor"
-        android:clickable="true"
+        style="@style/LayoutDecrypting"
         android:visibility="gone">
 
         <ImageView
@@ -68,7 +58,7 @@
         <TextView
             android:id="@+id/text_decrypting"
             style="@style/TextLargeWhite"
-            android:text="Decrypting Files..." />
+            android:text="@string/decrypting" />
 
     </LinearLayout>
 </android.support.constraint.ConstraintLayout>

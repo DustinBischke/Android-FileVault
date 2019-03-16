@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -15,7 +16,7 @@
 
             <ImageView
                 android:id="@+id/image_file_icon"
-                style="@style/FileIcon"
+                style="@style/ImageFileListIcon"
                 app:srcCompat="@drawable/ic_file_24dp" />
 
             <LinearLayout
@@ -24,7 +25,7 @@
 
                 <TextView
                     android:id="@+id/text_file_name"
-                    style="@style/TextFileName"
+                    style="@style/TextFileListName"
                     android:text="@string/file_name" />
 
                 <LinearLayout
@@ -33,15 +34,15 @@
 
                     <TextView
                         android:id="@+id/text_file_date"
-                        style="@style/TextFileSubtext"
+                        style="@style/TextFileListSubtext"
                         android:text="@string/file_date" />
 
                     <TextView
                         android:id="@+id/text_file_size"
-                        style="@style/TextFileSubtextRight"
+                        style="@style/TextFileListSubtextRight"
                         android:text="@string/file_size" />
-                </LinearLayout>
 
+                </LinearLayout>
             </LinearLayout>
 
             <ImageButton

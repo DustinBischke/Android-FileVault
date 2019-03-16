@@ -9,44 +9,36 @@
 
     <LinearLayout
         android:id="@+id/layout_permissions"
-        style="@style/LayoutFullColor">
+        style="@style/LayoutScreenColor">
 
-        <LinearLayout
+        <ImageView
+            android:id="@+id/image_lock"
+            style="@style/ImageLock"
+            app:srcCompat="@drawable/ic_lock_256dp" />
+
+        <Space
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingLeft="32dp"
-            android:paddingRight="32dp">
+            android:layout_height="48dp" />
 
-            <ImageView
-                android:id="@+id/image_lock"
-                style="@style/ImageLock"
-                app:srcCompat="@drawable/ic_lock_256dp" />
+        <TextView
+            android:id="@+id/text_welcome_title"
+            style="@style/TextLargeWhite"
+            android:text="@string/welcome_title" />
 
-            <Space
-                android:layout_width="match_parent"
-                android:layout_height="48dp" />
+        <TextView
+            android:id="@+id/text_welcome_description"
+            style="@style/TextSmallLight"
+            android:text="@string/welcome_description" />
 
-            <TextView
-                android:id="@+id/text_welcome_title"
-                style="@style/TextLargeWhite"
-                android:text="@string/welcome_title" />
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="48dp" />
 
-            <TextView
-                android:id="@+id/text_welcome_description"
-                style="@style/TextSmallLight"
-                android:text="@string/welcome_description" />
+        <Button
+            android:id="@+id/button_start"
+            style="@style/ButtonWhite"
+            android:onClick="buttonStart"
+            android:text="@string/welcome_start" />
 
-            <Space
-                android:layout_width="match_parent"
-                android:layout_height="48dp" />
-
-            <Button
-                android:id="@+id/button_start"
-                style="@style/ButtonWhite"
-                android:onClick="buttonStart"
-                android:text="@string/welcome_start" />
-
-        </LinearLayout>
     </LinearLayout>
 </android.support.constraint.ConstraintLayout>

@@ -2,8 +2,10 @@
 <android.support.constraint.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    tools:context=".VideoPlayerActivity">
 
     <LinearLayout
         android:id="@+id/layout_screen"
@@ -15,9 +17,7 @@
 
         <VideoView
             android:id="@+id/videoview"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_gravity="center" />
+            style="@style/VideoView" />
 
     </LinearLayout>
 </android.support.constraint.ConstraintLayout>
