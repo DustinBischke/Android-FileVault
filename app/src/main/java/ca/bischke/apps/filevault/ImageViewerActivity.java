@@ -11,7 +11,7 @@ import android.widget.ImageView;
 
 import java.io.File;
 
-public class ViewImageActivity extends AppCompatActivity
+public class ImageViewerActivity extends AppCompatActivity
 {
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -29,7 +29,7 @@ public class ViewImageActivity extends AppCompatActivity
             finish();
         }
 
-        setContentView(R.layout.activity_viewimage);
+        setContentView(R.layout.activity_imageviewer);
 
         // Adds the Toolbar to the Layout
         Toolbar toolbar = findViewById(R.id.toolbar);

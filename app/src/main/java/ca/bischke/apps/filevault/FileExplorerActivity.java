@@ -152,6 +152,7 @@ public class FileExplorerActivity extends AppCompatActivity
         }
     }
 
+    // TODO: Setup Adapter
     private void listFiles(File directory)
     {
         Log.d(TAG, "Listing Files in " + directory.getAbsolutePath());
@@ -187,7 +188,7 @@ public class FileExplorerActivity extends AppCompatActivity
                     else
                     {
                         // TODO: CONFIGURE TO ONLY DO THIS IF IT IS AN IMAGE FILE
-                        startImageViewActivity(file1);
+                        startImageViewerActivity(file1);
                     }
                 }
             });
@@ -236,9 +237,9 @@ public class FileExplorerActivity extends AppCompatActivity
         scrollView.scrollTo(0, 0);
     }
 
-    public void startImageViewActivity(File file)
+    public void startImageViewerActivity(File file)
     {
-        Intent intent = new Intent(this, ViewImageActivity.class);
+        Intent intent = new Intent(this, ImageViewerActivity.class);
         intent.putExtra("FILE_PATH", file.getAbsolutePath());
         startActivity(intent);
     }

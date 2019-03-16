@@ -50,7 +50,7 @@ public class FileAdapter extends RecyclerView.Adapter<FileViewHolder>
             {
                 if (fileData.isImage())
                 {
-                    Intent intent = new Intent(context, ViewImageActivity.class);
+                    Intent intent = new Intent(context, ImageViewerActivity.class);
                     intent.putExtra("FILE_PATH", fileData.getFilePath());
                     context.startActivity(intent);
                 }

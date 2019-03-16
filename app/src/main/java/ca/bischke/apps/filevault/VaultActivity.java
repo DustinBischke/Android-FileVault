@@ -79,6 +79,7 @@ public class VaultActivity extends AppCompatActivity
         fileManager = new FileManager();
         encryption = new Encryption(this);
 
+        // TODO: Fix Files changing order when scrolling
         // Setup Recycler View
         recyclerView = findViewById(R.id.recycler_view);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 2);
