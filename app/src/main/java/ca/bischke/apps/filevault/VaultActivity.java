@@ -79,7 +79,6 @@ public class VaultActivity extends AppCompatActivity
         fileManager = new FileManager();
         encryption = new Encryption(this);
 
-        // TODO: Fix Files changing order when scrolling
         // Setup Recycler View
         recyclerView = findViewById(R.id.recycler_view);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 2);
@@ -90,15 +89,15 @@ public class VaultActivity extends AppCompatActivity
         recyclerView.addItemDecoration(itemDecoration);
 
         // Recycler View Caching
-        //recyclerView.setHasFixedSize(true);
-        recyclerView.setItemViewCacheSize(100);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setItemViewCacheSize(12);
         recyclerView.setDrawingCacheEnabled(true);
         recyclerView.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
 
         // Setup File Adapter
         fileDataList = new ArrayList<>();
         fileAdapter = new FileAdapter(this, fileDataList, this);
-        fileAdapter.setHasStableIds(true);
+        //fileAdapter.setHasStableIds(true);
         recyclerView.setAdapter(fileAdapter);
 
         listFiles();
