@@ -97,7 +97,7 @@ public class VaultActivity extends AppCompatActivity
         // Setup File Adapter
         fileDataList = new ArrayList<>();
         fileAdapter = new FileAdapter(this, fileDataList, this);
-        //fileAdapter.setHasStableIds(true);
+        fileAdapter.setHasStableIds(true);
         recyclerView.setAdapter(fileAdapter);
 
         listFiles();

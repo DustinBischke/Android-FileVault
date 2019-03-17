@@ -47,6 +47,12 @@ public class FileAdapter extends RecyclerView.Adapter<FileViewHolder>
     }
 
     @Override
+    public long getItemId(int position)
+    {
+        return position;
+    }
+
+    @Override
     public int getItemCount()
     {
         return fileDataList.size();
