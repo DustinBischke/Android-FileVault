@@ -38,8 +38,8 @@ public class VaultActivity extends AppCompatActivity
     private FileManager fileManager;
     private Encryption encryption;
     private RecyclerView recyclerView;
-    private ArrayList<FileData> fileDataList;
-    private FileAdapter fileAdapter;
+    private ArrayList<FileGridData> fileDataList;
+    private FileGridAdapter fileAdapter;
     private boolean sortByName = true;
     private final int CAMERA_PERMISSION_CODE = 22;
     private final int REQUEST_IMAGE_CAPTURE = 23;
@@ -79,6 +79,8 @@ public class VaultActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
         fileManager = new FileManager();
+        fileManager.createVault();
+
         encryption = new Encryption(this);
 
         // Setup Recycler View
@@ -98,7 +100,7 @@ public class VaultActivity extends AppCompatActivity
 
         // Setup File Adapter
         fileDataList = new ArrayList<>();
-        fileAdapter = new FileAdapter(this, fileDataList, this);
+        fileAdapter = new FileGridAdapter(this, fileDataList, this);
         fileAdapter.setHasStableIds(true);
         recyclerView.setAdapter(fileAdapter);
 
@@ -264,7 +266,9 @@ public class VaultActivity extends AppCompatActivity
     private void listFiles()
     {
         File vault = fileManager.getVaultDirectory();
-        ArrayList<File> files = fileManager.getSortedFiles(fileManager.getFilesInDirectory(vault), sortByName);
+
+        ArrayList<File> files = fileManager.getFilesInDirectory(vault);
+        files = fileManager.getSortedFiles(files, sortByName);
 
         for (File file : files)
         {
@@ -323,7 +327,7 @@ public class VaultActivity extends AppCompatActivity
     @Override
     public void onFileClick(int position)
     {
-        FileData fileData = fileAdapter.getDataFromPosition(position);
+        FileGridData fileData = fileAdapter.getDataFromPosition(position);
         String filePath = fileData.getFilePath();
 
         if (fileData.isImage())
@@ -343,7 +347,7 @@ public class VaultActivity extends AppCompatActivity
     @Override
     public void onMenuClick(int position)
     {
-        FileViewHolder fileViewHolder = (FileViewHolder) recyclerView.findViewHolderForAdapterPosition(position);
+        FileGridViewHolder fileViewHolder = (FileGridViewHolder) recyclerView.findViewHolderForAdapterPosition(position);
         ImageButton menuButton = fileViewHolder.getButtonFileMenu();
 
         final PopupMenu popupMenu = new PopupMenu(this, menuButton);
@@ -390,7 +394,7 @@ public class VaultActivity extends AppCompatActivity
         @Override
         protected Void doInBackground(Void... voids)
         {
-            fileDataList.add(new FileData(file));
+            fileDataList.add(new FileGridData(file));
 
             return null;
         }

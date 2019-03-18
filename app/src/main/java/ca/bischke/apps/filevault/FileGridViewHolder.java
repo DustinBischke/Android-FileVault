@@ -6,13 +6,13 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-public class FileViewHolder extends RecyclerView.ViewHolder
+public class FileGridViewHolder extends RecyclerView.ViewHolder
 {
     private TextView textFileName;
     private ImageView imageFileIcon;
     private ImageButton buttonFileMenu;
 
-    public FileViewHolder(View view, final FileGridListener fileGridListener)
+    public FileGridViewHolder(View view, final FileGridListener fileGridListener)
     {
         super(view);
 

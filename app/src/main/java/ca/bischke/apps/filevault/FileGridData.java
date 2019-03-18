@@ -7,7 +7,7 @@ import android.provider.MediaStore;
 
 import java.io.File;
 
-public class FileData
+public class FileGridData
 {
     private File file;
     private String fileName;
@@ -17,7 +17,7 @@ public class FileData
     private String[] imageFormats = new String[] {".jpg", ".jpeg", ".png", ".gif", ".bmp", ".webp"};
     private String[] videoFormats = new String[] {".mp4", ".3gp", ".webm", ".mkv"};
 
-    public FileData(File file)
+    public FileGridData(File file)
     {
         this.file = file;
         fileName = file.getName();

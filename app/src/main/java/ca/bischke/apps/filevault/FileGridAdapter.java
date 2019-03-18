@@ -1,7 +1,6 @@
 package ca.bischke.apps.filevault;
 
 import android.content.Context;
-import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -11,13 +10,13 @@ import android.widget.ImageView;
 
 import java.util.List;
 
-public class FileAdapter extends RecyclerView.Adapter<FileViewHolder>
+public class FileGridAdapter extends RecyclerView.Adapter<FileGridViewHolder>
 {
     private Context context;
-    private List<FileData> fileDataList;
+    private List<FileGridData> fileDataList;
     private FileGridListener fileGridListener;
 
-    public FileAdapter(Context context, List<FileData> fileDataList, FileGridListener fileGridListener)
+    public FileGridAdapter(Context context, List<FileGridData> fileDataList, FileGridListener fileGridListener)
     {
         this.context = context;
         this.fileDataList = fileDataList;
@@ -26,16 +25,16 @@ public class FileAdapter extends RecyclerView.Adapter<FileViewHolder>
 
     @NonNull
     @Override
-    public FileViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i)
+    public FileGridViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i)
     {
         View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.file_grid, viewGroup, false);
-        return new FileViewHolder(view, fileGridListener);
+        return new FileGridViewHolder(view, fileGridListener);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull final FileViewHolder fileViewHolder, int i)
+    public void onBindViewHolder(@NonNull final FileGridViewHolder fileViewHolder, int i)
     {
-        final FileData fileData = fileDataList.get(i);
+        final FileGridData fileData = fileDataList.get(i);
 
         fileViewHolder.getTextFileName().setText(fileData.getFileName());
 
@@ -58,7 +57,7 @@ public class FileAdapter extends RecyclerView.Adapter<FileViewHolder>
         return fileDataList.size();
     }
 
-    public FileData getDataFromPosition(int position)
+    public FileGridData getDataFromPosition(int position)
     {
         return fileDataList.get(position);
     }
