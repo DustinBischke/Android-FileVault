@@ -1,29 +1,33 @@
 package ca.bischke.apps.filevault;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.LinearLayout;
-import android.widget.ScrollView;
 
 import java.io.File;
 import java.util.ArrayList;
 
 public class FileExplorerActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener
+        implements NavigationView.OnNavigationItemSelectedListener, FileListListener
 {
+    private final String TAG = "FileVault";
     private FileManager fileManager;
     private Encryption encryption;
-    private final String TAG = "FileVault";
+    private RecyclerView recyclerView;
+    private ArrayList<FileListData> fileDataList;
+    private FileListAdapter fileAdapter;
     private boolean sortByName = true;
 
     @Override
@@ -44,24 +48,45 @@ public class FileExplorerActivity extends AppCompatActivity
         // Sets Activity Layout
         setContentView(R.layout.activity_file_explorer);
 
-        // Adds the Toolbar to the Layout
+        // Sets Toolbar
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        // Sets Drawer Layout
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
+        // Sets Navigation View
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
         fileManager = new FileManager();
         fileManager.createVault();
-        listFiles(fileManager.getCurrentDirectory());
 
         encryption = new Encryption(this);
+
+        // Setup Recycler View
+        recyclerView = findViewById(R.id.recycler_view);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(linearLayoutManager);
+
+        // Recycler View Caching
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setItemViewCacheSize(12);
+        recyclerView.setDrawingCacheEnabled(true);
+        recyclerView.setDrawingCacheEnabled(false);
+        recyclerView.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
+
+        // Setup File Adapter
+        fileDataList = new ArrayList<>();
+        fileAdapter = new FileListAdapter(this, fileDataList, this);
+        fileAdapter.setHasStableIds(true);
+        recyclerView.setAdapter(fileAdapter);
+
+        listFiles(fileManager.getCurrentDirectory());
     }
 
     @Override
@@ -152,62 +177,28 @@ public class FileExplorerActivity extends AppCompatActivity
         }
     }
 
-    // TODO: Setup Adapter
     private void listFiles(File directory)
     {
         Log.d(TAG, "Listing Files in " + directory.getAbsolutePath());
         fileManager.setCurrentDirectory(directory);
         displayCurrentDirectory();
-        clearLayoutFiles();
         scrollToTop();
+
+        fileDataList.clear();
 
         // Get Files in Directory and Sort them
         ArrayList<File> files = fileManager.getFilesInDirectory(directory);
         files = fileManager.getSortedFiles(files, sortByName);
 
-        final LinearLayout layoutFiles = findViewById(R.id.layout_files);
-
         for (File file : files)
         {
-            final FileLayout fileLayout = new FileLayout(this, file);
-
-            final File file1 = file;
-            final boolean isDirectory = file.isDirectory();
-            String currentPath = fileManager.getCurrentDirectory().getAbsolutePath();
-            final File childDirectory = new File(currentPath + File.separator + file.getName());
-
-            fileLayout.setOnClickListener(new View.OnClickListener()
-            {
-                @Override
-                public void onClick(View view)
-                {
-                    if (isDirectory)
-                    {
-                        listFiles(childDirectory);
-                    }
-                    else
-                    {
-                        // TODO: CONFIGURE TO ONLY DO THIS IF IT IS AN IMAGE FILE
-                        startImageViewerActivity(file1);
-                    }
-                }
-            });
-
-            // TODO: Setup Encrypt Button to run moveFileToVault()
-            if (fileLayout.getImageButton().getVisibility() == View.VISIBLE)
-            {
-                fileLayout.getImageButton().setOnClickListener(new View.OnClickListener()
-                {
-                    @Override
-                    public void onClick(View view)
-                    {
-                        //moveFileToVaultDirectory(fileLayout, fileLayout.getFile());
-                    }
-                });
-            }
-
-            layoutFiles.addView(fileLayout);
+            displayFile(file);
         }
+    }
+
+    private void displayFile(File file)
+    {
+        new FileAsyncTask(file).execute();
     }
 
     private void displayCurrentDirectory()
@@ -221,27 +212,9 @@ public class FileExplorerActivity extends AppCompatActivity
         setTitle(fileManager.getCurrentDirectory().getName());
     }
 
-    private void clearLayoutFiles()
-    {
-        LinearLayout layoutFiles = findViewById(R.id.layout_files);
-
-        if (layoutFiles.getChildCount() > 0)
-        {
-            layoutFiles.removeAllViews();
-        }
-    }
-
     private void scrollToTop()
     {
-        ScrollView scrollView = findViewById(R.id.scrollview);
-        scrollView.scrollTo(0, 0);
-    }
-
-    public void startImageViewerActivity(File file)
-    {
-        Intent intent = new Intent(this, ImageViewerActivity.class);
-        intent.putExtra("FILE_PATH", file.getAbsolutePath());
-        startActivity(intent);
+        recyclerView.scrollToPosition(0);
     }
 
     private void encryptVault()
@@ -254,6 +227,58 @@ public class FileExplorerActivity extends AppCompatActivity
         catch (Exception ex)
         {
             Log.d(TAG, ex.getMessage());
+        }
+    }
+
+    @Override
+    public void onFileClick(int position)
+    {
+        FileListData fileData = fileAdapter.getDataFromPosition(position);
+        File file = fileData.getFile();
+        String filePath = fileData.getFilePath();
+
+        if (file.isDirectory())
+        {
+            listFiles(file);
+        }
+        else
+        {
+            if (fileData.isImage())
+            {
+                Intent intent = new Intent(this, ImageViewerActivity.class);
+                intent.putExtra("FILE_PATH", filePath);
+                startActivity(intent);
+            }
+            else if (fileData.isVideo())
+            {
+                Intent intent = new Intent(this, VideoPlayerActivity.class);
+                intent.putExtra("FILE_PATH", filePath);
+                startActivity(intent);
+            }
+        }
+    }
+
+    private class FileAsyncTask extends AsyncTask<Void, Void, Void>
+    {
+        File file;
+
+        FileAsyncTask(File file)
+        {
+            this.file = file;
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids)
+        {
+            fileDataList.add(new FileListData(file));
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid)
+        {
+            fileAdapter.notifyDataSetChanged();
         }
     }
 }

@@ -20,15 +20,10 @@
                 android:id="@+id/toolbar"
                 layout="@layout/toolbar_main" />
 
-            <ScrollView
-                android:id="@+id/scrollview"
-                style="@style/ScrollView">
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recycler_view"
+                style="@style/RecyclerView" />
 
-                <LinearLayout
-                    android:id="@+id/layout_files"
-                    style="@style/LayoutScreen" />
-
-            </ScrollView>
         </LinearLayout>
 
         <include
