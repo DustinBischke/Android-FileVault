@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/file_open"
+        android:title="@string/open" />
+
+    <item
+        android:id="@+id/file_rename"
+        android:title="@string/rename" />
+
+    <item
+        android:id="@+id/file_remove"
+        android:title="@string/remove" />
+
+    <item
+        android:id="@+id/file_delete"
+        android:title="@string/delete" />
+
+</menu>

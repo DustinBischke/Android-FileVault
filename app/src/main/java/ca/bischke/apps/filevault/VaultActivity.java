@@ -21,6 +21,8 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageButton;
+import android.widget.PopupMenu;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -336,6 +338,44 @@ public class VaultActivity extends AppCompatActivity
             intent.putExtra("FILE_PATH", filePath);
             startActivity(intent);
         }
+    }
+
+    @Override
+    public void onMenuClick(int position)
+    {
+        FileViewHolder fileViewHolder = (FileViewHolder) recyclerView.findViewHolderForAdapterPosition(position);
+        ImageButton menuButton = fileViewHolder.getButtonFileMenu();
+
+        final PopupMenu popupMenu = new PopupMenu(this, menuButton);
+        popupMenu.getMenuInflater().inflate(R.menu.file, popupMenu.getMenu());
+
+        popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener()
+        {
+            @Override
+            public boolean onMenuItemClick(MenuItem menuItem)
+            {
+                int id = menuItem.getItemId();
+
+                // TODO: Setup Menu buttons
+                switch(id)
+                {
+                    case R.id.file_open:
+                        break;
+                    case R.id.file_rename:
+                        break;
+                    case R.id.file_remove:
+                        break;
+                    case R.id.file_delete:
+                        break;
+                    default:
+                        break;
+                }
+
+                return true;
+            }
+        });
+
+        popupMenu.show();
     }
 
     private class FileAsyncTask extends AsyncTask<Void, Void, Void>

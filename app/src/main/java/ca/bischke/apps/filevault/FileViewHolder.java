@@ -8,15 +8,13 @@ import android.widget.TextView;
 
 public class FileViewHolder extends RecyclerView.ViewHolder
 {
-    FileGridListener fileGridListener;
-    TextView textFileName;
-    ImageView imageFileIcon;
+    private TextView textFileName;
+    private ImageView imageFileIcon;
+    private ImageButton buttonFileMenu;
 
-    public FileViewHolder(View view, FileGridListener onNoteListener)
+    public FileViewHolder(View view, final FileGridListener fileGridListener)
     {
         super(view);
-
-        this.fileGridListener = onNoteListener;
 
         textFileName = view.findViewById(R.id.text_file_name);
         imageFileIcon = view.findViewById(R.id.image_file_icon);
@@ -29,6 +27,17 @@ public class FileViewHolder extends RecyclerView.ViewHolder
                 fileGridListener.onFileClick(getAdapterPosition());
             }
         });
+
+        buttonFileMenu = view.findViewById(R.id.button_file_menu);
+
+        buttonFileMenu.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                fileGridListener.onMenuClick(getAdapterPosition());
+            }
+        });
     }
 
     public TextView getTextFileName()
@@ -39,5 +48,10 @@ public class FileViewHolder extends RecyclerView.ViewHolder
     public ImageView getImageFileIcon()
     {
         return imageFileIcon;
+    }
+
+    public ImageButton getButtonFileMenu()
+    {
+        return buttonFileMenu;
     }
 }

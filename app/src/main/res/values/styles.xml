@@ -109,9 +109,8 @@
 
     <style name="LayoutFileGridName">
         <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">35dp</item>
+        <item name="android:layout_height">36dp</item>
         <item name="android:paddingLeft">8dp</item>
-        <item name="android:paddingRight">8dp</item>
         <item name="android:gravity">center</item>
         <item name="android:background">@color/colorFileGrid</item>
     </style>
@@ -194,7 +193,7 @@
     </style>
 
     <style name="TextFileGridName" parent="Text">
-        <item name="android:textSize">16sp</item>
+        <item name="android:textSize">14sp</item>
         <item name="android:maxLines">1</item>
         <item name="android:ellipsize">middle</item>
     </style>
@@ -214,6 +213,12 @@
 
     <style name="TextFileListSubtextRight" parent="TextFileListSubtext">
         <item name="android:gravity">right</item>
+    </style>
+
+    <style name="ImageButtonFileMenu">
+        <item name="android:layout_width">28dp</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:background">@android:color/transparent</item>
     </style>
 
     <style name="ButtonWhite">
