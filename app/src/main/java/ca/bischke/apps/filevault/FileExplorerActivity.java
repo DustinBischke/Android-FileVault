@@ -15,6 +15,8 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageButton;
+import android.widget.PopupMenu;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -87,6 +89,52 @@ public class FileExplorerActivity extends AppCompatActivity
         recyclerView.setAdapter(fileAdapter);
 
         listFiles(fileManager.getCurrentDirectory());
+
+        ImageButton buttonDropdown = findViewById(R.id.button_dropdown);
+        buttonDropdown.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                PopupMenu popupMenu = new PopupMenu(FileExplorerActivity.this, view);
+                final Menu menu = popupMenu.getMenu();
+
+                String currentPath = fileManager.getCurrentDirectory().getAbsolutePath();
+                String rootPath = fileManager.getRootDirectory().getAbsolutePath();
+                currentPath = currentPath.substring(rootPath.length() + 1, currentPath.length());
+
+                menu.add(Menu.NONE, 0, 0, R.string.internal_storage);
+
+                String[] pathParts = currentPath.split("/");
+
+                for (int i = 0; i < pathParts.length; i++)
+                {
+                    menu.add(Menu.NONE, i + 1, i + 1, pathParts[i]);
+                }
+
+                popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener()
+                {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem menuItem)
+                    {
+                        int id = menuItem.getItemId();
+
+                        String path = fileManager.getRootDirectory().getAbsolutePath();
+
+                        for (int i = 1; i <= id; i++)
+                        {
+                            path += "/" + menu.getItem(i).getTitle().toString();
+                        }
+
+                        listFiles(new File(path));
+
+                        return true;
+                    }
+                });
+
+                popupMenu.show();
+            }
+        });
     }
 
     @Override
