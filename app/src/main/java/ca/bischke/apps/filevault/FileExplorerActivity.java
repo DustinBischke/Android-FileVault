@@ -277,13 +277,18 @@ public class FileExplorerActivity extends AppCompatActivity
 
     private void displayCurrentDirectory()
     {
+        ImageButton buttonDropdown = findViewById(R.id.button_dropdown);
+
         if (fileManager.currentDirectoryIsRoot())
         {
             setTitle(getString(R.string.internal_storage));
+            buttonDropdown.setVisibility(View.GONE);
+
             return;
         }
 
         setTitle(fileManager.getCurrentDirectory().getName());
+        buttonDropdown.setVisibility(View.VISIBLE);
     }
 
     private void scrollToTop()
