@@ -265,8 +265,10 @@ public class VaultActivity extends AppCompatActivity
 
     private void listFiles()
     {
-        File vault = fileManager.getVaultDirectory();
+        scrollToTop();
+        fileDataList.clear();
 
+        File vault = fileManager.getVaultDirectory();
         ArrayList<File> files = fileManager.getFilesInDirectory(vault);
         files = fileManager.getSortedFiles(files, sortByName);
 
@@ -279,6 +281,11 @@ public class VaultActivity extends AppCompatActivity
     private void displayFile(File file)
     {
         new FileAsyncTask(file).execute();
+    }
+
+    private void scrollToTop()
+    {
+        recyclerView.scrollToPosition(0);
     }
 
     private void encryptVault()
