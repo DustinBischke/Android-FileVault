@@ -19,6 +19,8 @@ import android.widget.ImageButton;
 import android.widget.PopupMenu;
 
 import java.io.File;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 
 public class FileExplorerActivity extends AppCompatActivity
@@ -99,17 +101,41 @@ public class FileExplorerActivity extends AppCompatActivity
                 PopupMenu popupMenu = new PopupMenu(FileExplorerActivity.this, view);
                 final Menu menu = popupMenu.getMenu();
 
+                try
+                {
+                    Field[] fields = popupMenu.getClass().getDeclaredFields();
+
+                    for (Field field : fields)
+                    {
+                        if (field.getName().equals("mPopup"))
+                        {
+                            field.setAccessible(true);
+                            Object menuPopupHelper = field.get(popupMenu);
+                            Class<?> classPopupHelper = Class.forName(menuPopupHelper.getClass().getName());
+                            Method setForceIcons = classPopupHelper.getMethod("setForceShowIcon", boolean.class);
+                            setForceIcons.invoke(menuPopupHelper, true);
+                            break;
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Log.d(TAG, ex.getMessage());
+                }
+
                 String currentPath = fileManager.getCurrentDirectory().getAbsolutePath();
                 String rootPath = fileManager.getRootDirectory().getAbsolutePath();
                 currentPath = currentPath.substring(rootPath.length() + 1, currentPath.length());
 
                 menu.add(Menu.NONE, 0, 0, R.string.internal_storage);
+                menu.getItem(0).setIcon(R.drawable.ic_storage_24dp);
 
                 String[] pathParts = currentPath.split("/");
 
                 for (int i = 0; i < pathParts.length; i++)
                 {
                     menu.add(Menu.NONE, i + 1, i + 1, pathParts[i]);
+                    menu.getItem(i + 1).setIcon(R.drawable.ic_subdirectory_24dp);
                 }
 
                 popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener()
