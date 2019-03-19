@@ -26,7 +26,7 @@ public class FileExplorerActivity extends AppCompatActivity
     private FileManager fileManager;
     private Encryption encryption;
     private RecyclerView recyclerView;
-    private ArrayList<FileListData> fileDataList;
+    private ArrayList<File> fileList;
     private FileListAdapter fileAdapter;
     private boolean sortByName = true;
 
@@ -81,8 +81,8 @@ public class FileExplorerActivity extends AppCompatActivity
         recyclerView.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
 
         // Setup File Adapter
-        fileDataList = new ArrayList<>();
-        fileAdapter = new FileListAdapter(this, fileDataList, this);
+        fileList = new ArrayList<>();
+        fileAdapter = new FileListAdapter(this, fileList, this);
         fileAdapter.setHasStableIds(true);
         recyclerView.setAdapter(fileAdapter);
 
@@ -184,7 +184,7 @@ public class FileExplorerActivity extends AppCompatActivity
         displayCurrentDirectory();
         scrollToTop();
 
-        fileDataList.clear();
+        fileList.clear();
 
         // Get Files in Directory and Sort them
         ArrayList<File> files = fileManager.getFilesInDirectory(directory);
@@ -198,7 +198,7 @@ public class FileExplorerActivity extends AppCompatActivity
 
     private void displayFile(File file)
     {
-        new FileAsyncTask(file).execute();
+        new FileAsyncTask().execute(file);
     }
 
     private void displayCurrentDirectory()
@@ -233,9 +233,8 @@ public class FileExplorerActivity extends AppCompatActivity
     @Override
     public void onFileClick(int position)
     {
-        FileListData fileData = fileAdapter.getDataFromPosition(position);
-        File file = fileData.getFile();
-        String filePath = fileData.getFilePath();
+        File file = fileAdapter.getDataFromPosition(position);
+        String filePath = file.getAbsolutePath();
 
         if (file.isDirectory())
         {
@@ -243,13 +242,13 @@ public class FileExplorerActivity extends AppCompatActivity
         }
         else
         {
-            if (fileData.isImage())
+            if (FileTypes.isImage(file))
             {
                 Intent intent = new Intent(this, ImageViewerActivity.class);
                 intent.putExtra("FILE_PATH", filePath);
                 startActivity(intent);
             }
-            else if (fileData.isVideo())
+            else if (FileTypes.isVideo(file))
             {
                 Intent intent = new Intent(this, VideoPlayerActivity.class);
                 intent.putExtra("FILE_PATH", filePath);
@@ -258,20 +257,12 @@ public class FileExplorerActivity extends AppCompatActivity
         }
     }
 
-    private class FileAsyncTask extends AsyncTask<Void, Void, Void>
+    private class FileAsyncTask extends AsyncTask<File, Void, Void>
     {
-        File file;
-
-        FileAsyncTask(File file)
-        {
-            this.file = file;
-        }
-
         @Override
-        protected Void doInBackground(Void... voids)
+        protected Void doInBackground(File... files)
         {
-            fileDataList.add(new FileListData(file));
-
+            fileList.add(files[0]);
             return null;
         }
 

@@ -38,7 +38,7 @@ public class VaultActivity extends AppCompatActivity
     private FileManager fileManager;
     private Encryption encryption;
     private RecyclerView recyclerView;
-    private ArrayList<FileGridData> fileDataList;
+    private ArrayList<File> fileList;
     private FileGridAdapter fileAdapter;
     private boolean sortByName = true;
     private final int CAMERA_PERMISSION_CODE = 22;
@@ -99,8 +99,8 @@ public class VaultActivity extends AppCompatActivity
         recyclerView.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
 
         // Setup File Adapter
-        fileDataList = new ArrayList<>();
-        fileAdapter = new FileGridAdapter(this, fileDataList, this);
+        fileList = new ArrayList<>();
+        fileAdapter = new FileGridAdapter(this, fileList, this);
         fileAdapter.setHasStableIds(true);
         recyclerView.setAdapter(fileAdapter);
 
@@ -266,7 +266,7 @@ public class VaultActivity extends AppCompatActivity
     private void listFiles()
     {
         scrollToTop();
-        fileDataList.clear();
+        fileList.clear();
 
         File vault = fileManager.getVaultDirectory();
         ArrayList<File> files = fileManager.getFilesInDirectory(vault);
@@ -280,7 +280,7 @@ public class VaultActivity extends AppCompatActivity
 
     private void displayFile(File file)
     {
-        new FileAsyncTask(file).execute();
+        new FileAsyncTask().execute(file);
     }
 
     private void scrollToTop()
@@ -334,16 +334,16 @@ public class VaultActivity extends AppCompatActivity
     @Override
     public void onFileClick(int position)
     {
-        FileGridData fileData = fileAdapter.getDataFromPosition(position);
-        String filePath = fileData.getFilePath();
+        File file = fileAdapter.getDataFromPosition(position);
+        String filePath = file.getAbsolutePath();
 
-        if (fileData.isImage())
+        if (FileTypes.isImage(file))
         {
             Intent intent = new Intent(this, ImageViewerActivity.class);
             intent.putExtra("FILE_PATH", filePath);
             startActivity(intent);
         }
-        else if (fileData.isVideo())
+        else if (FileTypes.isVideo(file))
         {
             Intent intent = new Intent(this, VideoPlayerActivity.class);
             intent.putExtra("FILE_PATH", filePath);
@@ -389,20 +389,12 @@ public class VaultActivity extends AppCompatActivity
         popupMenu.show();
     }
 
-    private class FileAsyncTask extends AsyncTask<Void, Void, Void>
+    private class FileAsyncTask extends AsyncTask<File, Void, Void>
     {
-        File file;
-
-        FileAsyncTask(File file)
-        {
-            this.file = file;
-        }
-
         @Override
-        protected Void doInBackground(Void... voids)
+        protected Void doInBackground(File... files)
         {
-            fileDataList.add(new FileGridData(file));
-
+            fileList.add(files[0]);
             return null;
         }
 

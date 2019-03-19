@@ -11,21 +11,26 @@ import android.text.format.Formatter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 public class FileListAdapter extends RecyclerView.Adapter<FileListViewHolder>
 {
     private Context context;
-    private List<FileListData> fileDataList;
+    private List<File> fileList;
     private FileListListener fileListListener;
 
-    public FileListAdapter(Context context, List<FileListData> fileDataList, FileListListener fileListListener)
+    public FileListAdapter(Context context, List<File> fileList, FileListListener fileListListener)
     {
         this.context = context;
-        this.fileDataList = fileDataList;
+        this.fileList = fileList;
         this.fileListListener = fileListListener;
     }
 
@@ -40,36 +45,37 @@ public class FileListAdapter extends RecyclerView.Adapter<FileListViewHolder>
     @Override
     public void onBindViewHolder(@NonNull final FileListViewHolder fileViewHolder, int i)
     {
-        FileListData fileData = fileDataList.get(i);
+        File file = fileList.get(i);
 
-        fileViewHolder.getTextFileName().setText(fileData.getFileName());
-        fileViewHolder.getTextFileDate().setText(fileData.getFileDate());
+        TextView textFileName = fileViewHolder.getTextFileName();
+        textFileName.setText(file.getName());
 
-        if (fileData.getFile().isDirectory())
+        TextView textFileDate = fileViewHolder.getTextFileDate();
+        Date date = new Date(file.lastModified());
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MMM d, yyyy", Locale.getDefault());
+        textFileDate.setText(simpleDateFormat.format(date));
+
+        if (file.isDirectory())
         {
             fileViewHolder.getTextFileSize().setVisibility(View.GONE);
             fileViewHolder.getButtonFileEncrypt().setVisibility(View.GONE);
         }
         else
         {
-            fileViewHolder.getTextFileSize().setVisibility(View.VISIBLE);
-            String fileSize = Formatter.formatShortFileSize(context, fileData.getFileSize());
-            fileViewHolder.getTextFileSize().setText(fileSize);
+            TextView textFileSize = fileViewHolder.getTextFileSize();
+            textFileSize.setVisibility(View.VISIBLE);
+            String fileSize = Formatter.formatShortFileSize(context, file.length());
+            textFileSize.setText(fileSize);
 
-            fileViewHolder.getButtonFileEncrypt().setVisibility(View.VISIBLE);
+            ImageButton buttonFileEncrypt = fileViewHolder.getButtonFileEncrypt();
+            buttonFileEncrypt.setVisibility(View.VISIBLE);
 
-            if (fileData.isImage())
+            if (FileTypes.isImage(file))
             {
-                ImageView imageView = fileViewHolder.getImageFileIcon();
-                new ThumbnailAsyncTask().execute(imageView, fileData.getFile());
+                ImageView imageFileIcon = fileViewHolder.getImageFileIcon();
+                new ThumbnailAsyncTask().execute(imageFileIcon, file);
             }
         }
-
-        /*if (fileDataList.get(i).getFileIcon() != null)
-        {
-            fileViewHolder.getImageFileIcon().setScaleType(ImageView.ScaleType.CENTER_CROP);
-            fileViewHolder.getImageFileIcon().setImageBitmap(fileDataList.get(i).getFileIcon());
-        }*/
     }
 
     @Override
@@ -81,22 +87,22 @@ public class FileListAdapter extends RecyclerView.Adapter<FileListViewHolder>
     @Override
     public int getItemCount()
     {
-        return fileDataList.size();
+        return fileList.size();
     }
 
-    public FileListData getDataFromPosition(int position)
+    public File getDataFromPosition(int position)
     {
-        return fileDataList.get(position);
+        return fileList.get(position);
     }
 
     private class ThumbnailAsyncTask extends AsyncTask<Object, Void, Bitmap>
     {
-        private ImageView imageView;
+        private ImageView imageFileIcon;
 
         @Override
         protected Bitmap doInBackground(Object... objects)
         {
-            imageView = (ImageView) objects[0];
+            imageFileIcon = (ImageView) objects[0];
             File file = (File) objects[1];
 
             int size = 128;
@@ -109,8 +115,8 @@ public class FileListAdapter extends RecyclerView.Adapter<FileListViewHolder>
         @Override
         protected void onPostExecute(Bitmap bitmap)
         {
-            imageView.setImageBitmap(bitmap);
-            imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+            imageFileIcon.setImageBitmap(bitmap);
+            imageFileIcon.setScaleType(ImageView.ScaleType.CENTER_CROP);
         }
     }
 }

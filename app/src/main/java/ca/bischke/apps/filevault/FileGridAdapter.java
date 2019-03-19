@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import java.io.File;
 import java.util.List;
@@ -18,13 +19,13 @@ import java.util.List;
 public class FileGridAdapter extends RecyclerView.Adapter<FileGridViewHolder>
 {
     private Context context;
-    private List<FileGridData> fileDataList;
+    private List<File> fileList;
     private FileGridListener fileGridListener;
 
-    public FileGridAdapter(Context context, List<FileGridData> fileDataList, FileGridListener fileGridListener)
+    public FileGridAdapter(Context context, List<File> fileList, FileGridListener fileGridListener)
     {
         this.context = context;
-        this.fileDataList = fileDataList;
+        this.fileList = fileList;
         this.fileGridListener = fileGridListener;
     }
 
@@ -39,21 +40,16 @@ public class FileGridAdapter extends RecyclerView.Adapter<FileGridViewHolder>
     @Override
     public void onBindViewHolder(@NonNull final FileGridViewHolder fileViewHolder, int i)
     {
-        final FileGridData fileData = fileDataList.get(i);
+        File file = fileList.get(i);
 
-        fileViewHolder.getTextFileName().setText(fileData.getFileName());
+        TextView textFileName = fileViewHolder.getTextFileName();
+        textFileName.setText(file.getName());
 
-        if (fileData.isImage())
+        if (FileTypes.isImage(file))
         {
-            ImageView imageView = fileViewHolder.getImageFileIcon();
-            new ThumbnailAsyncTask().execute(imageView, fileData.getFile());
+            ImageView imageFileIcon = fileViewHolder.getImageFileIcon();
+            new ThumbnailAsyncTask().execute(imageFileIcon, file);
         }
-
-        /*if (fileDataList.get(i).getFileIcon() != null)
-        {
-            fileViewHolder.getImageFileIcon().setScaleType(ImageView.ScaleType.CENTER_CROP);
-            fileViewHolder.getImageFileIcon().setImageBitmap(fileDataList.get(i).getFileIcon());
-        }*/
     }
 
     @Override
@@ -65,22 +61,22 @@ public class FileGridAdapter extends RecyclerView.Adapter<FileGridViewHolder>
     @Override
     public int getItemCount()
     {
-        return fileDataList.size();
+        return fileList.size();
     }
 
-    public FileGridData getDataFromPosition(int position)
+    public File getDataFromPosition(int position)
     {
-        return fileDataList.get(position);
+        return fileList.get(position);
     }
 
     private class ThumbnailAsyncTask extends AsyncTask<Object, Void, Bitmap>
     {
-        private ImageView imageView;
+        private ImageView imageFileIcon;
 
         @Override
         protected Bitmap doInBackground(Object... objects)
         {
-            imageView = (ImageView) objects[0];
+            imageFileIcon = (ImageView) objects[0];
             File file = (File) objects[1];
 
             int size = 512;
@@ -93,8 +89,8 @@ public class FileGridAdapter extends RecyclerView.Adapter<FileGridViewHolder>
         @Override
         protected void onPostExecute(Bitmap bitmap)
         {
-            imageView.setImageBitmap(bitmap);
-            imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+            imageFileIcon.setImageBitmap(bitmap);
+            imageFileIcon.setScaleType(ImageView.ScaleType.CENTER_CROP);
         }
     }
 }
