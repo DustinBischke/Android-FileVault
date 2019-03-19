@@ -23,7 +23,7 @@ public class FileGridData
         fileName = file.getName();
         filePath = file.getAbsolutePath();
 
-        if (isImage())
+        /*if (isImage())
         {
             int size = 512;
             Bitmap bitmap = BitmapFactory.decodeFile(file.getPath());
@@ -33,7 +33,12 @@ public class FileGridData
         if (isVideo())
         {
             fileIcon = ThumbnailUtils.createVideoThumbnail(file.getAbsolutePath(), MediaStore.Video.Thumbnails.FULL_SCREEN_KIND);
-        }
+        }*/
+    }
+
+    public File getFile()
+    {
+        return file;
     }
 
     public String getFileName()

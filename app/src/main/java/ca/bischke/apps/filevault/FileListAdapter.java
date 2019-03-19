@@ -1,13 +1,19 @@
 package ca.bischke.apps.filevault;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.media.ThumbnailUtils;
+import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.text.format.Formatter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
+import java.io.File;
 import java.util.List;
 
 public class FileListAdapter extends RecyclerView.Adapter<FileListViewHolder>
@@ -34,7 +40,7 @@ public class FileListAdapter extends RecyclerView.Adapter<FileListViewHolder>
     @Override
     public void onBindViewHolder(@NonNull final FileListViewHolder fileViewHolder, int i)
     {
-        final FileListData fileData = fileDataList.get(i);
+        FileListData fileData = fileDataList.get(i);
 
         fileViewHolder.getTextFileName().setText(fileData.getFileName());
         fileViewHolder.getTextFileDate().setText(fileData.getFileDate());
@@ -51,6 +57,12 @@ public class FileListAdapter extends RecyclerView.Adapter<FileListViewHolder>
             fileViewHolder.getTextFileSize().setText(fileSize);
 
             fileViewHolder.getButtonFileEncrypt().setVisibility(View.VISIBLE);
+
+            if (fileData.isImage())
+            {
+                ImageView imageView = fileViewHolder.getImageFileIcon();
+                new ThumbnailAsyncTask().execute(imageView, fileData.getFile());
+            }
         }
 
         /*if (fileDataList.get(i).getFileIcon() != null)
@@ -75,5 +87,30 @@ public class FileListAdapter extends RecyclerView.Adapter<FileListViewHolder>
     public FileListData getDataFromPosition(int position)
     {
         return fileDataList.get(position);
+    }
+
+    private class ThumbnailAsyncTask extends AsyncTask<Object, Void, Bitmap>
+    {
+        private ImageView imageView;
+
+        @Override
+        protected Bitmap doInBackground(Object... objects)
+        {
+            imageView = (ImageView) objects[0];
+            File file = (File) objects[1];
+
+            int size = 128;
+            Bitmap bitmap = BitmapFactory.decodeFile(file.getPath());
+            bitmap = ThumbnailUtils.extractThumbnail(bitmap, size, size);
+
+            return bitmap;
+        }
+
+        @Override
+        protected void onPostExecute(Bitmap bitmap)
+        {
+            imageView.setImageBitmap(bitmap);
+            imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+        }
     }
 }
