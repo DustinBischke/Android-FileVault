@@ -383,7 +383,7 @@ public class VaultActivity extends AppCompatActivity
             Log.d(TAG, ex.getMessage());
         }
 
-        popupMenu.getMenuInflater().inflate(R.menu.file, popupMenu.getMenu());
+        popupMenu.getMenuInflater().inflate(R.menu.file_grid, popupMenu.getMenu());
 
         popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener()
         {
