@@ -38,7 +38,7 @@
 
     <ImageButton
         android:id="@+id/button_file_menu"
-        style="@style/ImageButtonFileGridMenu"
+        style="@style/ImageButtonFileListMenu"
         app:srcCompat="@drawable/ic_more_24dp" />
 
 </LinearLayout>
