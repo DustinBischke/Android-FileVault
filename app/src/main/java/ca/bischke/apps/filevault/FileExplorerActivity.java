@@ -25,7 +25,7 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 
 public class FileExplorerActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, FileListListener
+        implements NavigationView.OnNavigationItemSelectedListener, FileListener
 {
     private final String TAG = "FileVault";
     private FileManager fileManager;
@@ -338,6 +338,62 @@ public class FileExplorerActivity extends AppCompatActivity
                 startActivity(intent);
             }
         }
+    }
+
+    @Override
+    public void onMenuClick(int position)
+    {
+        FileListViewHolder fileViewHolder = (FileListViewHolder) recyclerView.findViewHolderForAdapterPosition(position);
+        ImageButton menuButton = fileViewHolder.getButtonFileMenu();
+
+        PopupMenu popupMenu = new PopupMenu(this, menuButton);
+
+        try
+        {
+            Field[] fields = popupMenu.getClass().getDeclaredFields();
+
+            for (Field field : fields)
+            {
+                if (field.getName().equals("mPopup"))
+                {
+                    field.setAccessible(true);
+                    Object menuPopupHelper = field.get(popupMenu);
+                    Class<?> classPopupHelper = Class.forName(menuPopupHelper.getClass().getName());
+                    Method setForceIcons = classPopupHelper.getMethod("setForceShowIcon", boolean.class);
+                    setForceIcons.invoke(menuPopupHelper, true);
+                    break;
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            Log.d(TAG, ex.getMessage());
+        }
+
+        popupMenu.getMenuInflater().inflate(R.menu.file_list, popupMenu.getMenu());
+
+        popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener()
+        {
+            @Override
+            public boolean onMenuItemClick(MenuItem menuItem)
+            {
+                int id = menuItem.getItemId();
+
+                // TODO: Setup Menu buttons
+                switch(id)
+                {
+                    case R.id.file_open:
+                        break;
+                    case R.id.file_encrypt:
+                    default:
+                        break;
+                }
+
+                return true;
+            }
+        });
+
+        popupMenu.show();
     }
 
     private class FileAsyncTask extends AsyncTask<File, Void, Void>

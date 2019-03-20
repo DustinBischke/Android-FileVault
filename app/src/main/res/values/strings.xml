@@ -22,6 +22,7 @@
     <string name="file_name">File Name</string>
     <string name="file_date">Date Modified</string>
     <string name="file_size">File Size</string>
+    <string name="encrypt">Encrypt</string>
     <string name="open">Open</string>
     <string name="rename">Rename</string>
     <string name="remove">Remove</string>

@@ -4,29 +4,37 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 public class FileListViewHolder extends RecyclerView.ViewHolder
         implements View.OnClickListener
 {
-    private FileListListener fileListListener;
+    private FileListener fileListener;
     private TextView textFileName;
     private TextView textFileDate;
     private TextView textFileSize;
     private ImageView imageFileIcon;
     private ImageButton buttonFileMenu;
 
-    public FileListViewHolder(View view, final FileListListener fileListListener)
+    public FileListViewHolder(View view, final FileListener fileListener)
     {
         super(view);
 
-        this.fileListListener = fileListListener;
+        this.fileListener = fileListener;
         textFileName = view.findViewById(R.id.text_file_name);
         textFileDate = view.findViewById(R.id.text_file_date);
         textFileSize = view.findViewById(R.id.text_file_size);
         imageFileIcon = view.findViewById(R.id.image_file_icon);
         buttonFileMenu = view.findViewById(R.id.button_file_menu);
+
+        buttonFileMenu.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                fileListener.onMenuClick(getAdapterPosition());
+            }
+        });
 
         view.setOnClickListener(this);
     }
@@ -59,6 +67,6 @@ public class FileListViewHolder extends RecyclerView.ViewHolder
     @Override
     public void onClick(View view)
     {
-        fileListListener.onFileClick(getAdapterPosition());
+        fileListener.onFileClick(getAdapterPosition());
     }
 }

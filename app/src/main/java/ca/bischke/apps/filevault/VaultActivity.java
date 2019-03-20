@@ -25,13 +25,15 @@ import android.widget.ImageButton;
 import android.widget.PopupMenu;
 
 import java.io.File;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
 
 public class VaultActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, FileGridListener
+        implements NavigationView.OnNavigationItemSelectedListener, FileListener
 {
     private final String TAG = "FileVault";
     private Permissions permissions;
@@ -357,7 +359,30 @@ public class VaultActivity extends AppCompatActivity
         FileGridViewHolder fileViewHolder = (FileGridViewHolder) recyclerView.findViewHolderForAdapterPosition(position);
         ImageButton menuButton = fileViewHolder.getButtonFileMenu();
 
-        final PopupMenu popupMenu = new PopupMenu(this, menuButton);
+        PopupMenu popupMenu = new PopupMenu(this, menuButton);
+
+        try
+        {
+            Field[] fields = popupMenu.getClass().getDeclaredFields();
+
+            for (Field field : fields)
+            {
+                if (field.getName().equals("mPopup"))
+                {
+                    field.setAccessible(true);
+                    Object menuPopupHelper = field.get(popupMenu);
+                    Class<?> classPopupHelper = Class.forName(menuPopupHelper.getClass().getName());
+                    Method setForceIcons = classPopupHelper.getMethod("setForceShowIcon", boolean.class);
+                    setForceIcons.invoke(menuPopupHelper, true);
+                    break;
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            Log.d(TAG, ex.getMessage());
+        }
+
         popupMenu.getMenuInflater().inflate(R.menu.file, popupMenu.getMenu());
 
         popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener()

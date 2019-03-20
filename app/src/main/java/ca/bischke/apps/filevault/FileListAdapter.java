@@ -25,13 +25,13 @@ public class FileListAdapter extends RecyclerView.Adapter<FileListViewHolder>
 {
     private Context context;
     private List<File> fileList;
-    private FileListListener fileListListener;
+    private FileListener fileListener;
 
-    public FileListAdapter(Context context, List<File> fileList, FileListListener fileListListener)
+    public FileListAdapter(Context context, List<File> fileList, FileListener fileListener)
     {
         this.context = context;
         this.fileList = fileList;
-        this.fileListListener = fileListListener;
+        this.fileListener = fileListener;
     }
 
     @NonNull
@@ -39,7 +39,7 @@ public class FileListAdapter extends RecyclerView.Adapter<FileListViewHolder>
     public FileListViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i)
     {
         View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.file_list, viewGroup, false);
-        return new FileListViewHolder(view, fileListListener);
+        return new FileListViewHolder(view, fileListener);
     }
 
     @Override

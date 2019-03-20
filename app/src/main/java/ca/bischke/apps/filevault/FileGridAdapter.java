@@ -20,13 +20,13 @@ public class FileGridAdapter extends RecyclerView.Adapter<FileGridViewHolder>
 {
     private Context context;
     private List<File> fileList;
-    private FileGridListener fileGridListener;
+    private FileListener fileListener;
 
-    public FileGridAdapter(Context context, List<File> fileList, FileGridListener fileGridListener)
+    public FileGridAdapter(Context context, List<File> fileList, FileListener fileListener)
     {
         this.context = context;
         this.fileList = fileList;
-        this.fileGridListener = fileGridListener;
+        this.fileListener = fileListener;
     }
 
     @NonNull
@@ -34,7 +34,7 @@ public class FileGridAdapter extends RecyclerView.Adapter<FileGridViewHolder>
     public FileGridViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i)
     {
         View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.file_grid, viewGroup, false);
-        return new FileGridViewHolder(view, fileGridListener);
+        return new FileGridViewHolder(view, fileListener);
     }
 
     @Override

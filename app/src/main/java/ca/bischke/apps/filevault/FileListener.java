@@ -1,6 +1,8 @@
 package ca.bischke.apps.filevault;
 
-public interface FileListListener
+public interface FileListener
 {
     void onFileClick(int position);
+
+    void onMenuClick(int position);
 }
