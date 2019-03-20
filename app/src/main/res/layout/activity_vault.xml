@@ -27,7 +27,7 @@
 
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/recycler_view"
-                    style="@style/RecyclerView" />
+                    style="@style/RecyclerViewGrid" />
 
             </LinearLayout>
 

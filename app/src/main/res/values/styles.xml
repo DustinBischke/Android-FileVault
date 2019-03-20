@@ -46,8 +46,17 @@
     <style name="RecyclerView">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">match_parent</item>
+        <item name="android:scrollbars">vertical</item>
+    </style>
+
+    <style name="RecyclerViewGrid" parent="RecyclerView">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
         <item name="android:layout_marginLeft">@dimen/grid_margin</item>
         <item name="android:layout_marginRight">@dimen/grid_margin</item>
+        <item name="android:paddingTop">@dimen/grid_margin</item>
+        <item name="android:paddingBottom">@dimen/grid_margin</item>
+        <item name="android:clipToPadding">false</item>
         <item name="android:scrollbars">vertical</item>
     </style>
 
