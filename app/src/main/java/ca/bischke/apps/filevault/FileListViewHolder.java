@@ -28,8 +28,7 @@ public class FileListViewHolder extends RecyclerView.ViewHolder
         imageFileIcon = view.findViewById(R.id.image_file_icon);
         buttonFileEncrypt = view.findViewById(R.id.button_file_encrypt);
 
-        LinearLayout layoutFile = view.findViewById(R.id.layout_file);
-        layoutFile.setOnClickListener(this);
+        view.setOnClickListener(this);
     }
 
     public TextView getTextFileName()
