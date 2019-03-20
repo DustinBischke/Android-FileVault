@@ -58,7 +58,7 @@ public class FileListAdapter extends RecyclerView.Adapter<FileListViewHolder>
         if (file.isDirectory())
         {
             fileViewHolder.getTextFileSize().setVisibility(View.GONE);
-            fileViewHolder.getButtonFileEncrypt().setVisibility(View.GONE);
+            fileViewHolder.getButtonFileMenu().setVisibility(View.GONE);
         }
         else
         {
@@ -67,8 +67,8 @@ public class FileListAdapter extends RecyclerView.Adapter<FileListViewHolder>
             String fileSize = Formatter.formatShortFileSize(context, file.length());
             textFileSize.setText(fileSize);
 
-            ImageButton buttonFileEncrypt = fileViewHolder.getButtonFileEncrypt();
-            buttonFileEncrypt.setVisibility(View.VISIBLE);
+            ImageButton buttonFileMenu = fileViewHolder.getButtonFileMenu();
+            buttonFileMenu.setVisibility(View.VISIBLE);
 
             if (FileTypes.isImage(file))
             {

@@ -37,8 +37,8 @@
     </LinearLayout>
 
     <ImageButton
-        android:id="@+id/button_file_encrypt"
-        style="@style/FileEncryptButton"
-        app:srcCompat="@drawable/ic_encrypt_24dp" />
+        android:id="@+id/button_file_menu"
+        style="@style/ImageButtonFileGridMenu"
+        app:srcCompat="@drawable/ic_more_24dp" />
 
 </LinearLayout>

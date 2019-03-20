@@ -15,7 +15,7 @@ public class FileListViewHolder extends RecyclerView.ViewHolder
     private TextView textFileDate;
     private TextView textFileSize;
     private ImageView imageFileIcon;
-    private ImageButton buttonFileEncrypt;
+    private ImageButton buttonFileMenu;
 
     public FileListViewHolder(View view, final FileListListener fileListListener)
     {
@@ -26,7 +26,7 @@ public class FileListViewHolder extends RecyclerView.ViewHolder
         textFileDate = view.findViewById(R.id.text_file_date);
         textFileSize = view.findViewById(R.id.text_file_size);
         imageFileIcon = view.findViewById(R.id.image_file_icon);
-        buttonFileEncrypt = view.findViewById(R.id.button_file_encrypt);
+        buttonFileMenu = view.findViewById(R.id.button_file_menu);
 
         view.setOnClickListener(this);
     }
@@ -51,9 +51,9 @@ public class FileListViewHolder extends RecyclerView.ViewHolder
         return imageFileIcon;
     }
 
-    public ImageButton getButtonFileEncrypt()
+    public ImageButton getButtonFileMenu()
     {
-        return buttonFileEncrypt;
+        return buttonFileMenu;
     }
 
     @Override
