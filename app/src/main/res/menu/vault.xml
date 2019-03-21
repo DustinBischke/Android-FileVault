@@ -3,16 +3,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/action_settings"
-        android:orderInCategory="3"
-        android:title="@string/settings"
-        app:showAsAction="never" />
-
-    <item
-        android:id="@+id/action_lock"
+        android:id="@+id/action_backup"
+        android:icon="@drawable/ic_cloud_upload_24dp"
         android:orderInCategory="1"
-        android:icon="@drawable/ic_lock_white_24dp"
-        android:title="Lock"
+        android:title="@string/backup"
         app:showAsAction="always" />
 
     <item
@@ -26,9 +20,18 @@
             <item
                 android:id="@+id/action_by_name"
                 android:title="@string/by_name" />
+
             <item
                 android:id="@+id/action_by_date"
                 android:title="@string/by_date" />
+
         </menu>
     </item>
+
+    <item
+        android:id="@+id/action_settings"
+        android:orderInCategory="3"
+        android:title="@string/settings"
+        app:showAsAction="never" />
+
 </menu>

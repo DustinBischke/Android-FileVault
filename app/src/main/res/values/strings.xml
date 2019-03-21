@@ -28,6 +28,7 @@
     <string name="remove">Remove</string>
     <string name="delete">Delete</string>
     <string name="file_explorer">File Explorer</string>
+    <string name="backup">Backup</string>
     <string name="settings">Settings</string>
     <string name="sort">Sort</string>
     <string name="by_name">By Name</string>

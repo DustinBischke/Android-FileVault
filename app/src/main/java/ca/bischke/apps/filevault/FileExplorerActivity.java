@@ -29,7 +29,6 @@ public class FileExplorerActivity extends AppCompatActivity
 {
     private final String TAG = "FileVault";
     private FileManager fileManager;
-    private Encryption encryption;
     private RecyclerView recyclerView;
     private ArrayList<File> fileList;
     private FileListAdapter fileAdapter;
@@ -70,8 +69,6 @@ public class FileExplorerActivity extends AppCompatActivity
 
         fileManager = new FileManager();
         fileManager.createVault();
-
-        encryption = new Encryption(this);
 
         // Setup Recycler View
         recyclerView = findViewById(R.id.recycler_view);
@@ -168,18 +165,10 @@ public class FileExplorerActivity extends AppCompatActivity
     }
 
     @Override
-    public void onPause()
-    {
-        super.onPause();
-        /*encryptVault();
-        finish();*/
-    }
-
-    @Override
     public boolean onCreateOptionsMenu(Menu menu)
     {
         // Adds Menu to the Toolbar
-        getMenuInflater().inflate(R.menu.main, menu);
+        getMenuInflater().inflate(R.menu.file_explorer, menu);
         return true;
     }
 
@@ -191,9 +180,7 @@ public class FileExplorerActivity extends AppCompatActivity
         // Handles Menu item clicks
         switch(id)
         {
-            case R.id.action_lock:
-                encryptVault();
-                finish();
+            // TODO Setup Settings button
             case R.id.action_settings:
                 break;
             case R.id.action_by_name:
@@ -298,19 +285,6 @@ public class FileExplorerActivity extends AppCompatActivity
     private void scrollToTop()
     {
         recyclerView.scrollToPosition(0);
-    }
-
-    private void encryptVault()
-    {
-        try
-        {
-            File vault = fileManager.getVaultDirectory();
-            encryption.encryptDirectory("SHIBA", vault);
-        }
-        catch (Exception ex)
-        {
-            Log.d(TAG, ex.getMessage());
-        }
     }
 
     @Override

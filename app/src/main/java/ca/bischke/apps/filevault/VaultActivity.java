@@ -136,7 +136,7 @@ public class VaultActivity extends AppCompatActivity
     public boolean onCreateOptionsMenu(Menu menu)
     {
         // Adds Menu to the Toolbar
-        getMenuInflater().inflate(R.menu.main, menu);
+        getMenuInflater().inflate(R.menu.vault, menu);
         return true;
     }
 
@@ -148,9 +148,8 @@ public class VaultActivity extends AppCompatActivity
         // Handles Menu item clicks
         switch(id)
         {
-            case R.id.action_lock:
-                encryptVault();
-                finish();
+            case R.id.action_backup:
+                break;
             case R.id.action_settings:
                 break;
             case R.id.action_by_name:
@@ -213,6 +212,7 @@ public class VaultActivity extends AppCompatActivity
             File file = new File(cameraImagePath);
             fileManager.moveFileToVault(file, fileName);
 
+            // TODO Fix file not appearing correctly in Vault
             displayFile(file);
         }
     }
