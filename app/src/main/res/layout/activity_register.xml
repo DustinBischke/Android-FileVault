@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".RegisterActivity">
+
+    <LinearLayout
+        android:id="@+id/layout_permissions"
+        style="@style/LayoutScreenColorTop">
+
+        <ImageView
+            android:id="@+id/image_lock"
+            style="@style/ImageLock"
+            app:srcCompat="@drawable/ic_lock_256dp" />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="16dp" />
+
+        <TextView
+            android:id="@+id/text_set_password_title"
+            style="@style/TextLargeWhite"
+            android:text="@string/create_account" />
+
+        <TextView
+            android:id="@+id/text_email"
+            style="@style/TextSmallAccent"
+            android:text="@string/email" />
+
+        <EditText
+            android:id="@+id/edittext_email"
+            style="@style/EditTextLoginEmail" />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="12dp" />
+
+        <TextView
+            android:id="@+id/text_password"
+            style="@style/TextSmallAccent"
+            android:text="@string/password" />
+
+        <EditText
+            android:id="@+id/edittext_password"
+            style="@style/EditTextLoginPassword" />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="12dp" />
+
+        <TextView
+            android:id="@+id/text_confirm_password"
+            style="@style/TextSmallAccent"
+            android:text="@string/confirm_password" />
+
+        <EditText
+            android:id="@+id/edittext_confirm_password"
+            style="@style/EditTextLoginPassword" />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="24dp" />
+
+        <Button
+            android:id="@+id/button_register"
+            style="@style/ButtonWhite"
+            android:onClick="buttonRegister"
+            android:text="Register" />
+
+    </LinearLayout>
+</android.support.constraint.ConstraintLayout>

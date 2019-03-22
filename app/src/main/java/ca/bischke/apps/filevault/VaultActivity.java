@@ -149,6 +149,8 @@ public class VaultActivity extends AppCompatActivity
         switch(id)
         {
             case R.id.action_backup:
+                Intent intent = new Intent(this, RegisterActivity.class);
+                startActivity(intent);
                 break;
             case R.id.action_settings:
                 break;
