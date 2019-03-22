@@ -252,10 +252,11 @@
     </style>
 
     <style name="ButtonTransparent">
-        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">24dp</item>
+        <item name="android:layout_gravity">center_horizontal</item>
         <item name="android:textSize">14sp</item>
-        <item name="android:textColor">@color/colorBlack</item>
+        <item name="android:textColor">@color/colorAccent</item>
         <item name="android:textAllCaps">false</item>
         <item name="android:background">@android:color/transparent</item>
     </style>
