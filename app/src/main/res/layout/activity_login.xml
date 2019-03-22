@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".RegisterActivity">
+    tools:context=".LoginActivity">
 
     <LinearLayout
         android:id="@+id/layout_permissions"
@@ -23,7 +23,7 @@
         <TextView
             android:id="@+id/text_set_password_title"
             style="@style/TextLargeWhite"
-            android:text="@string/register" />
+            android:text="@string/login" />
 
         <TextView
             android:id="@+id/text_email"
@@ -49,32 +49,19 @@
 
         <Space
             android:layout_width="match_parent"
-            android:layout_height="12dp" />
-
-        <TextView
-            android:id="@+id/text_confirm_password"
-            style="@style/TextSmallAccent"
-            android:text="@string/confirm_password" />
-
-        <EditText
-            android:id="@+id/edittext_confirm_password"
-            style="@style/EditTextLoginPassword" />
-
-        <Space
-            android:layout_width="match_parent"
             android:layout_height="24dp" />
 
         <Button
-            android:id="@+id/button_register"
+            android:id="@+id/button_login"
             style="@style/ButtonWhite"
-            android:onClick="buttonRegister"
-            android:text="@string/register" />
+            android:onClick="buttonLogin"
+            android:text="@string/login" />
 
         <Button
-            android:id="@+id/button_login"
+            android:id="@+id/button_register"
             style="@style/ButtonTransparent"
-            android:onClick="buttonLogin"
-            android:text="@string/already_registered" />
+            android:onClick="buttonRegister"
+            android:text="@string/no_account" />
 
     </LinearLayout>
 </android.support.constraint.ConstraintLayout>
