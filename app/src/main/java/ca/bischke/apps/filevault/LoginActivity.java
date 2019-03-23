@@ -87,7 +87,18 @@ public class LoginActivity extends AppCompatActivity
                         // TODO Switch to Activity / Display error
                         if (task.isSuccessful())
                         {
-                            Log.d(TAG, "Login successful :)");
+                            if (firebaseAuth.getCurrentUser().isEmailVerified())
+                            {
+                                Log.d(TAG, "Login successful :)");
+
+                                Intent intent = new Intent(getApplicationContext(), VaultActivity.class);
+                                startActivity(intent);
+                                finish();
+                            }
+                            else
+                            {
+                                Log.d(TAG, "Please verify your email");
+                            }
                         }
                         else
                         {

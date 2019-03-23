@@ -122,6 +122,23 @@ public class RegisterActivity extends AppCompatActivity
                         // TODO Switch to Activity / Display error
                         if (task.isSuccessful())
                         {
+                            firebaseAuth.getCurrentUser().sendEmailVerification()
+                                    .addOnCompleteListener(new OnCompleteListener<Void>()
+                                    {
+                                        @Override
+                                        public void onComplete(@NonNull Task<Void> task)
+                                        {
+                                            if (task.isSuccessful())
+                                            {
+                                                Log.d(TAG, "Please verify your email");
+                                            }
+                                            else
+                                            {
+                                                Log.d(TAG, "Failed to send email");
+                                            }
+                                        }
+                                    });
+
                             Log.d(TAG, "Registration successful :)");
                         }
                         else

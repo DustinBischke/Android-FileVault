@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".AccountActivity">
+
+    <LinearLayout
+        android:id="@+id/layout_permissions"
+        style="@style/LayoutScreenColorTop">
+
+        <ImageView
+            android:id="@+id/image_account"
+            style="@style/ImageLock"
+            app:srcCompat="@drawable/ic_account_256dp" />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="16dp" />
+
+        <TextView
+            android:id="@+id/text_email"
+            style="@style/TextLargeWhite"
+            android:text="Email" />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="24dp" />
+
+        <Button
+            android:id="@+id/button_register"
+            style="@style/ButtonWhite"
+            android:onClick="buttonLogout"
+            android:text="Logout" />
+
+    </LinearLayout>
+</android.support.constraint.ConstraintLayout>

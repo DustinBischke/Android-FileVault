@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.GravityCompat;
@@ -23,6 +24,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.PopupMenu;
+
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import java.io.File;
 import java.lang.reflect.Field;
@@ -46,6 +50,8 @@ public class VaultActivity extends AppCompatActivity
     private final int CAMERA_PERMISSION_CODE = 22;
     private final int REQUEST_IMAGE_CAPTURE = 23;
     private Uri cameraImageUri;
+    private FirebaseAuth firebaseAuth;
+    private FirebaseUser firebaseUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -107,6 +113,21 @@ public class VaultActivity extends AppCompatActivity
         recyclerView.setAdapter(fileAdapter);
 
         listFiles();
+
+        firebaseAuth = FirebaseAuth.getInstance();
+    }
+
+    @Override
+    public void onStart()
+    {
+        super.onStart();
+
+        firebaseUser = firebaseAuth.getCurrentUser();
+
+        if (firebaseUser != null)
+        {
+            Log.d(TAG, firebaseUser.getEmail());
+        }
     }
 
     /*@Override
@@ -148,9 +169,19 @@ public class VaultActivity extends AppCompatActivity
         // Handles Menu item clicks
         switch(id)
         {
+            case R.id.action_account:
+                if (firebaseUser != null && firebaseUser.isEmailVerified())
+                {
+                    Intent intent = new Intent(this, AccountActivity.class);
+                    startActivity(intent);
+                }
+                else
+                {
+                    Intent intent = new Intent(this, LoginActivity.class);
+                    startActivity(intent);
+                }
+                break;
             case R.id.action_backup:
-                Intent intent = new Intent(this, RegisterActivity.class);
-                startActivity(intent);
                 break;
             case R.id.action_settings:
                 break;

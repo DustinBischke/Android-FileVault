@@ -3,15 +3,22 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/action_backup"
-        android:icon="@drawable/ic_cloud_upload_24dp"
+        android:id="@+id/action_account"
+        android:icon="@drawable/ic_account_24dp"
         android:orderInCategory="1"
         android:title="@string/backup"
         app:showAsAction="always" />
 
     <item
-        android:id="@+id/action_sort"
+        android:id="@+id/action_backup"
+        android:icon="@drawable/ic_cloud_upload_24dp"
         android:orderInCategory="2"
+        android:title="@string/backup"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/action_sort"
+        android:orderInCategory="3"
         android:icon="@drawable/ic_sort_24dp"
         android:title="@string/sort"
         app:showAsAction="ifRoom">
@@ -30,7 +37,7 @@
 
     <item
         android:id="@+id/action_settings"
-        android:orderInCategory="3"
+        android:orderInCategory="4"
         android:title="@string/settings"
         app:showAsAction="never" />
 
