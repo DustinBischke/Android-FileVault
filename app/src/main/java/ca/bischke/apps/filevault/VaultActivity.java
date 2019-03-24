@@ -246,7 +246,7 @@ public class VaultActivity extends AppCompatActivity
 
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK)
         {
-            // Get path of captured picture
+            // Get path of captured image
             String[] projection = { MediaStore.Images.Media.DATA };
             Cursor cursor = managedQuery(cameraImageUri, projection, null, null, null);
             int dataIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
@@ -258,11 +258,13 @@ public class VaultActivity extends AppCompatActivity
             String date = simpleDateFormat.format(new Date());
             String fileName = "IMG_" + date + ".jpg";
 
-            // Move picture into Vault
+            // Move image into Vault
             File file = new File(cameraImagePath);
             fileManager.moveFileToVault(file, fileName);
 
-            // TODO Fix file not appearing correctly in Vault
+            // Display image
+            File vault = fileManager.getVaultDirectory();
+            file = new File(vault + File.separator + fileName);
             displayFile(file);
         }
     }
