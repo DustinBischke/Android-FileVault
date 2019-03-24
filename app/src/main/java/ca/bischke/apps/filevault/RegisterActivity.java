@@ -60,6 +60,22 @@ public class RegisterActivity extends AppCompatActivity
         editTextPassword.addTextChangedListener(new EditTextWatcher(editTextPassword));
         editTextPassword2.addTextChangedListener(new EditTextWatcher(editTextPassword2));
 
+        Intent intent = getIntent();
+        Bundle extras = intent.getExtras();
+
+        if (extras != null)
+        {
+            if (extras.containsKey("Email"))
+            {
+                editTextEmail.setText(extras.getString("Email"));
+            }
+
+            if (extras.containsKey("Password"))
+            {
+                editTextPassword.setText(extras.getString("Password"));
+            }
+        }
+
         firebaseAuth = FirebaseAuth.getInstance();
     }
 
@@ -120,7 +136,13 @@ public class RegisterActivity extends AppCompatActivity
 
     public void buttonLogin(View view)
     {
+        String email = editTextEmail.getText().toString();
+        String password = editTextPassword.getText().toString();
+
         Intent intent = new Intent(this, LoginActivity.class);
+        intent.putExtra("Email", email);
+        intent.putExtra("Password", password);
+
         startActivity(intent);
         finish();
     }
