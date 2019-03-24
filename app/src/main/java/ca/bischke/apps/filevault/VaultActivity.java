@@ -25,8 +25,14 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.PopupMenu;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageMetadata;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import java.io.File;
 import java.lang.reflect.Field;
@@ -52,6 +58,9 @@ public class VaultActivity extends AppCompatActivity
     private Uri cameraImageUri;
     private FirebaseAuth firebaseAuth;
     private FirebaseUser firebaseUser;
+    private FirebaseStorage firebaseStorage;
+    private StorageReference storageReference;
+    private StorageReference userReference;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -115,6 +124,8 @@ public class VaultActivity extends AppCompatActivity
         listFiles();
 
         firebaseAuth = FirebaseAuth.getInstance();
+        firebaseStorage = FirebaseStorage.getInstance();
+        storageReference = firebaseStorage.getReference();
     }
 
     @Override
@@ -126,7 +137,9 @@ public class VaultActivity extends AppCompatActivity
 
         if (firebaseUser != null)
         {
-            Log.d(TAG, firebaseUser.getEmail());
+            Log.d(TAG, "Logged in as: " + firebaseUser.getEmail());
+
+            userReference = storageReference.child("user/" + firebaseUser.getUid());
         }
     }
 
@@ -182,6 +195,10 @@ public class VaultActivity extends AppCompatActivity
                 }
                 break;
             case R.id.action_backup:
+                if (firebaseUser != null && firebaseUser.isEmailVerified())
+                {
+                    backupFiles();
+                }
                 break;
             case R.id.action_settings:
                 break;
@@ -321,6 +338,67 @@ public class VaultActivity extends AppCompatActivity
     private void scrollToTop()
     {
         recyclerView.scrollToPosition(0);
+    }
+
+    // TODO Upload Encrypted files
+    private void backupFiles()
+    {
+        File vault = fileManager.getVaultDirectory();
+        ArrayList<File> files = fileManager.getFilesInDirectory(vault);
+
+        for (final File file : files)
+        {
+            final Uri uri = Uri.fromFile(file);
+            StorageReference fileReference = userReference.child(uri.getLastPathSegment());
+
+            // Checks if File already exists
+            fileReference.getMetadata().addOnSuccessListener(new OnSuccessListener<StorageMetadata>()
+            {
+                @Override
+                public void onSuccess(StorageMetadata storageMetadata)
+                {
+                    if (storageMetadata.getSizeBytes() != file.getTotalSpace())
+                    {
+                        Log.d(TAG, file.getName() + " already uploaded");
+                    }
+                    else
+                    {
+                        Log.d(TAG, file.getName() + " updated since last upload");
+                        uploadFile(uri);
+                    }
+                }
+            }).addOnFailureListener(new OnFailureListener()
+            {
+                @Override
+                public void onFailure(@NonNull Exception e)
+                {
+                    Log.d(TAG, file.getName() + " not uploaded");
+                    uploadFile(uri);
+                }
+            });
+        }
+    }
+
+    private void uploadFile(final Uri uri)
+    {
+        StorageReference fileReference = userReference.child(uri.getLastPathSegment());
+        UploadTask uploadTask = fileReference.putFile(uri);
+
+        uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>()
+        {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot)
+            {
+                Log.d(TAG, uri.getLastPathSegment() + " uploaded successfully");
+            }
+        }).addOnFailureListener(new OnFailureListener()
+        {
+            @Override
+            public void onFailure(@NonNull Exception e)
+            {
+                Log.d(TAG,  uri.getLastPathSegment() + " failed to upload: " + e.getMessage());
+            }
+        });
     }
 
     private void encryptVault()
