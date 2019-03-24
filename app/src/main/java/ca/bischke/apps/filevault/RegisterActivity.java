@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
 import android.util.Patterns;
@@ -41,6 +42,16 @@ public class RegisterActivity extends AppCompatActivity
         // Sets Activity Layout
         setContentView(R.layout.activity_register);
 
+        // Adds the Toolbar to the Layout
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        // Displays Back Button in Toolbar
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+
+        setTitle(R.string.register);
+
         editTextEmail = findViewById(R.id.edittext_email);
         editTextPassword = findViewById(R.id.edittext_password);
         editTextPassword2 = findViewById(R.id.edittext_confirm_password);
@@ -50,6 +61,14 @@ public class RegisterActivity extends AppCompatActivity
         editTextPassword2.addTextChangedListener(new EditTextWatcher(editTextPassword2));
 
         firebaseAuth = FirebaseAuth.getInstance();
+    }
+
+    @Override
+    public boolean onSupportNavigateUp()
+    {
+        // Handles Toolbar back button click event
+        onBackPressed();
+        return true;
     }
 
     // TODO Improve error display layout

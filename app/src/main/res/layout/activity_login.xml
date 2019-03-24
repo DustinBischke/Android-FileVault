@@ -8,60 +8,64 @@
     tools:context=".LoginActivity">
 
     <LinearLayout
-        android:id="@+id/layout_permissions"
-        style="@style/LayoutScreenColorTop">
+        android:id="@+id/layout_screen"
+        style="@style/LayoutScreen">
 
-        <ImageView
-            android:id="@+id/image_lock"
-            style="@style/ImageLock"
-            app:srcCompat="@drawable/ic_lock_256dp" />
+        <include
+            android:id="@+id/toolbar"
+            layout="@layout/toolbar_main" />
 
-        <Space
-            android:layout_width="match_parent"
-            android:layout_height="16dp" />
+        <LinearLayout
+            android:id="@+id/layout_permissions"
+            style="@style/LayoutScreenColorTop">
 
-        <TextView
-            android:id="@+id/text_set_password_title"
-            style="@style/TextLargeWhite"
-            android:text="@string/login" />
+            <ImageView
+                android:id="@+id/image_lock"
+                style="@style/ImageLock"
+                app:srcCompat="@drawable/ic_lock_256dp" />
 
-        <TextView
-            android:id="@+id/text_email"
-            style="@style/TextSmallAccent"
-            android:text="@string/email" />
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="16dp" />
 
-        <EditText
-            android:id="@+id/edittext_email"
-            style="@style/EditTextLoginEmail" />
+            <TextView
+                android:id="@+id/text_email"
+                style="@style/TextSmallAccent"
+                android:text="@string/email" />
 
-        <Space
-            android:layout_width="match_parent"
-            android:layout_height="12dp" />
+            <EditText
+                android:id="@+id/edittext_email"
+                style="@style/EditTextLoginEmail" />
 
-        <TextView
-            android:id="@+id/text_password"
-            style="@style/TextSmallAccent"
-            android:text="@string/password" />
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="12dp" />
 
-        <EditText
-            android:id="@+id/edittext_password"
-            style="@style/EditTextLoginPassword" />
+            <TextView
+                android:id="@+id/text_password"
+                style="@style/TextSmallAccent"
+                android:text="@string/password" />
 
-        <Space
-            android:layout_width="match_parent"
-            android:layout_height="24dp" />
+            <EditText
+                android:id="@+id/edittext_password"
+                style="@style/EditTextLoginPassword" />
 
-        <Button
-            android:id="@+id/button_login"
-            style="@style/ButtonWhite"
-            android:onClick="buttonLogin"
-            android:text="@string/login" />
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="24dp" />
 
-        <Button
-            android:id="@+id/button_register"
-            style="@style/ButtonTransparent"
-            android:onClick="buttonRegister"
-            android:text="@string/no_account" />
+            <Button
+                android:id="@+id/button_login"
+                style="@style/ButtonWhite"
+                android:onClick="buttonLogin"
+                android:text="@string/login" />
 
+            <Button
+                android:id="@+id/button_register"
+                style="@style/ButtonTransparent"
+                android:onClick="buttonRegister"
+                android:text="@string/no_account" />
+
+        </LinearLayout>
     </LinearLayout>
 </android.support.constraint.ConstraintLayout>

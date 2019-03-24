@@ -7,7 +7,9 @@
     <string name="register">Register</string>
     <string name="already_registered">Already registered? Click here to login</string>
     <string name="login">Login</string>
+    <string name="logout">Logout</string>
     <string name="no_account">No account? Click here to register</string>
+    <string name="account">Account</string>
     <string name="email">Email</string>
     <string name="password">Password</string>
     <string name="confirm_password">Confirm password</string>
