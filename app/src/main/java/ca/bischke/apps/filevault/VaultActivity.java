@@ -183,32 +183,18 @@ public class VaultActivity extends AppCompatActivity
         switch(id)
         {
             case R.id.action_account:
-                if (firebaseUser != null && firebaseUser.isEmailVerified())
-                {
-                    Intent intent = new Intent(this, AccountActivity.class);
-                    startActivity(intent);
-                }
-                else
-                {
-                    Intent intent = new Intent(this, LoginActivity.class);
-                    startActivity(intent);
-                }
+                buttonAccount();
                 break;
             case R.id.action_backup:
-                if (firebaseUser != null && firebaseUser.isEmailVerified())
-                {
-                    backupFiles();
-                }
-                break;
-            case R.id.action_settings:
+                buttonBackup();
                 break;
             case R.id.action_by_name:
-                sortByName = true;
-                listFiles();
+                buttonSortByName();
                 break;
             case R.id.action_by_date:
-                sortByName = false;
-                listFiles();
+                buttonSortByDate();
+                break;
+            case R.id.action_settings:
                 break;
             default:
                 break;
@@ -296,6 +282,50 @@ public class VaultActivity extends AppCompatActivity
         }
     }
 
+    private void buttonAccount()
+    {
+        if (isVerifiedUser())
+        {
+            Intent intent = new Intent(this, AccountActivity.class);
+            startActivity(intent);
+        }
+        else
+        {
+            Intent intent = new Intent(this, LoginActivity.class);
+            startActivity(intent);
+        }
+    }
+
+    private void buttonBackup()
+    {
+        if (isVerifiedUser())
+        {
+            backupFiles();
+        }
+        else
+        {
+            buttonAccount();
+        }
+    }
+
+    private void buttonSortByName()
+    {
+        if (!sortByName)
+        {
+            sortByName = true;
+            listFiles();
+        }
+    }
+
+    private void buttonSortByDate()
+    {
+        if (sortByName)
+        {
+            sortByName = false;
+            listFiles();
+        }
+    }
+
     public void buttonStartFileExplorer(View view)
     {
         startFileExplorer();
@@ -340,6 +370,11 @@ public class VaultActivity extends AppCompatActivity
     private void scrollToTop()
     {
         recyclerView.scrollToPosition(0);
+    }
+
+    private boolean isVerifiedUser()
+    {
+        return (firebaseUser != null && firebaseUser.isEmailVerified());
     }
 
     // TODO Upload Encrypted files

@@ -180,16 +180,14 @@ public class FileExplorerActivity extends AppCompatActivity
         // Handles Menu item clicks
         switch(id)
         {
-            // TODO Setup Settings button
-            case R.id.action_settings:
-                break;
             case R.id.action_by_name:
-                sortByName = true;
-                listFiles(fileManager.getCurrentDirectory());
+                buttonSortByName();
                 break;
             case R.id.action_by_date:
-                sortByName = false;
-                listFiles(fileManager.getCurrentDirectory());
+                buttonSortByDate();
+                break;
+            // TODO Setup Settings button
+            case R.id.action_settings:
                 break;
             default:
                 break;
@@ -239,6 +237,24 @@ public class FileExplorerActivity extends AppCompatActivity
             {
                 listFiles(fileManager.getParentDirectory());
             }
+        }
+    }
+
+    private void buttonSortByName()
+    {
+        if (!sortByName)
+        {
+            sortByName = true;
+            listFiles(fileManager.getCurrentDirectory());
+        }
+    }
+
+    private void buttonSortByDate()
+    {
+        if (sortByName)
+        {
+            sortByName = false;
+            listFiles(fileManager.getCurrentDirectory());
         }
     }
 
