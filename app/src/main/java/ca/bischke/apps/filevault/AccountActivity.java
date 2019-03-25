@@ -42,11 +42,21 @@ public class AccountActivity extends AppCompatActivity
         }
     }
 
+    @Override
+    public boolean onSupportNavigateUp()
+    {
+        // Handles Toolbar back button click event
+        onBackPressed();
+        return true;
+    }
+
     public void buttonLogout(View view)
     {
         if (firebaseUser != null)
         {
             firebaseAuth.signOut();
         }
+
+        finish();
     }
 }
