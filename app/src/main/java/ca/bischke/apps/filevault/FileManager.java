@@ -183,7 +183,7 @@ public class FileManager
         }
     }
 
-    private String getFileNameWithoutExtension(File file)
+    public String getFileNameWithoutExtension(File file)
     {
         String fileName = file.getName();
         int position = fileName.lastIndexOf('.');

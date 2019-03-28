@@ -29,6 +29,7 @@ public class FileExplorerActivity extends AppCompatActivity
 {
     private final String TAG = "FileVault";
     private FileManager fileManager;
+    private Encryption encryption;
     private RecyclerView recyclerView;
     private ArrayList<File> fileList;
     private FileListAdapter fileAdapter;
@@ -162,6 +163,8 @@ public class FileExplorerActivity extends AppCompatActivity
                 popupMenu.show();
             }
         });
+
+        encryption = new Encryption(this);
     }
 
     @Override
@@ -303,6 +306,25 @@ public class FileExplorerActivity extends AppCompatActivity
         recyclerView.scrollToPosition(0);
     }
 
+    private void moveFileToVault(File file)
+    {
+        String fileName = fileManager.getFileNameWithoutExtension(file);
+        fileManager.moveFileToVault(file);
+
+        File vault = fileManager.getVaultDirectory();
+        String vaultPath = vault.getAbsolutePath();
+        File directory = new File(vaultPath + File.separator + fileName);
+
+        try
+        {
+            encryption.encryptDirectory("SHIBA", directory);
+        }
+        catch (Exception ex)
+        {
+            Log.d(TAG, ex.getMessage());
+        }
+    }
+
     @Override
     public void onFileClick(int position)
     {
@@ -377,7 +399,7 @@ public class FileExplorerActivity extends AppCompatActivity
                     case R.id.file_open:
                         break;
                     case R.id.file_encrypt:
-                        fileManager.moveFileToVault(file);
+                        moveFileToVault(file);
                     default:
                         break;
                 }

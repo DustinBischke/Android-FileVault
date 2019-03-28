@@ -122,9 +122,6 @@ public class VaultActivity extends AppCompatActivity
         fileAdapter.setHasStableIds(true);
         recyclerView.setAdapter(fileAdapter);
 
-        decryptThumbnails();
-        listFiles();
-
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseStorage = FirebaseStorage.getInstance();
         storageReference = firebaseStorage.getReference();
@@ -144,47 +141,17 @@ public class VaultActivity extends AppCompatActivity
             userReference = storageReference.child("user/" + firebaseUser.getUid());
         }
 
-        //decryptThumbnails();
-        //listFiles();
-    }
-
-    /*@Override
-    public void onResume()
-    {
-        super.onResume();
-
-        //decryptVault();
         decryptThumbnails();
         listFiles();
-    }*/
-
-    /*@Override
-    public void onPause()
-    {
-        super.onPause();
-
-        //encryptVault();
-        encryptThumbnails();
-        finish();
-    }*/
+    }
 
     @Override
     public void onStop()
     {
         super.onStop();
 
-        //encryptVault();
         encryptThumbnails();
-        //finish();
     }
-
-    /*@Override
-    public void onDestroy()
-    {
-        super.onDestroy();
-
-        encryptThumbnails();
-    }*/
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu)
