@@ -19,6 +19,7 @@ import java.util.List;
 public class FileGridAdapter extends RecyclerView.Adapter<FileGridViewHolder>
 {
     private Context context;
+    private FileManager fileManager;
     private List<File> fileList;
     private FileListener fileListener;
 
@@ -27,6 +28,7 @@ public class FileGridAdapter extends RecyclerView.Adapter<FileGridViewHolder>
         this.context = context;
         this.fileList = fileList;
         this.fileListener = fileListener;
+        fileManager = new FileManager();
     }
 
     @NonNull
@@ -40,15 +42,17 @@ public class FileGridAdapter extends RecyclerView.Adapter<FileGridViewHolder>
     @Override
     public void onBindViewHolder(@NonNull final FileGridViewHolder fileViewHolder, int i)
     {
-        File file = fileList.get(i);
+        File directory = fileList.get(i);
+        File file = fileManager.getMainFileFromDirectory(directory);
 
         TextView textFileName = fileViewHolder.getTextFileName();
         textFileName.setText(file.getName());
 
-        if (FileTypes.isImage(file))
+        ImageView imageFileIcon = fileViewHolder.getImageFileIcon();
+
+        if (fileManager.getThumbnailFromDirectory(directory) != null)
         {
-            ImageView imageFileIcon = fileViewHolder.getImageFileIcon();
-            new ThumbnailAsyncTask().execute(imageFileIcon, file);
+            new ThumbnailAsyncTask().execute(imageFileIcon, directory);
         }
     }
 
@@ -79,11 +83,10 @@ public class FileGridAdapter extends RecyclerView.Adapter<FileGridViewHolder>
             imageFileIcon = (ImageView) objects[0];
             File file = (File) objects[1];
 
-            int size = 512;
-            Bitmap bitmap = BitmapFactory.decodeFile(file.getPath());
-            bitmap = ThumbnailUtils.extractThumbnail(bitmap, size, size);
+            File thumbnail = fileManager.getThumbnailFromDirectory(file);
+            String thumbnailPath = thumbnail.getAbsolutePath();
 
-            return bitmap;
+            return BitmapFactory.decodeFile(thumbnailPath);
         }
 
         @Override

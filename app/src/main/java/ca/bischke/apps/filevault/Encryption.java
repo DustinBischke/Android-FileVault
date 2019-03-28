@@ -11,6 +11,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.KeySpec;
+import java.util.ArrayList;
 
 import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
@@ -125,6 +126,42 @@ public class Encryption
             throws GeneralSecurityException, IOException
     {
         encodeFile(Cipher.DECRYPT_MODE, password, inputFile, outputFile);
+    }
+
+    public void encodeFileList(int cipherMode, String password, ArrayList<File> files)
+            throws GeneralSecurityException, IOException
+    {
+        SecretKey secretKey = getSecretKey(password, getSalt());
+        String algorithm = "AES/CBC/PKCS5Padding";
+        Cipher cipher = Cipher.getInstance(algorithm);
+        cipher.init(cipherMode, secretKey, getIV());
+
+        for (File file : files)
+        {
+            FileInputStream inputStream = new FileInputStream(file);
+            byte[] inputBytes = new byte[(int) file.length()];
+            inputStream.read(inputBytes);
+
+            byte[] outputBytes = cipher.doFinal(inputBytes);
+
+            FileOutputStream outputStream = new FileOutputStream(file);
+            outputStream.write(outputBytes);
+
+            inputStream.close();
+            outputStream.close();
+        }
+    }
+
+    public void encryptFileList(String password, ArrayList<File> files)
+            throws GeneralSecurityException, IOException
+    {
+        encodeFileList(Cipher.ENCRYPT_MODE, password, files);
+    }
+
+    public void decryptFileList(String password, ArrayList<File> files)
+            throws GeneralSecurityException, IOException
+    {
+        encodeFileList(Cipher.DECRYPT_MODE, password, files);
     }
 
     public void encodeDirectory(int cipherMode, String password, File directory)

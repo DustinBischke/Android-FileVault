@@ -336,6 +336,8 @@ public class FileExplorerActivity extends AppCompatActivity
         FileListViewHolder fileViewHolder = (FileListViewHolder) recyclerView.findViewHolderForAdapterPosition(position);
         ImageButton menuButton = fileViewHolder.getButtonFileMenu();
 
+        final File file = fileAdapter.getDataFromPosition(position);
+
         PopupMenu popupMenu = new PopupMenu(this, menuButton);
 
         try
@@ -375,6 +377,7 @@ public class FileExplorerActivity extends AppCompatActivity
                     case R.id.file_open:
                         break;
                     case R.id.file_encrypt:
+                        fileManager.moveFileToVault(file);
                     default:
                         break;
                 }

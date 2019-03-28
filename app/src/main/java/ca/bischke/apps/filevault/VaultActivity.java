@@ -35,6 +35,7 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.io.File;
+import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;
@@ -121,6 +122,7 @@ public class VaultActivity extends AppCompatActivity
         fileAdapter.setHasStableIds(true);
         recyclerView.setAdapter(fileAdapter);
 
+        decryptThumbnails();
         listFiles();
 
         firebaseAuth = FirebaseAuth.getInstance();
@@ -141,29 +143,47 @@ public class VaultActivity extends AppCompatActivity
 
             userReference = storageReference.child("user/" + firebaseUser.getUid());
         }
+
+        //decryptThumbnails();
+        //listFiles();
     }
 
     /*@Override
     public void onResume()
     {
         super.onResume();
-        decryptVault();
-        listFiles();
-    }
 
-    @Override
+        //decryptVault();
+        decryptThumbnails();
+        listFiles();
+    }*/
+
+    /*@Override
     public void onPause()
     {
         super.onPause();
-        encryptVault();
-        finish();
-    }
 
-    /*@Override
+        //encryptVault();
+        encryptThumbnails();
+        finish();
+    }*/
+
+    @Override
     public void onStop()
     {
         super.onStop();
-        encryptVault();
+
+        //encryptVault();
+        encryptThumbnails();
+        //finish();
+    }
+
+    /*@Override
+    public void onDestroy()
+    {
+        super.onDestroy();
+
+        encryptThumbnails();
     }*/
 
     @Override
@@ -438,6 +458,60 @@ public class VaultActivity extends AppCompatActivity
         });
     }
 
+    private void encryptThumbnails()
+    {
+        File vault = fileManager.getVaultDirectory();
+        ArrayList<File> directories = fileManager.getFilesInDirectory(vault);
+
+        ArrayList<File> files = new ArrayList<>();
+
+        for (File directory : directories)
+        {
+            File file = fileManager.getThumbnailFromDirectory(directory);
+
+            if (file != null)
+            {
+                files.add(file);
+            }
+        }
+
+        try
+        {
+            encryption.encryptFileList("SHIBA", files);
+        }
+        catch (Exception ex)
+        {
+            Log.d(TAG, ex.getMessage());
+        }
+    }
+
+    private void decryptThumbnails()
+    {
+        File vault = fileManager.getVaultDirectory();
+        ArrayList<File> directories = fileManager.getFilesInDirectory(vault);
+
+        ArrayList<File> files = new ArrayList<>();
+
+        for (File directory : directories)
+        {
+            File file = fileManager.getThumbnailFromDirectory(directory);
+
+            if (file != null)
+            {
+                files.add(file);
+            }
+        }
+
+        try
+        {
+            encryption.decryptFileList("SHIBA", files);
+        }
+        catch (Exception ex)
+        {
+            Log.d(TAG, ex.getMessage());
+        }
+    }
+
     private void encryptVault()
     {
         try
@@ -484,7 +558,8 @@ public class VaultActivity extends AppCompatActivity
     @Override
     public void onFileClick(int position)
     {
-        File file = fileAdapter.getDataFromPosition(position);
+        File directory = fileAdapter.getDataFromPosition(position);
+        File file = fileManager.getMainFileFromDirectory(directory);
         String filePath = file.getAbsolutePath();
 
         if (FileTypes.isImage(file))
