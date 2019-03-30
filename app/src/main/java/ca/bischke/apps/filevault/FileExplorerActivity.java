@@ -1,6 +1,7 @@
 package ca.bischke.apps.filevault;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -16,6 +17,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.webkit.MimeTypeMap;
 import android.widget.ImageButton;
 import android.widget.PopupMenu;
 
@@ -347,6 +349,18 @@ public class FileExplorerActivity extends AppCompatActivity
             {
                 Intent intent = new Intent(this, VideoPlayerActivity.class);
                 intent.putExtra("FILE_PATH", filePath);
+                startActivity(intent);
+            }
+            else
+            {
+                Intent intent = new Intent();
+                intent.setAction(Intent.ACTION_VIEW);
+
+                MimeTypeMap mime = MimeTypeMap.getSingleton();
+                String ext = file.getName().substring(file.getName().indexOf(".")+1);
+                String type = mime.getMimeTypeFromExtension(ext);
+
+                intent.setDataAndType(Uri.fromFile(file), type);
                 startActivity(intent);
             }
         }
