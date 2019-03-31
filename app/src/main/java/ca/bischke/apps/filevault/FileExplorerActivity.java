@@ -346,11 +346,40 @@ public class FileExplorerActivity extends AppCompatActivity
         finish();
     }
 
+    private void openFile(File file)
+    {
+        String filePath = file.getAbsolutePath();
+
+        if (FileTypes.isImage(file))
+        {
+            Intent intent = new Intent(this, ImageViewerActivity.class);
+            intent.putExtra("FILE_PATH", filePath);
+            startActivity(intent);
+        }
+        else if (FileTypes.isVideo(file))
+        {
+            Intent intent = new Intent(this, VideoPlayerActivity.class);
+            intent.putExtra("FILE_PATH", filePath);
+            startActivity(intent);
+        }
+        else
+        {
+            Intent intent = new Intent();
+            intent.setAction(Intent.ACTION_VIEW);
+
+            MimeTypeMap mime = MimeTypeMap.getSingleton();
+            String ext = file.getName().substring(file.getName().indexOf(".")+1);
+            String type = mime.getMimeTypeFromExtension(ext);
+
+            intent.setDataAndType(Uri.fromFile(file), type);
+            startActivity(intent);
+        }
+    }
+
     @Override
     public void onFileClick(int position)
     {
         File file = fileAdapter.getDataFromPosition(position);
-        String filePath = file.getAbsolutePath();
 
         if (file.isDirectory())
         {
@@ -358,30 +387,7 @@ public class FileExplorerActivity extends AppCompatActivity
         }
         else
         {
-            if (FileTypes.isImage(file))
-            {
-                Intent intent = new Intent(this, ImageViewerActivity.class);
-                intent.putExtra("FILE_PATH", filePath);
-                startActivity(intent);
-            }
-            else if (FileTypes.isVideo(file))
-            {
-                Intent intent = new Intent(this, VideoPlayerActivity.class);
-                intent.putExtra("FILE_PATH", filePath);
-                startActivity(intent);
-            }
-            else
-            {
-                Intent intent = new Intent();
-                intent.setAction(Intent.ACTION_VIEW);
-
-                MimeTypeMap mime = MimeTypeMap.getSingleton();
-                String ext = file.getName().substring(file.getName().indexOf(".")+1);
-                String type = mime.getMimeTypeFromExtension(ext);
-
-                intent.setDataAndType(Uri.fromFile(file), type);
-                startActivity(intent);
-            }
+            openFile(file);
         }
     }
 
@@ -426,10 +432,10 @@ public class FileExplorerActivity extends AppCompatActivity
             {
                 int id = menuItem.getItemId();
 
-                // TODO: Setup Menu buttons
                 switch(id)
                 {
                     case R.id.file_open:
+                        openFile(file);
                         break;
                     case R.id.file_encrypt:
                         moveFileToVault(file);

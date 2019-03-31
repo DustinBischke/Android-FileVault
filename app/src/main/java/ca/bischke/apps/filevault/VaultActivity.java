@@ -539,11 +539,8 @@ public class VaultActivity extends AppCompatActivity
         startActivityForResult(intent, REQUEST_IMAGE_CAPTURE);
     }
 
-    @Override
-    public void onFileClick(int position)
+    private void openFile(File file)
     {
-        File directory = fileAdapter.getDataFromPosition(position);
-        File file = fileManager.getMainFileFromDirectory(directory);
         String filePath = file.getAbsolutePath();
 
         if (FileTypes.isImage(file))
@@ -563,10 +560,21 @@ public class VaultActivity extends AppCompatActivity
     }
 
     @Override
+    public void onFileClick(int position)
+    {
+        File directory = fileAdapter.getDataFromPosition(position);
+        File file = fileManager.getMainFileFromDirectory(directory);
+
+        openFile(file);
+    }
+
+    @Override
     public void onMenuClick(int position)
     {
         FileGridViewHolder fileViewHolder = (FileGridViewHolder) recyclerView.findViewHolderForAdapterPosition(position);
         ImageButton menuButton = fileViewHolder.getButtonFileMenu();
+
+        final File file = fileAdapter.getDataFromPosition(position);
 
         PopupMenu popupMenu = new PopupMenu(this, menuButton);
 
@@ -605,6 +613,7 @@ public class VaultActivity extends AppCompatActivity
                 switch(id)
                 {
                     case R.id.file_open:
+                        openFile(file);
                         break;
                     case R.id.file_rename:
                         break;
