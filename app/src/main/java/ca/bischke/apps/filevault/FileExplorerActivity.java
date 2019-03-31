@@ -36,6 +36,7 @@ public class FileExplorerActivity extends AppCompatActivity
     private ArrayList<File> fileList;
     private FileListAdapter fileAdapter;
     private boolean sortByName = true;
+    private String encryptionKey;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -69,6 +70,18 @@ public class FileExplorerActivity extends AppCompatActivity
         // Sets Navigation View
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        // Get Encryption Key from Intent
+        Intent intent = getIntent();
+        Bundle extras = intent.getExtras();
+
+        if (extras != null)
+        {
+            if (extras.containsKey("ENCRYPTION_KEY"))
+            {
+                encryptionKey = intent.getExtras().getString("ENCRYPTION_KEY");
+            }
+        }
 
         fileManager = new FileManager();
         fileManager.createVault();
@@ -210,9 +223,7 @@ public class FileExplorerActivity extends AppCompatActivity
         switch(id)
         {
             case R.id.nav_file_vault:
-                Intent intent = new Intent(this, VaultActivity.class);
-                startActivity(intent);
-                finish();
+                startVault();
                 break;
             case R.id.nav_file_explorer:
                 break;
@@ -319,12 +330,20 @@ public class FileExplorerActivity extends AppCompatActivity
 
         try
         {
-            encryption.encryptDirectory("SHIBA", directory);
+            encryption.encryptDirectory(encryptionKey, directory);
         }
         catch (Exception ex)
         {
             Log.d(TAG, ex.getMessage());
         }
+    }
+
+    private void startVault()
+    {
+        Intent intent = new Intent(this, VaultActivity.class);
+        intent.putExtra("ENCRYPTION_KEY", encryptionKey);
+        startActivity(intent);
+        finish();
     }
 
     @Override

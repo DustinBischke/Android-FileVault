@@ -55,7 +55,7 @@ public class LockScreenActivity extends AppCompatActivity
 
                 if (Arrays.equals(hashPassword, savedPassword))
                 {
-                    LinearLayout layout = findViewById(R.id.layout_decrypting);
+                    /*LinearLayout layout = findViewById(R.id.layout_decrypting);
                     Animation fadeIn = AnimationUtils.loadAnimation(this, R.anim.fade_in);
                     layout.setVisibility(View.VISIBLE);
                     layout.startAnimation(fadeIn);
@@ -69,12 +69,17 @@ public class LockScreenActivity extends AppCompatActivity
                         @Override
                         public void run()
                         {
-                            decryptVault();
+                            //decryptVault();
                             Intent intent = new Intent(LockScreenActivity.this, VaultActivity.class);
                             startActivity(intent);
                             finish();
                         }
-                    }).start();
+                    }).start();*/
+
+                    Intent intent = new Intent(LockScreenActivity.this, VaultActivity.class);
+                    intent.putExtra("ENCRYPTION_KEY", password);
+                    startActivity(intent);
+                    finish();
                 }
                 else
                 {

@@ -4,6 +4,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.ThumbnailUtils;
 import android.os.Environment;
+import android.provider.MediaStore;
 import android.util.Log;
 
 import java.io.File;
@@ -236,17 +237,20 @@ public class FileManager
             {
                 Log.d(TAG, fileName + " moved to Vault Directory");
 
-                // TODO Video Thumbnails
-                if (FileTypes.isImage(vaultFile))
+                try
                 {
-                    try
+                    if (FileTypes.isImage(vaultFile))
                     {
                         exportImageThumbnail(vaultFile, directory);
                     }
-                    catch (IOException e)
+                    else if (FileTypes.isVideo(vaultFile))
                     {
-                        Log.d(TAG, "Failed to create thumbnail");
+                        exportVideoThumbnail(vaultFile, directory);
                     }
+                }
+                catch (IOException e)
+                {
+                    Log.d(TAG, "Failed to create thumbnail");
                 }
             }
             else
@@ -289,6 +293,20 @@ public class FileManager
         fileOutputStream.close();
     }
 
+    private void exportVideoThumbnail(File file, File directory)
+            throws IOException
+    {
+        String path = directory.getAbsolutePath();
+        File thumbnail = new File(path + File.separator + "thumbnail.jpg");
+
+        Bitmap bitmap = ThumbnailUtils.createVideoThumbnail(path, MediaStore.Images.Thumbnails.MINI_KIND);
+
+        FileOutputStream fileOutputStream = new FileOutputStream(thumbnail);
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 50, fileOutputStream);
+        fileOutputStream.flush();
+        fileOutputStream.close();
+    }
+
     public File getMainFileFromDirectory(File directory)
     {
         ArrayList<File> files = getFilesInDirectory(directory);
@@ -320,5 +338,12 @@ public class FileManager
         }
 
         return null;
+    }
+
+    public boolean isFileInVault(File file)
+    {
+        String filePath = file.getAbsolutePath();
+
+        return filePath.contains(vaultPath);
     }
 }

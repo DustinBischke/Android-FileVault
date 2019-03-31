@@ -41,6 +41,7 @@ public class SetPasswordActivity extends AppCompatActivity
             {
                 try
                 {
+                    // TODO Fix password not working with password length 5, 9, 13
                     String key = getString(R.string.preference_pass);
                     byte[] hashPassword = Hash.getHashBytes(password);
 
@@ -48,6 +49,7 @@ public class SetPasswordActivity extends AppCompatActivity
                     keyStore.setBytes(key, hashPassword);
 
                     Intent intent = new Intent(this, SetupCompleteActivity.class);
+                    intent.putExtra("ENCRYPTION_KEY", password);
                     startActivity(intent);
                 }
                 catch (Exception ex)

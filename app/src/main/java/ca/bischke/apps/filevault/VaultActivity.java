@@ -62,6 +62,7 @@ public class VaultActivity extends AppCompatActivity
     private FirebaseStorage firebaseStorage;
     private StorageReference storageReference;
     private StorageReference userReference;
+    private String encryptionKey;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -96,6 +97,19 @@ public class VaultActivity extends AppCompatActivity
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+        // Get Encryption Key from Intent
+        Intent intent = getIntent();
+        Bundle extras = intent.getExtras();
+
+        if (extras != null)
+        {
+            if (extras.containsKey("ENCRYPTION_KEY"))
+            {
+                encryptionKey = intent.getExtras().getString("ENCRYPTION_KEY");
+            }
+        }
+
+        // Create Vault directory
         fileManager = new FileManager();
         fileManager.createVault();
 
@@ -122,6 +136,7 @@ public class VaultActivity extends AppCompatActivity
         fileAdapter.setHasStableIds(true);
         recyclerView.setAdapter(fileAdapter);
 
+        // Create Firebase instances
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseStorage = FirebaseStorage.getInstance();
         storageReference = firebaseStorage.getReference();
@@ -212,6 +227,7 @@ public class VaultActivity extends AppCompatActivity
         return true;
     }
 
+    // TODO Update to generate Thumbnail file
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data)
     {
@@ -444,7 +460,7 @@ public class VaultActivity extends AppCompatActivity
 
         try
         {
-            encryption.encryptFileList("SHIBA", files);
+            encryption.encryptFileList(encryptionKey, files);
         }
         catch (Exception ex)
         {
@@ -471,7 +487,7 @@ public class VaultActivity extends AppCompatActivity
 
         try
         {
-            encryption.decryptFileList("SHIBA", files);
+            encryption.decryptFileList(encryptionKey, files);
         }
         catch (Exception ex)
         {
@@ -484,7 +500,7 @@ public class VaultActivity extends AppCompatActivity
         try
         {
             File vault = fileManager.getVaultDirectory();
-            encryption.encryptDirectory("SHIBA", vault);
+            encryption.encryptDirectory(encryptionKey, vault);
         }
         catch (Exception ex)
         {
@@ -497,7 +513,7 @@ public class VaultActivity extends AppCompatActivity
         try
         {
             File vault = fileManager.getVaultDirectory();
-            encryption.decryptDirectory("SHIBA", vault);
+            encryption.decryptDirectory(encryptionKey, vault);
         }
         catch (Exception ex)
         {
@@ -508,6 +524,7 @@ public class VaultActivity extends AppCompatActivity
     private void startFileExplorer()
     {
         Intent intent = new Intent(this, FileExplorerActivity.class);
+        intent.putExtra("ENCRYPTION_KEY", encryptionKey);
         startActivity(intent);
         finish();
     }
@@ -532,12 +549,14 @@ public class VaultActivity extends AppCompatActivity
         if (FileTypes.isImage(file))
         {
             Intent intent = new Intent(this, ImageViewerActivity.class);
+            intent.putExtra("ENCRYPTION_KEY", encryptionKey);
             intent.putExtra("FILE_PATH", filePath);
             startActivity(intent);
         }
         else if (FileTypes.isVideo(file))
         {
             Intent intent = new Intent(this, VideoPlayerActivity.class);
+            intent.putExtra("ENCRYPTION_KEY", encryptionKey);
             intent.putExtra("FILE_PATH", filePath);
             startActivity(intent);
         }

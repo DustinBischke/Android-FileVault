@@ -7,6 +7,8 @@ import android.view.View;
 
 public class SetupCompleteActivity extends AppCompatActivity
 {
+    private String encryptionKey;
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -24,11 +26,23 @@ public class SetupCompleteActivity extends AppCompatActivity
 
         // Sets Activity Layout
         setContentView(R.layout.activity_setup_complete);
+
+        Intent intent = getIntent();
+        Bundle extras = intent.getExtras();
+
+        if (extras != null)
+        {
+            if (extras.containsKey("ENCRYPTION_KEY"))
+            {
+                encryptionKey = intent.getExtras().getString("ENCRYPTION_KEY");
+            }
+        }
     }
 
     public void buttonContinue(View view)
     {
         Intent intent = new Intent(this, VaultActivity.class);
+        intent.putExtra("ENCRYPTION_KEY", encryptionKey);
         startActivity(intent);
         finish();
     }
