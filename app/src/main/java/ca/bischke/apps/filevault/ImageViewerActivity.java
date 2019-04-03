@@ -1,10 +1,12 @@
 package ca.bischke.apps.filevault;
 
 import android.content.Intent;
-import android.net.Uri;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -19,7 +21,6 @@ public class ImageViewerActivity extends AppCompatActivity
     private Encryption encryption;
     private File file;
     private String encryptionKey;
-    private boolean fileInVault;
     private String filePath;
 
     @Override
@@ -91,10 +92,7 @@ public class ImageViewerActivity extends AppCompatActivity
             }
         }
 
-        // TODO: Fix ImageView not displaying large images (Maximum resolution 4096x4096)
-        // Displays the Image File
-        ImageView imageView = findViewById(R.id.image);
-        imageView.setImageURI(Uri.fromFile(file));
+        displayImage();
     }
 
     @Override
@@ -163,6 +161,7 @@ public class ImageViewerActivity extends AppCompatActivity
             try
             {
                 encryption.encryptDirectory(encryptionKey, directory);
+                finish();
             }
             catch (Exception ex)
             {
@@ -174,5 +173,53 @@ public class ImageViewerActivity extends AppCompatActivity
             // TODO Display message that file is already in Vault
             Log.d(TAG, "File already in vault");
         }
+    }
+
+    private Bitmap getScaledBitmap(Bitmap bitmap)
+    {
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+
+        int displayWidth = displayMetrics.widthPixels;
+        int displayHeight = displayMetrics.heightPixels;
+
+        int bitmapWidth = bitmap.getWidth();
+        int bitmapHeight = bitmap.getHeight();
+        float bitmapRatio = (float) bitmapWidth / (float) bitmapHeight;
+
+        if (bitmapWidth > displayWidth || bitmapHeight > displayHeight)
+        {
+            int width;
+            int height;
+
+            if (bitmapRatio > 1)
+            {
+                width = displayWidth;
+                height = Math.round(displayWidth / bitmapRatio);
+            }
+            else if (bitmapRatio < 1)
+            {
+                width = Math.round(displayHeight * bitmapRatio);
+                height = displayHeight;
+            }
+            else
+            {
+                width = displayWidth;
+                height = displayHeight;
+            }
+
+            bitmap = Bitmap.createScaledBitmap(bitmap, width, height, false);
+        }
+
+        return bitmap;
+    }
+
+    private void displayImage()
+    {
+        Bitmap bitmap = BitmapFactory.decodeFile(file.getPath());
+        bitmap = getScaledBitmap(bitmap);
+
+        ImageView imageView = findViewById(R.id.image);
+        imageView.setImageBitmap(bitmap);
     }
 }
