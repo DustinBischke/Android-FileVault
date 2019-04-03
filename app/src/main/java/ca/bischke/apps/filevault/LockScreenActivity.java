@@ -88,22 +88,4 @@ public class LockScreenActivity extends AppCompatActivity
             }
         }
     }
-
-    private void decryptVault()
-    {
-        String STORAGE_ROOT = Environment.getExternalStorageDirectory().toString();
-        String STORAGE_VAULT = STORAGE_ROOT + File.separator + "FileVault";
-
-        Encryption encryption = new Encryption(this);
-
-        try
-        {
-            File vault = new File(STORAGE_VAULT);
-            encryption.decryptDirectory("SHIBA", vault);
-        }
-        catch (Exception ex)
-        {
-            Log.d("ASDF", ex.getMessage());
-        }
-    }
 }
