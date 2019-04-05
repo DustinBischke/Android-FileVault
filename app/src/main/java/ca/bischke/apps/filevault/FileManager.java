@@ -254,8 +254,7 @@ public class FileManager
     private void exportImageThumbnail(File file, File directory)
             throws IOException
     {
-        String path = directory.getAbsolutePath();
-        File thumbnail = new File(path + File.separator + "thumbnail.jpg");
+        File thumbnail = new File(directory + File.separator + "thumbnail.jpg");
 
         int size = 512;
         Bitmap bitmap = BitmapFactory.decodeFile(file.getPath());
@@ -280,14 +279,13 @@ public class FileManager
         fileOutputStream.close();
     }
 
-    // TODO Test video thumbnail creation
     private void exportVideoThumbnail(File file, File directory)
             throws IOException
     {
-        String path = directory.getAbsolutePath();
-        File thumbnail = new File(path + File.separator + "thumbnail.jpg");
+        File thumbnail = new File(directory + File.separator + "thumbnail.jpg");
+        String videoPath = file.getAbsolutePath();
 
-        Bitmap bitmap = ThumbnailUtils.createVideoThumbnail(path, MediaStore.Images.Thumbnails.MINI_KIND);
+        Bitmap bitmap = ThumbnailUtils.createVideoThumbnail(videoPath, MediaStore.Images.Thumbnails.MINI_KIND);
 
         FileOutputStream fileOutputStream = new FileOutputStream(thumbnail);
         bitmap.compress(Bitmap.CompressFormat.JPEG, 50, fileOutputStream);
