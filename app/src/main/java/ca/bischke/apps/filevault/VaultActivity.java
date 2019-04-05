@@ -575,6 +575,12 @@ public class VaultActivity extends AppCompatActivity
     }
 
     @Override
+    public void onFileLongClick(int position)
+    {
+        onMenuClick(position);
+    }
+
+    @Override
     public void onMenuClick(int position)
     {
         FileGridViewHolder fileViewHolder = (FileGridViewHolder) recyclerView.findViewHolderForAdapterPosition(position);

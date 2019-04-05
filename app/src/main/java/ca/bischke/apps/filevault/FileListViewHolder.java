@@ -4,12 +4,14 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 public class FileListViewHolder extends RecyclerView.ViewHolder
-        implements View.OnClickListener
+        implements View.OnClickListener, View.OnLongClickListener
 {
     private FileListener fileListener;
+    private LinearLayout layoutFile;
     private TextView textFileName;
     private TextView textFileDate;
     private TextView textFileSize;
@@ -21,6 +23,7 @@ public class FileListViewHolder extends RecyclerView.ViewHolder
         super(view);
 
         this.fileListener = fileListener;
+        layoutFile = view.findViewById(R.id.layout_file);
         textFileName = view.findViewById(R.id.text_file_name);
         textFileDate = view.findViewById(R.id.text_file_date);
         textFileSize = view.findViewById(R.id.text_file_size);
@@ -37,6 +40,12 @@ public class FileListViewHolder extends RecyclerView.ViewHolder
         });
 
         view.setOnClickListener(this);
+        view.setOnLongClickListener(this);
+    }
+
+    public LinearLayout getLayoutFile()
+    {
+        return layoutFile;
     }
 
     public TextView getTextFileName()
@@ -68,5 +77,12 @@ public class FileListViewHolder extends RecyclerView.ViewHolder
     public void onClick(View view)
     {
         fileListener.onFileClick(getAdapterPosition());
+    }
+
+    @Override
+    public boolean onLongClick(View view)
+    {
+        fileListener.onFileLongClick(getAdapterPosition());
+        return true;
     }
 }

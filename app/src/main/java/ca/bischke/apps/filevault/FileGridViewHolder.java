@@ -7,7 +7,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 public class FileGridViewHolder extends RecyclerView.ViewHolder
-        implements View.OnClickListener
+        implements View.OnClickListener, View.OnLongClickListener
 {
     private FileListener fileListener;
     private TextView textFileName;
@@ -33,6 +33,7 @@ public class FileGridViewHolder extends RecyclerView.ViewHolder
         });
 
         view.setOnClickListener(this);
+        view.setOnLongClickListener(this);
     }
 
     public TextView getTextFileName()
@@ -54,5 +55,12 @@ public class FileGridViewHolder extends RecyclerView.ViewHolder
     public void onClick(View view)
     {
         fileListener.onFileClick(getAdapterPosition());
+    }
+
+    @Override
+    public boolean onLongClick(View view)
+    {
+        fileListener.onFileLongClick(getAdapterPosition());
+        return true;
     }
 }

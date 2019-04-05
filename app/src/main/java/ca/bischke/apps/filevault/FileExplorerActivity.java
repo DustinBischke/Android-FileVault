@@ -19,6 +19,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.webkit.MimeTypeMap;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 
 import java.io.File;
@@ -391,6 +392,13 @@ public class FileExplorerActivity extends AppCompatActivity
         {
             openFile(file);
         }
+    }
+
+    // TODO Multi file selection
+    @Override
+    public void onFileLongClick(int position)
+    {
+        onMenuClick(position);
     }
 
     @Override
