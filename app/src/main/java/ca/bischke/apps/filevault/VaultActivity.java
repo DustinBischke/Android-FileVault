@@ -501,32 +501,6 @@ public class VaultActivity extends AppCompatActivity
         }
     }
 
-    private void encryptVault()
-    {
-        try
-        {
-            File vault = fileManager.getVaultDirectory();
-            encryption.encryptDirectory(encryptionKey, vault);
-        }
-        catch (Exception ex)
-        {
-            Log.d(TAG, ex.getMessage());
-        }
-    }
-
-    private void decryptVault()
-    {
-        try
-        {
-            File vault = fileManager.getVaultDirectory();
-            encryption.decryptDirectory(encryptionKey, vault);
-        }
-        catch (Exception ex)
-        {
-            Log.d(TAG, ex.getMessage());
-        }
-    }
-
     private void startFileExplorer()
     {
         Intent intent = new Intent(this, FileExplorerActivity.class);
