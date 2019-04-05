@@ -353,12 +353,14 @@ public class FileExplorerActivity extends AppCompatActivity
         if (FileTypes.isImage(file))
         {
             Intent intent = new Intent(this, ImageViewerActivity.class);
+            intent.putExtra("ENCRYPTION_KEY", encryptionKey);
             intent.putExtra("FILE_PATH", filePath);
             startActivity(intent);
         }
         else if (FileTypes.isVideo(file))
         {
             Intent intent = new Intent(this, VideoPlayerActivity.class);
+            intent.putExtra("ENCRYPTION_KEY", encryptionKey);
             intent.putExtra("FILE_PATH", filePath);
             startActivity(intent);
         }
