@@ -92,7 +92,15 @@ public class ImageViewerActivity extends AppCompatActivity
             }
         }
 
-        displayImage();
+        try
+        {
+            displayImage();
+        }
+        catch (Exception ex)
+        {
+            Log.d(TAG, ex.getMessage());
+            finish();
+        }
     }
 
     @Override
@@ -215,11 +223,20 @@ public class ImageViewerActivity extends AppCompatActivity
     }
 
     private void displayImage()
+            throws NullPointerException
     {
         Bitmap bitmap = BitmapFactory.decodeFile(file.getPath());
-        bitmap = getScaledBitmap(bitmap);
 
-        ImageView imageView = findViewById(R.id.image);
-        imageView.setImageBitmap(bitmap);
+        if (bitmap != null)
+        {
+            bitmap = getScaledBitmap(bitmap);
+
+            ImageView imageView = findViewById(R.id.image);
+            imageView.setImageBitmap(bitmap);
+        }
+        else
+        {
+            throw new NullPointerException("Unable to get Bitmap from file");
+        }
     }
 }
