@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.MediaController;
+import android.widget.Toast;
 import android.widget.VideoView;
 
 import java.io.File;
@@ -86,11 +87,35 @@ public class VideoPlayerActivity extends AppCompatActivity
             }
             catch (Exception ex)
             {
+                Toast toast = Toast.makeText(this, ex.getMessage(), Toast.LENGTH_SHORT);
+                toast.show();
+
                 Log.d(TAG, ex.getMessage());
             }
         }
 
         playVideo();
+    }
+
+    @Override
+    public void onStop()
+    {
+        super.onStop();
+
+        if (fileManager.isFileInVault(file))
+        {
+            try
+            {
+                encryption.encryptFile(encryptionKey, file, file);
+            }
+            catch (Exception ex)
+            {
+                Toast toast = Toast.makeText(this, ex.getMessage(), Toast.LENGTH_SHORT);
+                toast.show();
+
+                Log.d(TAG, ex.getMessage());
+            }
+        }
     }
 
     @Override
@@ -145,13 +170,18 @@ public class VideoPlayerActivity extends AppCompatActivity
             }
             catch (Exception ex)
             {
+                Toast toast = Toast.makeText(this, ex.getMessage(), Toast.LENGTH_SHORT);
+                toast.show();
+
                 Log.d(TAG, ex.getMessage());
             }
         }
         else
         {
-            // TODO Display message that file is already in Vault
-            Log.d(TAG, "File already in vault");
+            Toast toast = Toast.makeText(this, "File is already in vault", Toast.LENGTH_SHORT);
+            toast.show();
+
+            Log.d(TAG, "File is already in vault");
         }
     }
 

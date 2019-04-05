@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import java.io.File;
 
@@ -88,6 +89,9 @@ public class ImageViewerActivity extends AppCompatActivity
             }
             catch (Exception ex)
             {
+                Toast toast = Toast.makeText(this, ex.getMessage(), Toast.LENGTH_SHORT);
+                toast.show();
+
                 Log.d(TAG, ex.getMessage());
             }
         }
@@ -98,6 +102,9 @@ public class ImageViewerActivity extends AppCompatActivity
         }
         catch (Exception ex)
         {
+            Toast toast = Toast.makeText(this, ex.getMessage(), Toast.LENGTH_SHORT);
+            toast.show();
+
             Log.d(TAG, ex.getMessage());
             finish();
         }
@@ -116,6 +123,9 @@ public class ImageViewerActivity extends AppCompatActivity
             }
             catch (Exception ex)
             {
+                Toast toast = Toast.makeText(this, ex.getMessage(), Toast.LENGTH_SHORT);
+                toast.show();
+
                 Log.d(TAG, ex.getMessage());
             }
         }
@@ -173,13 +183,18 @@ public class ImageViewerActivity extends AppCompatActivity
             }
             catch (Exception ex)
             {
+                Toast toast = Toast.makeText(this, ex.getMessage(), Toast.LENGTH_SHORT);
+                toast.show();
+
                 Log.d(TAG, ex.getMessage());
             }
         }
         else
         {
-            // TODO Display message that file is already in Vault
-            Log.d(TAG, "File already in vault");
+            Toast toast = Toast.makeText(this, "File is already in vault", Toast.LENGTH_SHORT);
+            toast.show();
+
+            Log.d(TAG, "File is already in vault");
         }
     }
 
@@ -213,7 +228,7 @@ public class ImageViewerActivity extends AppCompatActivity
             else
             {
                 width = displayWidth;
-                height = displayHeight;
+                height = displayWidth;
             }
 
             bitmap = Bitmap.createScaledBitmap(bitmap, width, height, false);
