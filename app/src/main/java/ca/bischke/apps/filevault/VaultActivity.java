@@ -227,7 +227,6 @@ public class VaultActivity extends AppCompatActivity
         return true;
     }
 
-    // TODO Fix Folder name
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data)
     {

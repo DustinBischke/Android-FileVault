@@ -165,11 +165,11 @@ public class FileManager
         }
     }
 
-    private File createVaultFileDirectory(File file)
+    private File createVaultFileDirectory(String fileName)
     {
         createVault();
 
-        String fileName = getFileNameWithoutExtension(file);
+        fileName = getFileNameWithoutExtension(fileName);
         File fileDirectory = new File(vaultPath + File.separator + fileName);
 
         if (fileDirectory.mkdirs())
@@ -184,9 +184,8 @@ public class FileManager
         }
     }
 
-    public String getFileNameWithoutExtension(File file)
+    private String getFileNameWithoutExtension(String fileName)
     {
-        String fileName = file.getName();
         int position = fileName.lastIndexOf('.');
 
         if (position == -1)
@@ -199,34 +198,16 @@ public class FileManager
         }
     }
 
-    public void moveFileToVault(File file)
+    public String getFileNameWithoutExtension(File file)
     {
         String fileName = file.getName();
-        moveFileToVault(file, fileName);
+
+        return getFileNameWithoutExtension(fileName);
     }
-
-    /*public void moveFileToVault(File file, String fileName)
-    {
-        if (!vaultExists())
-        {
-            createVault();
-        }
-
-        File to = new File(vaultPath + File.separator + fileName);
-
-        if (file.renameTo(to))
-        {
-            Log.d(TAG, fileName + " moved to Vault Directory");
-        }
-        else
-        {
-            Log.d(TAG, fileName + " could not be moved");
-        }
-    }*/
 
     public void moveFileToVault(File file, String fileName)
     {
-        File directory = createVaultFileDirectory(file);
+        File directory = createVaultFileDirectory(fileName);
 
         if (directory != null)
         {
@@ -264,6 +245,12 @@ public class FileManager
         }
     }
 
+    public void moveFileToVault(File file)
+    {
+        String fileName = file.getName();
+        moveFileToVault(file, fileName);
+    }
+
     private void exportImageThumbnail(File file, File directory)
             throws IOException
     {
@@ -293,6 +280,7 @@ public class FileManager
         fileOutputStream.close();
     }
 
+    // TODO Test video thumbnail creation
     private void exportVideoThumbnail(File file, File directory)
             throws IOException
     {
