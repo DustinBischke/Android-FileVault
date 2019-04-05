@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.ThumbnailUtils;
 import android.os.AsyncTask;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.text.format.Formatter;
@@ -55,10 +56,15 @@ public class FileListAdapter extends RecyclerView.Adapter<FileListViewHolder>
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MMM d, yyyy", Locale.getDefault());
         textFileDate.setText(simpleDateFormat.format(date));
 
+        ImageView imageFileIcon = fileViewHolder.getImageFileIcon();
+        imageFileIcon.setScaleType(ImageView.ScaleType.CENTER);
+
         if (file.isDirectory())
         {
             fileViewHolder.getTextFileSize().setVisibility(View.GONE);
             fileViewHolder.getButtonFileMenu().setVisibility(View.GONE);
+
+            imageFileIcon.setImageResource(R.drawable.ic_folder_24dp);
         }
         else
         {
@@ -72,8 +78,21 @@ public class FileListAdapter extends RecyclerView.Adapter<FileListViewHolder>
 
             if (FileTypes.isImage(file))
             {
-                ImageView imageFileIcon = fileViewHolder.getImageFileIcon();
-                new ThumbnailAsyncTask().execute(imageFileIcon, file);
+                imageFileIcon.setImageResource(R.drawable.ic_image_24dp);
+                new ImageAsyncTask().execute(imageFileIcon, file);
+            }
+            else if (FileTypes.isVideo(file))
+            {
+                imageFileIcon.setImageResource(R.drawable.ic_video_24dp);
+                new VideoAsyncTask().execute(imageFileIcon, file);
+            }
+            else if (FileTypes.isAudio(file))
+            {
+                imageFileIcon.setImageResource(R.drawable.ic_audio_24dp);
+            }
+            else
+            {
+                imageFileIcon.setImageResource(R.drawable.ic_file_24dp);
             }
         }
     }
@@ -95,7 +114,7 @@ public class FileListAdapter extends RecyclerView.Adapter<FileListViewHolder>
         return fileList.get(position);
     }
 
-    private class ThumbnailAsyncTask extends AsyncTask<Object, Void, Bitmap>
+    private class ImageAsyncTask extends AsyncTask<Object, Void, Bitmap>
     {
         private ImageView imageFileIcon;
 
@@ -107,9 +126,30 @@ public class FileListAdapter extends RecyclerView.Adapter<FileListViewHolder>
 
             int size = 128;
             Bitmap bitmap = BitmapFactory.decodeFile(file.getPath());
-            bitmap = ThumbnailUtils.extractThumbnail(bitmap, size, size);
 
-            return bitmap;
+            return ThumbnailUtils.extractThumbnail(bitmap, size, size);
+        }
+
+        @Override
+        protected void onPostExecute(Bitmap bitmap)
+        {
+            imageFileIcon.setImageBitmap(bitmap);
+            imageFileIcon.setScaleType(ImageView.ScaleType.CENTER_CROP);
+        }
+    }
+
+    private class VideoAsyncTask extends AsyncTask<Object, Void, Bitmap>
+    {
+        private ImageView imageFileIcon;
+
+        @Override
+        protected Bitmap doInBackground(Object... objects)
+        {
+            imageFileIcon = (ImageView) objects[0];
+            File file = (File) objects[1];
+            String path = file.getAbsolutePath();
+
+            return ThumbnailUtils.createVideoThumbnail(path, MediaStore.Images.Thumbnails.MINI_KIND);
         }
 
         @Override
