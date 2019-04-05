@@ -227,7 +227,7 @@ public class VaultActivity extends AppCompatActivity
         return true;
     }
 
-    // TODO Update to generate Thumbnail file
+    // TODO Fix Folder name
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data)
     {
@@ -384,44 +384,51 @@ public class VaultActivity extends AppCompatActivity
     private void backupFiles()
     {
         File vault = fileManager.getVaultDirectory();
-        ArrayList<File> files = fileManager.getFilesInDirectory(vault);
+        ArrayList<File> directories = fileManager.getFilesInDirectory(vault);
 
-        for (final File file : files)
+        for (File directory : directories)
         {
-            final Uri uri = Uri.fromFile(file);
-            StorageReference fileReference = userReference.child(uri.getLastPathSegment());
+            ArrayList<File> files = fileManager.getFilesInDirectory(directory);
+            String directoryName = directory.getName();
 
-            // Checks if File already exists
-            fileReference.getMetadata().addOnSuccessListener(new OnSuccessListener<StorageMetadata>()
+            for (final File file : files)
             {
-                @Override
-                public void onSuccess(StorageMetadata storageMetadata)
+                final Uri uri = Uri.fromFile(file);
+                String reference = directoryName + File.separator + uri.getLastPathSegment();
+
+                final StorageReference fileReference = userReference.child(reference);
+
+                // Checks if File already exists
+                fileReference.getMetadata().addOnSuccessListener(new OnSuccessListener<StorageMetadata>()
                 {
-                    if (storageMetadata.getSizeBytes() != file.getTotalSpace())
+                    @Override
+                    public void onSuccess(StorageMetadata storageMetadata)
                     {
-                        Log.d(TAG, file.getName() + " already uploaded");
+                        if (storageMetadata.getSizeBytes() != file.getTotalSpace())
+                        {
+                            Log.d(TAG, file.getName() + " already up to date");
+                        }
+                        else
+                        {
+                            Log.d(TAG, file.getName() + " updated since last upload");
+                            uploadFile(uri, fileReference);
+                        }
                     }
-                    else
-                    {
-                        Log.d(TAG, file.getName() + " updated since last upload");
-                        uploadFile(uri);
-                    }
-                }
-            }).addOnFailureListener(new OnFailureListener()
-            {
-                @Override
-                public void onFailure(@NonNull Exception e)
+                }).addOnFailureListener(new OnFailureListener()
                 {
-                    Log.d(TAG, file.getName() + " not uploaded");
-                    uploadFile(uri);
-                }
-            });
+                    @Override
+                    public void onFailure(@NonNull Exception e)
+                    {
+                        Log.d(TAG, file.getName() + " not yet uploaded");
+                        uploadFile(uri, fileReference);
+                    }
+                });
+            }
         }
     }
 
-    private void uploadFile(final Uri uri)
+    private void uploadFile(final Uri uri, final StorageReference fileReference)
     {
-        StorageReference fileReference = userReference.child(uri.getLastPathSegment());
         UploadTask uploadTask = fileReference.putFile(uri);
 
         uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>()
