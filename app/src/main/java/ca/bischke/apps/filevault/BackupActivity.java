@@ -24,13 +24,20 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageMetadata;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class BackupActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, FileListener
@@ -139,6 +146,15 @@ public class BackupActivity extends AppCompatActivity
         recyclerView.setAdapter(fileAdapter);
 
         listFiles();
+
+        try
+        {
+            restoreFiles();
+        }
+        catch (Exception ex)
+        {
+            Log.d(TAG, ex.getMessage());
+        }
     }
 
     @Override
@@ -311,8 +327,9 @@ public class BackupActivity extends AppCompatActivity
         for (final File file : files)
         {
             final Uri uri = Uri.fromFile(file);
-            String reference = directoryName + File.separator + uri.getLastPathSegment();
+            final String reference = directoryName + File.separator + uri.getLastPathSegment();
 
+            final String fileName = file.getName();
             final StorageReference fileReference = userReference.child(reference);
 
             // Checks if File already exists
@@ -321,14 +338,14 @@ public class BackupActivity extends AppCompatActivity
                 @Override
                 public void onSuccess(StorageMetadata storageMetadata)
                 {
-                    if (storageMetadata.getSizeBytes() != file.getTotalSpace())
+                    if (storageMetadata.getSizeBytes() == file.getTotalSpace())
                     {
-                        Log.d(TAG, file.getName() + " already up to date");
+                        Log.d(TAG, fileName + " already up to date");
                     }
                     else
                     {
-                        Log.d(TAG, file.getName() + " updated since last upload");
-                        uploadFile(uri, fileReference);
+                        Log.d(TAG, fileName + " updated since last upload");
+                        uploadFile(uri, fileReference, reference);
                     }
                 }
             }).addOnFailureListener(new OnFailureListener()
@@ -336,14 +353,14 @@ public class BackupActivity extends AppCompatActivity
                 @Override
                 public void onFailure(@NonNull Exception e)
                 {
-                    Log.d(TAG, file.getName() + " not yet uploaded");
-                    uploadFile(uri, fileReference);
+                    Log.d(TAG, fileName + " not yet uploaded");
+                    uploadFile(uri, fileReference, reference);
                 }
             });
         }
     }
 
-    private void uploadFile(final Uri uri, final StorageReference fileReference)
+    private void uploadFile(final Uri uri, final StorageReference fileReference, final String reference)
     {
         UploadTask uploadTask = fileReference.putFile(uri);
         final String fileName = uri.getLastPathSegment();
@@ -357,6 +374,18 @@ public class BackupActivity extends AppCompatActivity
                 toast.show();
 
                 Log.d(TAG, fileName + " uploaded successfully");
+
+                try
+                {
+                    if (!isInReferenceList(reference))
+                    {
+                        writeReferencesList(reference);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Log.d(TAG, ex.getMessage());
+                }
             }
         }).addOnFailureListener(new OnFailureListener()
         {
@@ -367,6 +396,146 @@ public class BackupActivity extends AppCompatActivity
                 toast.show();
 
                 Log.d(TAG,  fileName + " failed to upload: " + e.getMessage());
+            }
+        });
+    }
+
+    private boolean isInReferenceList(String reference)
+            throws IOException
+    {
+        File file = new File(fileManager.getRootDirectory() + File.separator + "filevault-files.txt");
+
+        if (file.exists())
+        {
+            FileInputStream fileInputStream = new FileInputStream(file);
+            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(fileInputStream));
+
+            String text = bufferedReader.readLine();
+
+            return text.contains(reference);
+        }
+
+        return false;
+    }
+
+    private void writeReferencesList(String reference)
+            throws IOException
+    {
+        File file = new File(fileManager.getRootDirectory() + File.separator + "filevault-files.txt");
+
+        if (!file.exists())
+        {
+            file.createNewFile();
+        }
+
+        FileWriter fileWriter = new FileWriter(file, true);
+
+        fileWriter.write(reference);
+        fileWriter.write(",");
+
+        fileWriter.close();
+    }
+
+    private ArrayList<String> getReferencesList()
+            throws IOException
+    {
+        File file = new File(fileManager.getRootDirectory() + File.separator + "filevault-files.txt");
+
+        if (!file.exists())
+        {
+            return null;
+        }
+
+        FileInputStream fileInputStream = new FileInputStream(file);
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(fileInputStream));
+
+        String text = bufferedReader.readLine();
+        String[] references = text.split(",");
+
+        return new ArrayList<>(Arrays.asList(references));
+    }
+
+    private void restoreFiles()
+            throws IOException
+    {
+        ArrayList<String> references;
+
+        try
+        {
+            references = getReferencesList();
+        }
+        catch (Exception ex)
+        {
+            Log.d(TAG, ex.getMessage());
+            return;
+        }
+
+        for (String reference : references)
+        {
+            String[] parts = reference.split("/");
+
+            File directory = new File(fileManager.getVaultDirectory() + File.separator + parts[0]);
+
+            if (!directory.exists())
+            {
+                directory.mkdirs();
+            }
+
+            final File file = new File(directory + File.separator + parts[1]);
+
+            if (!file.exists())
+            {
+                file.createNewFile();
+            }
+
+            final String fileName = file.getName();
+            final StorageReference fileReference = userReference.child(reference);
+
+            // Checks if File already exists
+            fileReference.getMetadata().addOnSuccessListener(new OnSuccessListener<StorageMetadata>()
+            {
+                @Override
+                public void onSuccess(StorageMetadata storageMetadata)
+                {
+                    if (storageMetadata.getSizeBytes() == file.getTotalSpace())
+                    {
+                        Log.d(TAG, fileName + " already up to date");
+                    }
+                    else
+                    {
+                        Log.d(TAG, fileName + " updated since last download");
+                        downloadFile(file, fileReference);
+                    }
+                }
+            }).addOnFailureListener(new OnFailureListener()
+            {
+                @Override
+                public void onFailure(@NonNull Exception e)
+                {
+                    Log.d(TAG, fileName + " not yet downloaded");
+                    downloadFile(file, fileReference);
+                }
+            });
+        }
+    }
+
+    private void downloadFile(File file, StorageReference fileReference)
+    {
+        final String fileName = file.getName();
+
+        fileReference.getFile(file).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>()
+        {
+            @Override
+            public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot)
+            {
+                Log.d(TAG, fileName + " downloaded successfully");
+            }
+        }).addOnFailureListener(new OnFailureListener()
+        {
+            @Override
+            public void onFailure(@NonNull Exception e)
+            {
+                Log.d(TAG,  fileName + " failed to download: " + e.getMessage());
             }
         });
     }
