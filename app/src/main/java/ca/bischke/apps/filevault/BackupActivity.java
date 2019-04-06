@@ -346,14 +346,25 @@ public class BackupActivity extends AppCompatActivity
                 @Override
                 public void onSuccess(StorageMetadata storageMetadata)
                 {
-                    if (storageMetadata.getSizeBytes() == file.getTotalSpace())
+                    if (storageMetadata.getSizeBytes() == file.length())
                     {
-                        Log.d(TAG, fileName + " already up to date");
+                        Log.d(TAG, fileName + " is up to date");
                     }
                     else
                     {
-                        Log.d(TAG, fileName + " updated since last upload");
-                        uploadFile(uri, fileReference, reference);
+                        if (storageMetadata.getCreationTimeMillis() > file.lastModified())
+                        {
+                            Log.d(TAG, fileName + " is older than uploaded version");
+                        }
+                        else if (storageMetadata.getCreationTimeMillis() < file.lastModified())
+                        {
+                            Log.d(TAG, fileName + " is newer than uploaded version");
+                            uploadFile(uri, fileReference, reference);
+                        }
+                        else
+                        {
+                            Log.d(TAG, fileName + " is up to date");
+                        }
                     }
                 }
             }).addOnFailureListener(new OnFailureListener()
@@ -361,7 +372,7 @@ public class BackupActivity extends AppCompatActivity
                 @Override
                 public void onFailure(@NonNull Exception e)
                 {
-                    Log.d(TAG, fileName + " not yet uploaded");
+                    Log.d(TAG, fileName + " is not backed up");
                     uploadFile(uri, fileReference, reference);
                 }
             });
@@ -505,14 +516,25 @@ public class BackupActivity extends AppCompatActivity
                 @Override
                 public void onSuccess(StorageMetadata storageMetadata)
                 {
-                    if (storageMetadata.getSizeBytes() == file.getTotalSpace())
+                    if (storageMetadata.getSizeBytes() == file.length())
                     {
-                        Log.d(TAG, fileName + " already up to date");
+                        Log.d(TAG, fileName + " is up to date");
                     }
                     else
                     {
-                        Log.d(TAG, fileName + " updated since last download");
-                        downloadFile(file, fileReference);
+                        if (storageMetadata.getCreationTimeMillis() > file.lastModified())
+                        {
+                            Log.d(TAG, fileName + " is older than uploaded version");
+                            downloadFile(file, fileReference);
+                        }
+                        else if (storageMetadata.getCreationTimeMillis() < file.lastModified())
+                        {
+                            Log.d(TAG, fileName + " is newer than uploaded version");
+                        }
+                        else
+                        {
+                            Log.d(TAG, fileName + " is up to date");
+                        }
                     }
                 }
             }).addOnFailureListener(new OnFailureListener()
@@ -520,7 +542,7 @@ public class BackupActivity extends AppCompatActivity
                 @Override
                 public void onFailure(@NonNull Exception e)
                 {
-                    Log.d(TAG, fileName + " not yet downloaded");
+                    Log.d(TAG, fileName + " is not on local device");
                     downloadFile(file, fileReference);
                 }
             });
