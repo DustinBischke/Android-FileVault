@@ -28,12 +28,17 @@
                 style="@style/TextFileListSubtext"
                 android:text="@string/file_date" />
 
+            <TextView
+                android:id="@+id/text_file_size"
+                style="@style/TextFileListSubtextRight"
+                android:text="@string/file_size" />
+
         </LinearLayout>
     </LinearLayout>
 
     <ImageButton
         android:id="@+id/button_file_menu"
-        style="@style/ImageButtonFileListMenu"
-        app:srcCompat="@drawable/ic_more_24dp" />
+        style="@style/ImageButtonFileBackup"
+        app:srcCompat="@drawable/ic_cloud_upload_24dp" />
 
 </LinearLayout>

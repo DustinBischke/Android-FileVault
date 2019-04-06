@@ -1,18 +1,12 @@
 package ca.bischke.apps.filevault;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.media.ThumbnailUtils;
-import android.os.AsyncTask;
-import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.text.format.Formatter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -41,7 +35,7 @@ public class FileBackupAdapter extends RecyclerView.Adapter<FileBackupViewHolder
     @Override
     public FileBackupViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i)
     {
-        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.file_list, viewGroup, false);
+        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.file_list_backup, viewGroup, false);
         return new FileBackupViewHolder(view, fileListener);
     }
 
@@ -60,7 +54,6 @@ public class FileBackupAdapter extends RecyclerView.Adapter<FileBackupViewHolder
         textFileDate.setText(simpleDateFormat.format(date));
 
         TextView textFileSize = fileViewHolder.getTextFileSize();
-        textFileSize.setVisibility(View.VISIBLE);
         String fileSize = Formatter.formatShortFileSize(context, file.length());
         textFileSize.setText(fileSize);
 
