@@ -37,6 +37,7 @@ public class FileExplorerActivity extends AppCompatActivity
     private FileListAdapter fileAdapter;
     private boolean sortByName = true;
     private String encryptionKey;
+    private boolean loadFileInternal = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -359,6 +360,18 @@ public class FileExplorerActivity extends AppCompatActivity
 
     private void openFile(File file)
     {
+        if (loadFileInternal)
+        {
+            openFileInternal(file);
+        }
+        else
+        {
+            openFileExternal(file);
+        }
+    }
+
+    private void openFileInternal(File file)
+    {
         String filePath = file.getAbsolutePath();
 
         if (FileTypes.isImage(file))
@@ -377,16 +390,21 @@ public class FileExplorerActivity extends AppCompatActivity
         }
         else
         {
-            Intent intent = new Intent();
-            intent.setAction(Intent.ACTION_VIEW);
-
-            MimeTypeMap mime = MimeTypeMap.getSingleton();
-            String ext = file.getName().substring(file.getName().indexOf(".")+1);
-            String type = mime.getMimeTypeFromExtension(ext);
-
-            intent.setDataAndType(Uri.fromFile(file), type);
-            startActivity(intent);
+            openFileExternal(file);
         }
+    }
+
+    private void openFileExternal(File file)
+    {
+        Intent intent = new Intent();
+        intent.setAction(Intent.ACTION_VIEW);
+
+        MimeTypeMap mime = MimeTypeMap.getSingleton();
+        String ext = file.getName().substring(file.getName().indexOf(".")+1);
+        String type = mime.getMimeTypeFromExtension(ext);
+
+        intent.setDataAndType(Uri.fromFile(file), type);
+        startActivity(intent);
     }
 
     @Override

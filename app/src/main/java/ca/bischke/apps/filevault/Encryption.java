@@ -109,6 +109,11 @@ public class Encryption
 
         byte[] outputBytes = cipher.doFinal(inputBytes);
 
+        if (!outputFile.exists())
+        {
+            outputFile.createNewFile();
+        }
+
         FileOutputStream outputStream = new FileOutputStream(outputFile);
         outputStream.write(outputBytes);
 

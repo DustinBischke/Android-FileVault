@@ -8,7 +8,6 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.GravityCompat;
@@ -22,17 +21,14 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.webkit.MimeTypeMap;
 import android.widget.ImageButton;
 import android.widget.PopupMenu;
 
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageMetadata;
 import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
 
 import java.io.File;
 import java.lang.reflect.Field;
@@ -62,6 +58,7 @@ public class VaultActivity extends AppCompatActivity
     private StorageReference storageReference;
     private StorageReference userReference;
     private String encryptionKey;
+    private boolean loadFileInternal = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -472,6 +469,18 @@ public class VaultActivity extends AppCompatActivity
 
     private void openFile(File file)
     {
+        if (loadFileInternal)
+        {
+            openFileInternal(file);
+        }
+        else
+        {
+            openFileExternal(file);
+        }
+    }
+
+    private void openFileInternal(File file)
+    {
         String filePath = file.getAbsolutePath();
 
         if (FileTypes.isImage(file))
@@ -487,6 +496,34 @@ public class VaultActivity extends AppCompatActivity
             intent.putExtra("ENCRYPTION_KEY", encryptionKey);
             intent.putExtra("FILE_PATH", filePath);
             startActivity(intent);
+        }
+        else
+        {
+            openFileExternal(file);
+        }
+    }
+
+    // TODO Setup Vault Temp directory
+    private void openFileExternal(File file)
+    {
+        try
+        {
+            File outputFile = new File(fileManager.getRootDirectory() + "/" + file.getName());
+            encryption.decryptFile(encryptionKey, file, outputFile);
+
+            Intent intent = new Intent();
+            intent.setAction(Intent.ACTION_VIEW);
+
+            MimeTypeMap mime = MimeTypeMap.getSingleton();
+            String ext = outputFile.getName().substring(outputFile.getName().indexOf(".") + 1);
+            String type = mime.getMimeTypeFromExtension(ext);
+
+            intent.setDataAndType(Uri.fromFile(outputFile), type);
+            startActivity(intent);
+        }
+        catch (Exception ex)
+        {
+            Log.d(TAG, ex.getMessage());
         }
     }
 
