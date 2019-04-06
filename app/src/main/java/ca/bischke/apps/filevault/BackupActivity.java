@@ -18,6 +18,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -345,20 +346,27 @@ public class BackupActivity extends AppCompatActivity
     private void uploadFile(final Uri uri, final StorageReference fileReference)
     {
         UploadTask uploadTask = fileReference.putFile(uri);
+        final String fileName = uri.getLastPathSegment();
 
         uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>()
         {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot)
             {
-                Log.d(TAG, uri.getLastPathSegment() + " uploaded successfully");
+                Toast toast = Toast.makeText(getApplicationContext(), fileName + " uploaded successfully", Toast.LENGTH_SHORT);
+                toast.show();
+
+                Log.d(TAG, fileName + " uploaded successfully");
             }
         }).addOnFailureListener(new OnFailureListener()
         {
             @Override
             public void onFailure(@NonNull Exception e)
             {
-                Log.d(TAG,  uri.getLastPathSegment() + " failed to upload: " + e.getMessage());
+                Toast toast = Toast.makeText(getApplicationContext(), fileName + " failed to upload", Toast.LENGTH_SHORT);
+                toast.show();
+
+                Log.d(TAG,  fileName + " failed to upload: " + e.getMessage());
             }
         });
     }

@@ -5,7 +5,6 @@ import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.text.format.Formatter;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -88,11 +87,10 @@ public class FileBackupAdapter extends RecyclerView.Adapter<FileBackupViewHolder
         }
 
         final ImageButton buttonFileBackup = fileViewHolder.getButtonFileBackup();
+        buttonFileBackup.setEnabled(true);
 
-        String directoryName = directory.getName();
-        final Uri uri = Uri.fromFile(file);
-        String reference = directoryName + File.separator + uri.getLastPathSegment();
-
+        Uri uri = Uri.fromFile(file);
+        String reference = directory.getName() + File.separator + uri.getLastPathSegment();
         final StorageReference fileReference = userReference.child(reference);
 
         // Checks if File already exists
@@ -104,6 +102,7 @@ public class FileBackupAdapter extends RecyclerView.Adapter<FileBackupViewHolder
                 if (storageMetadata.getSizeBytes() != file.getTotalSpace())
                 {
                     buttonFileBackup.setImageResource(R.drawable.ic_cloud_done_24dp);
+                    buttonFileBackup.setEnabled(false);
                 }
                 else
                 {
