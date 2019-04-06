@@ -8,37 +8,46 @@
     tools:context=".SetupCompleteActivity">
 
     <LinearLayout
-        android:id="@+id/layout_permissions"
-        style="@style/LayoutScreenColor">
+        android:id="@+id/layout_screen"
+        style="@style/LayoutScreen">
 
-        <ImageView
-            android:id="@+id/image_lock"
-            style="@style/ImageLock"
-            app:srcCompat="@drawable/ic_lock_256dp" />
+        <include
+            android:id="@+id/toolbar"
+            layout="@layout/toolbar_main" />
 
-        <Space
-            android:layout_width="match_parent"
-            android:layout_height="48dp" />
+        <LinearLayout
+            android:id="@+id/layout_permissions"
+            style="@style/LayoutScreenColorTop">
 
-        <TextView
-            android:id="@+id/text_welcome_title"
-            style="@style/TextLargeWhite"
-            android:text="@string/finished_title" />
+            <ImageView
+                android:id="@+id/image_lock"
+                style="@style/ImageLock"
+                app:srcCompat="@drawable/ic_lock_256dp" />
 
-        <TextView
-            android:id="@+id/text_welcome_description"
-            style="@style/TextSmallLight"
-            android:text="@string/finished_description" />
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="16dp" />
 
-        <Space
-            android:layout_width="match_parent"
-            android:layout_height="48dp" />
+            <TextView
+                android:id="@+id/text_welcome_title"
+                style="@style/TextLargeWhite"
+                android:text="@string/finished_title" />
 
-        <Button
-            android:id="@+id/button_start"
-            style="@style/ButtonWhite"
-            android:onClick="buttonContinue"
-            android:text="@string/finished_continue" />
+            <TextView
+                android:id="@+id/text_welcome_description"
+                style="@style/TextSmallLight"
+                android:text="@string/finished_description" />
 
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="24dp" />
+
+            <Button
+                android:id="@+id/button_start"
+                style="@style/ButtonWhite"
+                android:onClick="buttonContinue"
+                android:text="@string/finished_continue" />
+
+        </LinearLayout>
     </LinearLayout>
 </android.support.constraint.ConstraintLayout>

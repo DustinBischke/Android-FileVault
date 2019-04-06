@@ -3,6 +3,7 @@ package ca.bischke.apps.filevault;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 
 public class SetupCompleteActivity extends AppCompatActivity
@@ -27,6 +28,16 @@ public class SetupCompleteActivity extends AppCompatActivity
         // Sets Activity Layout
         setContentView(R.layout.activity_setup_complete);
 
+        // Adds the Toolbar to the Layout
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        setTitle("");
+
+        // Displays Back Button in Toolbar
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+
         Intent intent = getIntent();
         Bundle extras = intent.getExtras();
 
@@ -37,6 +48,14 @@ public class SetupCompleteActivity extends AppCompatActivity
                 encryptionKey = intent.getExtras().getString("ENCRYPTION_KEY");
             }
         }
+    }
+
+    @Override
+    public boolean onSupportNavigateUp()
+    {
+        // Handles Toolbar back button click event
+        onBackPressed();
+        return true;
     }
 
     public void buttonContinue(View view)

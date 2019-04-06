@@ -3,6 +3,7 @@ package ca.bischke.apps.filevault;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -26,6 +27,24 @@ public class SetPasswordActivity extends AppCompatActivity
 
         // Sets Activity Layout
         setContentView(R.layout.activity_set_password);
+
+        // Adds the Toolbar to the Layout
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        // Displays Back Button in Toolbar
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+
+        setTitle("");
+    }
+
+    @Override
+    public boolean onSupportNavigateUp()
+    {
+        // Handles Toolbar back button click event
+        onBackPressed();
+        return true;
     }
 
     public void buttonSetPassword(View view)
