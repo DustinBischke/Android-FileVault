@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    style="@style/LayoutFile">
+
+    <ImageView
+        android:id="@+id/image_file_icon"
+        style="@style/ImageFileListIcon"
+        app:srcCompat="@drawable/ic_file_24dp" />
+
+    <LinearLayout
+        android:id="@+id/layout_file_info"
+        style="@style/LayoutFileInfo">
+
+        <TextView
+            android:id="@+id/text_file_name"
+            style="@style/TextFileListName"
+            android:text="@string/file_name" />
+
+        <LinearLayout
+            android:id="@+id/layout_file_subtext"
+            style="@style/LayoutFileInfoSubtext">
+
+            <TextView
+                android:id="@+id/text_file_date"
+                style="@style/TextFileListSubtext"
+                android:text="@string/file_date" />
+
+        </LinearLayout>
+    </LinearLayout>
+
+    <ImageButton
+        android:id="@+id/button_file_menu"
+        style="@style/ImageButtonFileListMenu"
+        app:srcCompat="@drawable/ic_more_24dp" />
+
+</LinearLayout>

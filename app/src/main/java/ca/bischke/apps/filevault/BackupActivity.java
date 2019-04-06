@@ -38,7 +38,7 @@ public class BackupActivity extends AppCompatActivity
     private FileManager fileManager;
     private RecyclerView recyclerView;
     private ArrayList<File> fileList;
-    private FileListAdapter fileAdapter;
+    private FileBackupAdapter fileAdapter;
     private boolean sortByName = true;
     private FirebaseAuth firebaseAuth;
     private FirebaseUser firebaseUser;
@@ -113,7 +113,7 @@ public class BackupActivity extends AppCompatActivity
 
         // Setup File Adapter
         fileList = new ArrayList<>();
-        fileAdapter = new FileListAdapter(this, fileList, this);
+        fileAdapter = new FileBackupAdapter(this, fileList, this);
         fileAdapter.setHasStableIds(true);
         recyclerView.setAdapter(fileAdapter);
 
