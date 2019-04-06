@@ -19,7 +19,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.webkit.MimeTypeMap;
 import android.widget.ImageButton;
-import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 
 import java.io.File;
@@ -228,6 +227,9 @@ public class FileExplorerActivity extends AppCompatActivity
                 break;
             case R.id.nav_file_explorer:
                 break;
+            case R.id.nav_backup:
+                startBackupIntent();
+            // TODO Setup Settings button
             case R.id.nav_settings:
                 break;
             default:
@@ -342,6 +344,14 @@ public class FileExplorerActivity extends AppCompatActivity
     private void startVault()
     {
         Intent intent = new Intent(this, VaultActivity.class);
+        intent.putExtra("ENCRYPTION_KEY", encryptionKey);
+        startActivity(intent);
+        finish();
+    }
+
+    private void startBackupIntent()
+    {
+        Intent intent = new Intent(this, BackupActivity.class);
         intent.putExtra("ENCRYPTION_KEY", encryptionKey);
         startActivity(intent);
         finish();

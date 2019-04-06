@@ -35,7 +35,6 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.io.File;
-import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;
@@ -196,6 +195,7 @@ public class VaultActivity extends AppCompatActivity
             case R.id.action_by_date:
                 buttonSortByDate();
                 break;
+            // TODO Setup Settings button
             case R.id.action_settings:
                 break;
             default:
@@ -213,9 +213,14 @@ public class VaultActivity extends AppCompatActivity
         // Handles NavigationView item clicks
         switch(id)
         {
+            case R.id.nav_file_vault:
+                break;
             case R.id.nav_file_explorer:
                 startFileExplorer();
                 break;
+            case R.id.nav_backup:
+                startBackupIntent();
+            // TODO Setup Settings button
             case R.id.nav_settings:
                 break;
             default:
@@ -286,27 +291,18 @@ public class VaultActivity extends AppCompatActivity
 
     private void buttonAccount()
     {
-        if (isVerifiedUser())
-        {
-            Intent intent = new Intent(this, AccountActivity.class);
-            startActivity(intent);
-        }
-        else
-        {
-            Intent intent = new Intent(this, LoginActivity.class);
-            startActivity(intent);
-        }
+        startAccountIntent();
     }
 
     private void buttonBackup()
     {
         if (isVerifiedUser())
         {
-            backupFiles();
+            startBackupIntent();
         }
         else
         {
-            buttonAccount();
+            startAccountIntent();
         }
     }
 
@@ -379,74 +375,6 @@ public class VaultActivity extends AppCompatActivity
         return (firebaseUser != null && firebaseUser.isEmailVerified());
     }
 
-    // TODO Upload Encrypted files
-    private void backupFiles()
-    {
-        File vault = fileManager.getVaultDirectory();
-        ArrayList<File> directories = fileManager.getFilesInDirectory(vault);
-
-        for (File directory : directories)
-        {
-            ArrayList<File> files = fileManager.getFilesInDirectory(directory);
-            String directoryName = directory.getName();
-
-            for (final File file : files)
-            {
-                final Uri uri = Uri.fromFile(file);
-                String reference = directoryName + File.separator + uri.getLastPathSegment();
-
-                final StorageReference fileReference = userReference.child(reference);
-
-                // Checks if File already exists
-                fileReference.getMetadata().addOnSuccessListener(new OnSuccessListener<StorageMetadata>()
-                {
-                    @Override
-                    public void onSuccess(StorageMetadata storageMetadata)
-                    {
-                        if (storageMetadata.getSizeBytes() != file.getTotalSpace())
-                        {
-                            Log.d(TAG, file.getName() + " already up to date");
-                        }
-                        else
-                        {
-                            Log.d(TAG, file.getName() + " updated since last upload");
-                            uploadFile(uri, fileReference);
-                        }
-                    }
-                }).addOnFailureListener(new OnFailureListener()
-                {
-                    @Override
-                    public void onFailure(@NonNull Exception e)
-                    {
-                        Log.d(TAG, file.getName() + " not yet uploaded");
-                        uploadFile(uri, fileReference);
-                    }
-                });
-            }
-        }
-    }
-
-    private void uploadFile(final Uri uri, final StorageReference fileReference)
-    {
-        UploadTask uploadTask = fileReference.putFile(uri);
-
-        uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>()
-        {
-            @Override
-            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot)
-            {
-                Log.d(TAG, uri.getLastPathSegment() + " uploaded successfully");
-            }
-        }).addOnFailureListener(new OnFailureListener()
-        {
-            @Override
-            public void onFailure(@NonNull Exception e)
-            {
-                Log.d(TAG,  uri.getLastPathSegment() + " failed to upload: " + e.getMessage());
-            }
-        });
-    }
-
     private void encryptThumbnails()
     {
         File vault = fileManager.getVaultDirectory();
@@ -499,6 +427,28 @@ public class VaultActivity extends AppCompatActivity
         {
             Log.d(TAG, ex.getMessage());
         }
+    }
+
+    private void startAccountIntent()
+    {
+        if (isVerifiedUser())
+        {
+            Intent intent = new Intent(this, AccountActivity.class);
+            startActivity(intent);
+        }
+        else
+        {
+            Intent intent = new Intent(this, LoginActivity.class);
+            startActivity(intent);
+        }
+    }
+
+    private void startBackupIntent()
+    {
+        Intent intent = new Intent(this, BackupActivity.class);
+        intent.putExtra("ENCRYPTION_KEY", encryptionKey);
+        startActivity(intent);
+        finish();
     }
 
     private void startFileExplorer()

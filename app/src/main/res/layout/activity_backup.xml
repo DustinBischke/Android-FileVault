@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".BackupActivity">
+
+    <android.support.v4.widget.DrawerLayout
+        android:id="@+id/drawer_layout"
+        style="@style/DrawerLayout"
+        tools:openDrawer="start">
+
+        <LinearLayout
+            android:id="@+id/layout_screen"
+            style="@style/LayoutScreen">
+
+            <include
+                android:id="@+id/toolbar"
+                layout="@layout/toolbar_main" />
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recycler_view"
+                style="@style/RecyclerView" />
+
+        </LinearLayout>
+
+        <include
+            android:id="@+id/nav_view"
+            layout="@layout/nav_view_main" />
+
+    </android.support.v4.widget.DrawerLayout>
+</android.support.constraint.ConstraintLayout>
