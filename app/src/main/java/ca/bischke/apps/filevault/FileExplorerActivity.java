@@ -37,7 +37,7 @@ public class FileExplorerActivity extends AppCompatActivity
     private FileListAdapter fileAdapter;
     private boolean sortByName = true;
     private String encryptionKey;
-    private boolean loadFileInternal = true;
+    private boolean useExternalIntents;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -184,6 +184,16 @@ public class FileExplorerActivity extends AppCompatActivity
     }
 
     @Override
+    public void onStart()
+    {
+        super.onStart();
+
+        // Setup Preferences
+        Preferences preferences = new Preferences(this);
+        useExternalIntents = preferences.getBoolean(getString(R.string.preference_external_intents));
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu)
     {
         // Adds Menu to the Toolbar
@@ -205,8 +215,8 @@ public class FileExplorerActivity extends AppCompatActivity
             case R.id.action_by_date:
                 buttonSortByDate();
                 break;
-            // TODO Setup Settings button
             case R.id.action_settings:
+                buttonSettings();
                 break;
             default:
                 break;
@@ -230,8 +240,8 @@ public class FileExplorerActivity extends AppCompatActivity
                 break;
             case R.id.nav_backup:
                 startBackupIntent();
-            // TODO Setup Settings button
             case R.id.nav_settings:
+                buttonSettings();
                 break;
             default:
                 break;
@@ -276,6 +286,11 @@ public class FileExplorerActivity extends AppCompatActivity
             sortByName = false;
             listFiles(fileManager.getCurrentDirectory());
         }
+    }
+
+    private void buttonSettings()
+    {
+        startSettingsIntent();
     }
 
     private void listFiles(File directory)
@@ -358,15 +373,21 @@ public class FileExplorerActivity extends AppCompatActivity
         finish();
     }
 
+    private void startSettingsIntent()
+    {
+        Intent intent = new Intent(this, SettingsActivity.class);
+        startActivity(intent);
+    }
+
     private void openFile(File file)
     {
-        if (loadFileInternal)
+        if (useExternalIntents)
         {
-            openFileInternal(file);
+            openFileExternal(file);
         }
         else
         {
-            openFileExternal(file);
+            openFileInternal(file);
         }
     }
 

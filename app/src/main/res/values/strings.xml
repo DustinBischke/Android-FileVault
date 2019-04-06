@@ -46,5 +46,6 @@
     <string name="preference_pass">FileVault-Pass</string>
     <string name="preference_iv">FileVault-IV</string>
     <string name="preference_salt">FileVault-Salt</string>
+    <string name="preference_external_intents">FileVault-Intents</string>
     <string name="exit">Exit</string>
 </resources>

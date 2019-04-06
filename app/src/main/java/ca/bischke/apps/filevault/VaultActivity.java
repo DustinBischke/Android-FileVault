@@ -58,7 +58,7 @@ public class VaultActivity extends AppCompatActivity
     private StorageReference storageReference;
     private StorageReference userReference;
     private String encryptionKey;
-    private boolean loadFileInternal = true;
+    private boolean useExternalIntents;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -154,6 +154,10 @@ public class VaultActivity extends AppCompatActivity
 
         decryptThumbnails();
         listFiles();
+
+        // Setup Preferences
+        Preferences preferences = new Preferences(this);
+        useExternalIntents = preferences.getBoolean(getString(R.string.preference_external_intents));
     }
 
     @Override
@@ -195,8 +199,8 @@ public class VaultActivity extends AppCompatActivity
             case R.id.action_refresh:
                 buttonRefresh();
                 break;
-            // TODO Setup Settings button
             case R.id.action_settings:
+                buttonSettings();
                 break;
             default:
                 break;
@@ -219,9 +223,9 @@ public class VaultActivity extends AppCompatActivity
                 startFileExplorer();
                 break;
             case R.id.nav_backup:
-                startBackupIntent();
-            // TODO Setup Settings button
+                buttonBackup();
             case R.id.nav_settings:
+                buttonSettings();
                 break;
             default:
                 break;
@@ -327,6 +331,11 @@ public class VaultActivity extends AppCompatActivity
     private void buttonRefresh()
     {
         listFiles();
+    }
+
+    private void buttonSettings()
+    {
+        startSettingsIntent();
     }
 
     public void buttonStartFileExplorer(View view)
@@ -449,6 +458,12 @@ public class VaultActivity extends AppCompatActivity
         finish();
     }
 
+    private void startSettingsIntent()
+    {
+        Intent intent = new Intent(this, SettingsActivity.class);
+        startActivity(intent);
+    }
+
     private void startFileExplorer()
     {
         Intent intent = new Intent(this, FileExplorerActivity.class);
@@ -469,13 +484,13 @@ public class VaultActivity extends AppCompatActivity
 
     private void openFile(File file)
     {
-        if (loadFileInternal)
+        if (useExternalIntents)
         {
-            openFileInternal(file);
+            openFileExternal(file);
         }
         else
         {
-            openFileExternal(file);
+            openFileInternal(file);
         }
     }
 
