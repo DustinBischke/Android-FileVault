@@ -111,12 +111,6 @@ public class BackupActivity extends AppCompatActivity
         recyclerView.setDrawingCacheEnabled(false);
         recyclerView.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
 
-        // Setup File Adapter
-        fileList = new ArrayList<>();
-        fileAdapter = new FileBackupAdapter(this, fileList, this);
-        fileAdapter.setHasStableIds(true);
-        recyclerView.setAdapter(fileAdapter);
-
         // Create Firebase instances
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseStorage = FirebaseStorage.getInstance();
@@ -136,6 +130,12 @@ public class BackupActivity extends AppCompatActivity
 
             userReference = storageReference.child("user/" + firebaseUser.getUid());
         }
+
+        // Setup File Adapter
+        fileList = new ArrayList<>();
+        fileAdapter = new FileBackupAdapter(this, fileList, this, userReference);
+        fileAdapter.setHasStableIds(true);
+        recyclerView.setAdapter(fileAdapter);
 
         listFiles();
     }
@@ -298,42 +298,47 @@ public class BackupActivity extends AppCompatActivity
 
         for (File directory : directories)
         {
-            ArrayList<File> files = fileManager.getFilesInDirectory(directory);
-            String directoryName = directory.getName();
+            backupDirectory(directory);
+        }
+    }
 
-            for (final File file : files)
+    private void backupDirectory(File directory)
+    {
+        ArrayList<File> files = fileManager.getFilesInDirectory(directory);
+        String directoryName = directory.getName();
+
+        for (final File file : files)
+        {
+            final Uri uri = Uri.fromFile(file);
+            String reference = directoryName + File.separator + uri.getLastPathSegment();
+
+            final StorageReference fileReference = userReference.child(reference);
+
+            // Checks if File already exists
+            fileReference.getMetadata().addOnSuccessListener(new OnSuccessListener<StorageMetadata>()
             {
-                final Uri uri = Uri.fromFile(file);
-                String reference = directoryName + File.separator + uri.getLastPathSegment();
-
-                final StorageReference fileReference = userReference.child(reference);
-
-                // Checks if File already exists
-                fileReference.getMetadata().addOnSuccessListener(new OnSuccessListener<StorageMetadata>()
+                @Override
+                public void onSuccess(StorageMetadata storageMetadata)
                 {
-                    @Override
-                    public void onSuccess(StorageMetadata storageMetadata)
+                    if (storageMetadata.getSizeBytes() != file.getTotalSpace())
                     {
-                        if (storageMetadata.getSizeBytes() != file.getTotalSpace())
-                        {
-                            Log.d(TAG, file.getName() + " already up to date");
-                        }
-                        else
-                        {
-                            Log.d(TAG, file.getName() + " updated since last upload");
-                            uploadFile(uri, fileReference);
-                        }
+                        Log.d(TAG, file.getName() + " already up to date");
                     }
-                }).addOnFailureListener(new OnFailureListener()
-                {
-                    @Override
-                    public void onFailure(@NonNull Exception e)
+                    else
                     {
-                        Log.d(TAG, file.getName() + " not yet uploaded");
+                        Log.d(TAG, file.getName() + " updated since last upload");
                         uploadFile(uri, fileReference);
                     }
-                });
-            }
+                }
+            }).addOnFailureListener(new OnFailureListener()
+            {
+                @Override
+                public void onFailure(@NonNull Exception e)
+                {
+                    Log.d(TAG, file.getName() + " not yet uploaded");
+                    uploadFile(uri, fileReference);
+                }
+            });
         }
     }
 
@@ -389,7 +394,8 @@ public class BackupActivity extends AppCompatActivity
     @Override
     public void onMenuClick(int position)
     {
-        // TODO
+        File directory = fileAdapter.getDataFromPosition(position);
+        backupDirectory(directory);
     }
 
     private class FileAsyncTask extends AsyncTask<File, Void, Void>

@@ -1,14 +1,22 @@
 package ca.bischke.apps.filevault;
 
 import android.content.Context;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.text.format.Formatter;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.storage.StorageMetadata;
+import com.google.firebase.storage.StorageReference;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -21,13 +29,15 @@ public class FileBackupAdapter extends RecyclerView.Adapter<FileBackupViewHolder
     private Context context;
     private List<File> fileList;
     private FileListener fileListener;
+    private StorageReference userReference;
     private FileManager fileManager;
 
-    public FileBackupAdapter(Context context, List<File> fileList, FileListener fileListener)
+    public FileBackupAdapter(Context context, List<File> fileList, FileListener fileListener, StorageReference userReference)
     {
         this.context = context;
         this.fileList = fileList;
         this.fileListener = fileListener;
+        this.userReference = userReference;
         fileManager = new FileManager();
     }
 
@@ -43,7 +53,7 @@ public class FileBackupAdapter extends RecyclerView.Adapter<FileBackupViewHolder
     public void onBindViewHolder(@NonNull final FileBackupViewHolder fileViewHolder, int i)
     {
         File directory = fileList.get(i);
-        File file = fileManager.getMainFileFromDirectory(directory);
+        final File file = fileManager.getMainFileFromDirectory(directory);
 
         TextView textFileName = fileViewHolder.getTextFileName();
         textFileName.setText(file.getName());
@@ -76,6 +86,38 @@ public class FileBackupAdapter extends RecyclerView.Adapter<FileBackupViewHolder
         {
             imageFileIcon.setImageResource(R.drawable.ic_file_24dp);
         }
+
+        final ImageButton buttonFileBackup = fileViewHolder.getButtonFileBackup();
+
+        String directoryName = directory.getName();
+        final Uri uri = Uri.fromFile(file);
+        String reference = directoryName + File.separator + uri.getLastPathSegment();
+
+        final StorageReference fileReference = userReference.child(reference);
+
+        // Checks if File already exists
+        fileReference.getMetadata().addOnSuccessListener(new OnSuccessListener<StorageMetadata>()
+        {
+            @Override
+            public void onSuccess(StorageMetadata storageMetadata)
+            {
+                if (storageMetadata.getSizeBytes() != file.getTotalSpace())
+                {
+                    buttonFileBackup.setImageResource(R.drawable.ic_cloud_done_24dp);
+                }
+                else
+                {
+                    buttonFileBackup.setImageResource(R.drawable.ic_cloud_upload_24dp);
+                }
+            }
+        }).addOnFailureListener(new OnFailureListener()
+        {
+            @Override
+            public void onFailure(@NonNull Exception e)
+            {
+                buttonFileBackup.setImageResource(R.drawable.ic_cloud_upload_24dp);
+            }
+        });
     }
 
     @Override

@@ -14,7 +14,7 @@ public class FileBackupViewHolder extends RecyclerView.ViewHolder
     private TextView textFileDate;
     private TextView textFileSize;
     private ImageView imageFileIcon;
-    private ImageButton buttonFileMenu;
+    private ImageButton buttonFileBackup;
 
     public FileBackupViewHolder(View view, final FileListener fileListener)
     {
@@ -25,9 +25,9 @@ public class FileBackupViewHolder extends RecyclerView.ViewHolder
         textFileDate = view.findViewById(R.id.text_file_date);
         textFileSize = view.findViewById(R.id.text_file_size);
         imageFileIcon = view.findViewById(R.id.image_file_icon);
-        buttonFileMenu = view.findViewById(R.id.button_file_menu);
+        buttonFileBackup = view.findViewById(R.id.button_file_menu);
 
-        buttonFileMenu.setOnClickListener(new View.OnClickListener()
+        buttonFileBackup.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View view)
@@ -60,9 +60,9 @@ public class FileBackupViewHolder extends RecyclerView.ViewHolder
         return imageFileIcon;
     }
 
-    public ImageButton getButtonFileMenu()
+    public ImageButton getButtonFileBackup()
     {
-        return buttonFileMenu;
+        return buttonFileBackup;
     }
 
     @Override
