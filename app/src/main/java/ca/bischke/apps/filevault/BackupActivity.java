@@ -102,7 +102,7 @@ public class BackupActivity extends AppCompatActivity
         }
 
         fileManager = new FileManager();
-        fileManager.createVault();
+        fileManager.createVaultFilesDirectory();
 
         // Setup Recycler View
         recyclerView = findViewById(R.id.recycler_view);
@@ -291,7 +291,7 @@ public class BackupActivity extends AppCompatActivity
         scrollToTop();
         fileList.clear();
 
-        File vault = fileManager.getVaultDirectory();
+        File vault = fileManager.getVaultFilesDirectory();
         ArrayList<File> files = fileManager.getFilesInDirectory(vault);
         files = fileManager.getSortedFiles(files, sortByName);
 
@@ -318,7 +318,7 @@ public class BackupActivity extends AppCompatActivity
 
     private void backupFiles()
     {
-        File vault = fileManager.getVaultDirectory();
+        File vault = fileManager.getVaultFilesDirectory();
         ArrayList<File> directories = fileManager.getFilesInDirectory(vault);
 
         for (File directory : directories)
@@ -422,7 +422,7 @@ public class BackupActivity extends AppCompatActivity
     private boolean isInReferenceList(String reference)
             throws IOException
     {
-        File file = new File(fileManager.getRootDirectory() + File.separator + "filevault-files.txt");
+        File file = fileManager.getVaultFileList();
 
         if (file.exists())
         {
@@ -440,7 +440,7 @@ public class BackupActivity extends AppCompatActivity
     private void writeReferencesList(String reference)
             throws IOException
     {
-        File file = new File(fileManager.getRootDirectory() + File.separator + "filevault-files.txt");
+        File file = fileManager.getVaultFileList();
 
         if (!file.exists())
         {
@@ -458,7 +458,7 @@ public class BackupActivity extends AppCompatActivity
     private ArrayList<String> getReferencesList()
             throws IOException
     {
-        File file = new File(fileManager.getRootDirectory() + File.separator + "filevault-files.txt");
+        File file = fileManager.getVaultFileList();
 
         if (!file.exists())
         {
@@ -493,7 +493,7 @@ public class BackupActivity extends AppCompatActivity
         {
             String[] parts = reference.split("/");
 
-            File directory = new File(fileManager.getVaultDirectory() + File.separator + parts[0]);
+            File directory = new File(fileManager.getVaultFilesDirectory() + File.separator + parts[0]);
 
             if (!directory.exists())
             {

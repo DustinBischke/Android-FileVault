@@ -85,7 +85,7 @@ public class FileExplorerActivity extends AppCompatActivity
         }
 
         fileManager = new FileManager();
-        fileManager.createVault();
+        fileManager.createVaultFilesDirectory();
 
         // Setup Recycler View
         recyclerView = findViewById(R.id.recycler_view);
@@ -341,9 +341,9 @@ public class FileExplorerActivity extends AppCompatActivity
     private void moveFileToVault(File file)
     {
         String fileName = fileManager.getFileNameWithoutExtension(file);
-        fileManager.moveFileToVault(file);
+        fileManager.moveFileToVaultFiles(file);
 
-        File vault = fileManager.getVaultDirectory();
+        File vault = fileManager.getVaultFilesDirectory();
         String vaultPath = vault.getAbsolutePath();
         File directory = new File(vaultPath + File.separator + fileName);
 

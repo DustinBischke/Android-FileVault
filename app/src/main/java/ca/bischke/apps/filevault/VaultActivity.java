@@ -107,8 +107,8 @@ public class VaultActivity extends AppCompatActivity
 
         // Create Vault directory
         fileManager = new FileManager();
-        fileManager.createVault();
-        fileManager.createTempDirectory();
+        fileManager.createVaultFilesDirectory();
+        fileManager.createVaultTempDirectory();
 
         encryption = new Encryption(this);
 
@@ -156,7 +156,7 @@ public class VaultActivity extends AppCompatActivity
         decryptThumbnails();
         listFiles();
 
-        fileManager.clearTempDirectory();
+        fileManager.clearVaultTempDirectory();
 
         // Setup Preferences
         Preferences preferences = new Preferences(this);
@@ -260,10 +260,10 @@ public class VaultActivity extends AppCompatActivity
 
             // Move image into Vault
             File file = new File(cameraImagePath);
-            fileManager.moveFileToVault(file, fileName);
+            fileManager.moveFileToVaultFiles(file, fileName);
 
             // Display image
-            File vault = fileManager.getVaultDirectory();
+            File vault = fileManager.getVaultFilesDirectory();
             file = new File(vault + File.separator + fileName);
             displayFile(file);
         }
@@ -367,7 +367,7 @@ public class VaultActivity extends AppCompatActivity
         scrollToTop();
         fileList.clear();
 
-        File vault = fileManager.getVaultDirectory();
+        File vault = fileManager.getVaultFilesDirectory();
         ArrayList<File> files = fileManager.getFilesInDirectory(vault);
         files = fileManager.getSortedFiles(files, sortByName);
 
@@ -394,14 +394,14 @@ public class VaultActivity extends AppCompatActivity
 
     private void encodeThumbnails(boolean encrypt)
     {
-        File vault = fileManager.getVaultDirectory();
+        File vault = fileManager.getVaultFilesDirectory();
         ArrayList<File> directories = fileManager.getFilesInDirectory(vault);
 
         ArrayList<File> files = new ArrayList<>();
 
         for (File directory : directories)
         {
-            File file = fileManager.getThumbnailFromDirectory(directory);
+            File file = fileManager.getThumbnailFromVaultSubdirectory(directory);
 
             if (file != null)
             {
@@ -525,7 +525,7 @@ public class VaultActivity extends AppCompatActivity
     {
         try
         {
-            File outputFile = new File(fileManager.getTempDirectory() + File.separator + file.getName());
+            File outputFile = new File(fileManager.getVaultTempDirectory() + File.separator + file.getName());
             encryption.decryptFile(encryptionKey, file, outputFile);
 
             Intent intent = new Intent();
@@ -548,7 +548,7 @@ public class VaultActivity extends AppCompatActivity
     public void onFileClick(int position)
     {
         File directory = fileAdapter.getDataFromPosition(position);
-        File file = fileManager.getMainFileFromDirectory(directory);
+        File file = fileManager.getMainFileFromVaultSubdirectory(directory);
 
         openFile(file);
     }

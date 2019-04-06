@@ -81,7 +81,7 @@ public class ImageViewerActivity extends AppCompatActivity
     {
         super.onStart();
 
-        if (fileManager.isFileInVault(file))
+        if (fileManager.isFileInVaultDirectory(file))
         {
             try
             {
@@ -115,7 +115,7 @@ public class ImageViewerActivity extends AppCompatActivity
     {
         super.onStop();
 
-        if (fileManager.isFileInVault(file))
+        if (fileManager.isFileInVaultDirectory(file))
         {
             try
             {
@@ -167,12 +167,12 @@ public class ImageViewerActivity extends AppCompatActivity
 
     private void buttonEncrypt()
     {
-        if (!fileManager.isFileInVault(file))
+        if (!fileManager.isFileInVaultDirectory(file))
         {
             String fileName = fileManager.getFileNameWithoutExtension(file);
-            fileManager.moveFileToVault(file);
+            fileManager.moveFileToVaultFiles(file);
 
-            File vault = fileManager.getVaultDirectory();
+            File vault = fileManager.getVaultFilesDirectory();
             String vaultPath = vault.getAbsolutePath();
             File directory = new File(vaultPath + File.separator + fileName);
 

@@ -52,7 +52,7 @@ public class FileBackupAdapter extends RecyclerView.Adapter<FileBackupViewHolder
     public void onBindViewHolder(@NonNull final FileBackupViewHolder fileViewHolder, int i)
     {
         File directory = fileList.get(i);
-        final File file = fileManager.getMainFileFromDirectory(directory);
+        final File file = fileManager.getMainFileFromVaultSubdirectory(directory);
 
         TextView textFileName = fileViewHolder.getTextFileName();
         textFileName.setText(file.getName());

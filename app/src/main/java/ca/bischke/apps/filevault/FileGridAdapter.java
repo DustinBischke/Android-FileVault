@@ -3,7 +3,6 @@ package ca.bischke.apps.filevault;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.media.ThumbnailUtils;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
@@ -39,18 +38,19 @@ public class FileGridAdapter extends RecyclerView.Adapter<FileGridViewHolder>
         return new FileGridViewHolder(view, fileListener);
     }
 
+    // TODO Match List Adapter
     @Override
     public void onBindViewHolder(@NonNull final FileGridViewHolder fileViewHolder, int i)
     {
         File directory = fileList.get(i);
-        File file = fileManager.getMainFileFromDirectory(directory);
+        File file = fileManager.getMainFileFromVaultSubdirectory(directory);
 
         TextView textFileName = fileViewHolder.getTextFileName();
         textFileName.setText(file.getName());
 
         ImageView imageFileIcon = fileViewHolder.getImageFileIcon();
 
-        if (fileManager.getThumbnailFromDirectory(directory) != null)
+        if (fileManager.getThumbnailFromVaultSubdirectory(directory) != null)
         {
             new ThumbnailAsyncTask().execute(imageFileIcon, directory);
         }
@@ -83,7 +83,7 @@ public class FileGridAdapter extends RecyclerView.Adapter<FileGridViewHolder>
             imageFileIcon = (ImageView) objects[0];
             File file = (File) objects[1];
 
-            File thumbnail = fileManager.getThumbnailFromDirectory(file);
+            File thumbnail = fileManager.getThumbnailFromVaultSubdirectory(file);
             String thumbnailPath = thumbnail.getAbsolutePath();
 
             return BitmapFactory.decodeFile(thumbnailPath);

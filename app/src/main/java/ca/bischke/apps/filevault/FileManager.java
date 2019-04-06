@@ -21,8 +21,10 @@ public class FileManager
     private final String rootPath = Environment.getExternalStorageDirectory().toString();
     private final String vaultPath = rootPath + File.separator + "FileVault";
     private final File rootDirectory = new File(rootPath);
-    private final File vaultDirectory = new File(vaultPath + File.separator + "Files");
-    private final File tempDirectory = new File(vaultPath + File.separator + "Temp");
+    private final File vaultDirectory = new File(vaultPath);
+    private final File vaultFilesDirectory = new File(vaultDirectory + File.separator + "Files");
+    private final File vaultTempDirectory = new File(vaultDirectory + File.separator + "Temp");
+    private final File vaultFileList = new File(vaultDirectory + File.separator + "FileVault-Files.txt");
     private File currentDirectory;
 
     public FileManager()
@@ -40,9 +42,19 @@ public class FileManager
         return vaultDirectory;
     }
 
-    public File getTempDirectory()
+    public File getVaultFilesDirectory()
     {
-        return tempDirectory;
+        return vaultFilesDirectory;
+    }
+
+    public File getVaultTempDirectory()
+    {
+        return vaultTempDirectory;
+    }
+
+    public File getVaultFileList()
+    {
+        return vaultFileList;
     }
 
     public File getCurrentDirectory()
@@ -147,60 +159,48 @@ public class FileManager
         return files;
     }
 
-    private boolean vaultExists()
+    private boolean vaultTempDirectoryExists()
     {
-        return vaultDirectory.exists();
+        return vaultTempDirectory.exists();
     }
 
-    private boolean tempDirectoryExists()
+    private void createDirectory(File directory)
     {
-        return tempDirectory.exists();
-    }
+        String name = directory.getName();
 
-    public void createVault()
-    {
-        if (!vaultExists())
+        if (!directory.exists())
         {
-            if (vaultDirectory.mkdirs())
+            if (directory.mkdirs())
             {
-                Log.d(TAG, "Vault Directory created");
+                Log.d(TAG, name + " Directory created");
             }
             else
             {
-                Log.d(TAG, "Vault Directory could not be created");
+                Log.d(TAG, name + " Directory could not be created");
             }
         }
         else
         {
-            Log.d(TAG, "Vault Directory already exists");
+            Log.d(TAG, name + " Directory already exists");
         }
     }
 
-    public void createTempDirectory()
+    public void createVaultFilesDirectory()
     {
-        if (!tempDirectoryExists())
-        {
-            if (tempDirectory.mkdirs())
-            {
-                Log.d(TAG, "Temp Directory created");
-            }
-            else
-            {
-                Log.d(TAG, "Temp Directory could not be created");
-            }
-        }
-        else
-        {
-            Log.d(TAG, "Temp Directory already exists");
-        }
+        createDirectory(vaultFilesDirectory);
     }
 
-    private File createVaultFileDirectory(String fileName)
+    public void createVaultTempDirectory()
     {
-        createVault();
+        createDirectory(vaultTempDirectory);
+    }
+
+    private File createVaultFileSubdirectory(String fileName)
+    {
+        createVaultFilesDirectory();
 
         fileName = getFileNameWithoutExtension(fileName);
-        File fileDirectory = new File(vaultDirectory + File.separator + fileName);
+        File fileDirectory = new File(vaultFilesDirectory + File.separator + fileName);
 
         if (fileDirectory.mkdirs())
         {
@@ -235,9 +235,9 @@ public class FileManager
         return getFileNameWithoutExtension(fileName);
     }
 
-    public void moveFileToVault(File file, String fileName)
+    public void moveFileToVaultFiles(File file, String fileName)
     {
-        File directory = createVaultFileDirectory(fileName);
+        File directory = createVaultFileSubdirectory(fileName);
 
         if (directory != null)
         {
@@ -275,10 +275,10 @@ public class FileManager
         }
     }
 
-    public void moveFileToVault(File file)
+    public void moveFileToVaultFiles(File file)
     {
         String fileName = file.getName();
-        moveFileToVault(file, fileName);
+        moveFileToVaultFiles(file, fileName);
     }
 
     private void exportImageThumbnail(File file, File directory)
@@ -323,7 +323,7 @@ public class FileManager
         fileOutputStream.close();
     }
 
-    public File getMainFileFromDirectory(File directory)
+    public File getMainFileFromVaultSubdirectory(File directory)
     {
         ArrayList<File> files = getFilesInDirectory(directory);
 
@@ -341,7 +341,7 @@ public class FileManager
         return files.get(0);
     }
 
-    public File getThumbnailFromDirectory(File directory)
+    public File getThumbnailFromVaultSubdirectory(File directory)
     {
         ArrayList<File> files = getFilesInDirectory(directory);
 
@@ -356,20 +356,21 @@ public class FileManager
         return null;
     }
 
-    public boolean isFileInVault(File file)
+    public boolean isFileInVaultDirectory(File file)
     {
         String filePath = file.getAbsolutePath();
+        String vaultFilesPath = vaultFilesDirectory.getAbsolutePath();
 
-        return filePath.contains(vaultPath);
+        return filePath.contains(vaultFilesPath);
     }
 
-    public void clearTempDirectory()
+    public void clearVaultTempDirectory()
     {
-        if (tempDirectoryExists())
+        if (vaultTempDirectoryExists())
         {
-            if (tempDirectory.listFiles().length > 0)
+            if (vaultTempDirectory.listFiles().length > 0)
             {
-                File[] fileArray = tempDirectory.listFiles();
+                File[] fileArray = vaultTempDirectory.listFiles();
 
                 for (File file : fileArray)
                 {
