@@ -195,6 +195,9 @@ public class VaultActivity extends AppCompatActivity
             case R.id.action_by_date:
                 buttonSortByDate();
                 break;
+            case R.id.action_refresh:
+                buttonRefresh();
+                break;
             // TODO Setup Settings button
             case R.id.action_settings:
                 break;
@@ -322,6 +325,11 @@ public class VaultActivity extends AppCompatActivity
             sortByName = false;
             listFiles();
         }
+    }
+
+    private void buttonRefresh()
+    {
+        listFiles();
     }
 
     public void buttonStartFileExplorer(View view)

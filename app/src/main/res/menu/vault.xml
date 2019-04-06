@@ -36,8 +36,14 @@
     </item>
 
     <item
-        android:id="@+id/action_settings"
+        android:id="@+id/action_refresh"
         android:orderInCategory="4"
+        android:title="@string/refresh"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_settings"
+        android:orderInCategory="5"
         android:title="@string/settings"
         app:showAsAction="never" />
 

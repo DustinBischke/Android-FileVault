@@ -40,6 +40,7 @@
     <string name="sort">Sort</string>
     <string name="by_name">By Name</string>
     <string name="by_date">By Date</string>
+    <string name="refresh">Refresh</string>
     <string name="navigation_drawer_open">Open Navigation Drawer</string>
     <string name="navigation_drawer_close">Close Navigation Drawer</string>
     <string name="preference_pass">FileVault-Pass</string>
