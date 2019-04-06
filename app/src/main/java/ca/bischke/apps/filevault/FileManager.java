@@ -21,7 +21,8 @@ public class FileManager
     private final String rootPath = Environment.getExternalStorageDirectory().toString();
     private final String vaultPath = rootPath + File.separator + "FileVault";
     private final File rootDirectory = new File(rootPath);
-    private final File vaultDirectory = new File(vaultPath);
+    private final File vaultDirectory = new File(vaultPath + File.separator + "Files");
+    private final File tempDirectory = new File(vaultPath + File.separator + "Temp");
     private File currentDirectory;
 
     public FileManager()
@@ -37,6 +38,11 @@ public class FileManager
     public File getVaultDirectory()
     {
         return vaultDirectory;
+    }
+
+    public File getTempDirectory()
+    {
+        return tempDirectory;
     }
 
     public File getCurrentDirectory()
@@ -146,6 +152,11 @@ public class FileManager
         return vaultDirectory.exists();
     }
 
+    private boolean tempDirectoryExists()
+    {
+        return tempDirectory.exists();
+    }
+
     public void createVault()
     {
         if (!vaultExists())
@@ -165,12 +176,31 @@ public class FileManager
         }
     }
 
+    public void createTempDirectory()
+    {
+        if (!tempDirectoryExists())
+        {
+            if (tempDirectory.mkdirs())
+            {
+                Log.d(TAG, "Temp Directory created");
+            }
+            else
+            {
+                Log.d(TAG, "Temp Directory could not be created");
+            }
+        }
+        else
+        {
+            Log.d(TAG, "Temp Directory already exists");
+        }
+    }
+
     private File createVaultFileDirectory(String fileName)
     {
         createVault();
 
         fileName = getFileNameWithoutExtension(fileName);
-        File fileDirectory = new File(vaultPath + File.separator + fileName);
+        File fileDirectory = new File(vaultDirectory + File.separator + fileName);
 
         if (fileDirectory.mkdirs())
         {
@@ -331,5 +361,21 @@ public class FileManager
         String filePath = file.getAbsolutePath();
 
         return filePath.contains(vaultPath);
+    }
+
+    public void clearTempDirectory()
+    {
+        if (tempDirectoryExists())
+        {
+            if (tempDirectory.listFiles().length > 0)
+            {
+                File[] fileArray = tempDirectory.listFiles();
+
+                for (File file : fileArray)
+                {
+                    file.delete();
+                }
+            }
+        }
     }
 }

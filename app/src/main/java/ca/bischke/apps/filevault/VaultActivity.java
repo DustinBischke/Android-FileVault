@@ -108,6 +108,7 @@ public class VaultActivity extends AppCompatActivity
         // Create Vault directory
         fileManager = new FileManager();
         fileManager.createVault();
+        fileManager.createTempDirectory();
 
         encryption = new Encryption(this);
 
@@ -154,6 +155,8 @@ public class VaultActivity extends AppCompatActivity
 
         decryptThumbnails();
         listFiles();
+
+        fileManager.clearTempDirectory();
 
         // Setup Preferences
         Preferences preferences = new Preferences(this);
@@ -518,12 +521,11 @@ public class VaultActivity extends AppCompatActivity
         }
     }
 
-    // TODO Setup Vault Temp directory
     private void openFileExternal(File file)
     {
         try
         {
-            File outputFile = new File(fileManager.getRootDirectory() + "/" + file.getName());
+            File outputFile = new File(fileManager.getTempDirectory() + File.separator + file.getName());
             encryption.decryptFile(encryptionKey, file, outputFile);
 
             Intent intent = new Intent();
