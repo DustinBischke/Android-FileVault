@@ -502,11 +502,6 @@ public class BackupActivity extends AppCompatActivity
 
             final File file = new File(directory + File.separator + parts[1]);
 
-            if (!file.exists())
-            {
-                file.createNewFile();
-            }
-
             final String fileName = file.getName();
             final StorageReference fileReference = userReference.child(reference);
 
@@ -516,25 +511,33 @@ public class BackupActivity extends AppCompatActivity
                 @Override
                 public void onSuccess(StorageMetadata storageMetadata)
                 {
-                    if (storageMetadata.getSizeBytes() == file.length())
+                    if (file.exists())
                     {
-                        Log.d(TAG, fileName + " is up to date");
-                    }
-                    else
-                    {
-                        if (storageMetadata.getCreationTimeMillis() > file.lastModified())
-                        {
-                            Log.d(TAG, fileName + " is older than uploaded version");
-                            downloadFile(file, fileReference);
-                        }
-                        else if (storageMetadata.getCreationTimeMillis() < file.lastModified())
-                        {
-                            Log.d(TAG, fileName + " is newer than uploaded version");
-                        }
-                        else
+                        if (storageMetadata.getSizeBytes() == file.length())
                         {
                             Log.d(TAG, fileName + " is up to date");
                         }
+                        else
+                        {
+                            if (storageMetadata.getCreationTimeMillis() > file.lastModified())
+                            {
+                                Log.d(TAG, fileName + " is newer than uploaded version");
+                                downloadFile(file, fileReference);
+                            }
+                            else if (storageMetadata.getCreationTimeMillis() < file.lastModified())
+                            {
+                                Log.d(TAG, fileName + " is older than uploaded version");
+                            }
+                            else
+                            {
+                                Log.d(TAG, fileName + " is up to date");
+                            }
+                        }
+                    }
+                    else
+                    {
+                        Log.d(TAG, fileName + " is not on local device");
+                        downloadFile(file, fileReference);
                     }
                 }
             }).addOnFailureListener(new OnFailureListener()
@@ -542,8 +545,7 @@ public class BackupActivity extends AppCompatActivity
                 @Override
                 public void onFailure(@NonNull Exception e)
                 {
-                    Log.d(TAG, fileName + " is not on local device");
-                    downloadFile(file, fileReference);
+                    Log.d(TAG, fileName + " is not uploaded");
                 }
             });
         }
