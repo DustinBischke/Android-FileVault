@@ -383,7 +383,7 @@ public class VaultActivity extends AppCompatActivity
         return (firebaseUser != null && firebaseUser.isEmailVerified());
     }
 
-    private void encryptThumbnails()
+    private void encodeThumbnails(boolean encrypt)
     {
         File vault = fileManager.getVaultDirectory();
         ArrayList<File> directories = fileManager.getFilesInDirectory(vault);
@@ -400,41 +400,34 @@ public class VaultActivity extends AppCompatActivity
             }
         }
 
-        try
+        if (files.size() > 0)
         {
-            encryption.encryptFileList(encryptionKey, files);
+            try
+            {
+                if (encrypt)
+                {
+                    encryption.encryptFileList(encryptionKey, files);
+                }
+                else
+                {
+                    encryption.decryptFileList(encryptionKey, files);
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.d(TAG, ex.getMessage());
+            }
         }
-        catch (Exception ex)
-        {
-            Log.d(TAG, ex.getMessage());
-        }
+    }
+
+    private void encryptThumbnails()
+    {
+        encodeThumbnails(true);
     }
 
     private void decryptThumbnails()
     {
-        File vault = fileManager.getVaultDirectory();
-        ArrayList<File> directories = fileManager.getFilesInDirectory(vault);
-
-        ArrayList<File> files = new ArrayList<>();
-
-        for (File directory : directories)
-        {
-            File file = fileManager.getThumbnailFromDirectory(directory);
-
-            if (file != null)
-            {
-                files.add(file);
-            }
-        }
-
-        try
-        {
-            encryption.decryptFileList(encryptionKey, files);
-        }
-        catch (Exception ex)
-        {
-            Log.d(TAG, ex.getMessage());
-        }
+        encodeThumbnails(false);
     }
 
     private void startAccountIntent()
