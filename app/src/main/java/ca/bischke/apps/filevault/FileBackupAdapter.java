@@ -99,14 +99,26 @@ public class FileBackupAdapter extends RecyclerView.Adapter<FileBackupViewHolder
             @Override
             public void onSuccess(StorageMetadata storageMetadata)
             {
-                if (storageMetadata.getSizeBytes() != file.getTotalSpace())
+                if (storageMetadata.getSizeBytes() == file.length())
                 {
                     buttonFileBackup.setImageResource(R.drawable.ic_cloud_done_24dp);
                     buttonFileBackup.setEnabled(false);
                 }
                 else
                 {
-                    buttonFileBackup.setImageResource(R.drawable.ic_cloud_upload_24dp);
+                    if (storageMetadata.getCreationTimeMillis() > file.lastModified())
+                    {
+                        buttonFileBackup.setImageResource(R.drawable.ic_cloud_download_24dp);
+                    }
+                    else if (storageMetadata.getCreationTimeMillis() < file.lastModified())
+                    {
+                        buttonFileBackup.setImageResource(R.drawable.ic_cloud_upload_24dp);
+                    }
+                    else
+                    {
+                        buttonFileBackup.setImageResource(R.drawable.ic_cloud_done_24dp);
+                        buttonFileBackup.setEnabled(false);
+                    }
                 }
             }
         }).addOnFailureListener(new OnFailureListener()
