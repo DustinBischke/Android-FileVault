@@ -107,8 +107,7 @@ public class VaultActivity extends AppCompatActivity
 
         // Create Vault directory
         fileManager = new FileManager();
-        fileManager.createVaultFilesDirectory();
-        fileManager.createVaultTempDirectory();
+        fileManager.setupVaultDirectory();
 
         encryption = new Encryption(this);
 
@@ -263,16 +262,26 @@ public class VaultActivity extends AppCompatActivity
             // Set new file name
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMdd_HHmss", Locale.getDefault());
             String date = simpleDateFormat.format(new Date());
-            String fileName = "IMG_" + date + ".jpg";
+            String directoryName = "IMG_" + date;
+            String fileName = directoryName + ".jpg";
 
             // Move image into Vault
             File file = new File(cameraImagePath);
             fileManager.moveFileToVaultFiles(file, fileName);
 
-            // Display image
             File vault = fileManager.getVaultFilesDirectory();
-            file = new File(vault + File.separator + fileName);
-            displayFile(file);
+            File directory = new File(vault + File.separator + directoryName);
+
+            try
+            {
+                encryption.encryptDirectory(encryptionKey, directory);
+            }
+            catch (Exception ex)
+            {
+                Log.d(TAG, ex.getMessage());
+            }
+
+            displayFile(directory);
         }
     }
 
@@ -574,6 +583,34 @@ public class VaultActivity extends AppCompatActivity
         }
     }
 
+    private void removeFileFromVault(File directory)
+    {
+        try
+        {
+            File file = fileManager.getMainFileFromVaultSubdirectory(directory);
+            File outputFile = new File(fileManager.getVaultRemovedDirectory() + File.separator + file.getName());
+            encryption.decryptFile(encryptionKey, file, outputFile);
+
+            deleteDirectory(directory);
+        }
+        catch (Exception ex)
+        {
+            Log.d(TAG, ex.getMessage());
+        }
+    }
+
+    private void deleteDirectory(File directory)
+    {
+        ArrayList<File> files = fileManager.getFilesInDirectory(directory);
+
+        for (File file1 : files)
+        {
+            file1.delete();
+        }
+
+        directory.delete();
+    }
+
     @Override
     public void onFileClick(int position)
     {
@@ -590,12 +627,13 @@ public class VaultActivity extends AppCompatActivity
     }
 
     @Override
-    public void onMenuClick(int position)
+    public void onMenuClick(final int position)
     {
         FileGridViewHolder fileViewHolder = (FileGridViewHolder) recyclerView.findViewHolderForAdapterPosition(position);
         ImageButton menuButton = fileViewHolder.getButtonFileMenu();
 
-        final File file = fileAdapter.getDataFromPosition(position);
+        final File directory = fileAdapter.getDataFromPosition(position);
+        final File file = fileManager.getMainFileFromVaultSubdirectory(directory);
 
         PopupMenu popupMenu = new PopupMenu(this, menuButton);
 
@@ -630,17 +668,20 @@ public class VaultActivity extends AppCompatActivity
             {
                 int id = menuItem.getItemId();
 
-                // TODO: Setup Menu buttons
                 switch(id)
                 {
                     case R.id.file_open:
                         openFile(file);
                         break;
-                    case R.id.file_rename:
-                        break;
                     case R.id.file_remove:
+                        removeFileFromVault(directory);
+                        fileList.remove(position);
+                        fileAdapter.notifyDataSetChanged();
                         break;
                     case R.id.file_delete:
+                        deleteDirectory(directory);
+                        fileList.remove(position);
+                        fileAdapter.notifyDataSetChanged();
                         break;
                     default:
                         break;

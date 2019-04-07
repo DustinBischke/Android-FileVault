@@ -23,6 +23,7 @@ public class FileManager
     private final File rootDirectory = new File(rootPath);
     private final File vaultDirectory = new File(vaultPath);
     private final File vaultFilesDirectory = new File(vaultDirectory + File.separator + "Files");
+    private final File vaultRemovedDirectory = new File(vaultDirectory + File.separator + "Removed");
     private final File vaultTempDirectory = new File(vaultDirectory + File.separator + "Temp");
     private File currentDirectory;
 
@@ -44,6 +45,11 @@ public class FileManager
     public File getVaultFilesDirectory()
     {
         return vaultFilesDirectory;
+    }
+
+    public File getVaultRemovedDirectory()
+    {
+        return vaultRemovedDirectory;
     }
 
     public File getVaultTempDirectory()
@@ -184,6 +190,11 @@ public class FileManager
         createDirectory(vaultFilesDirectory);
     }
 
+    public void createVaultRemovedDirectory()
+    {
+        createDirectory(vaultRemovedDirectory);
+    }
+
     public void createVaultTempDirectory()
     {
         createDirectory(vaultTempDirectory);
@@ -206,6 +217,13 @@ public class FileManager
             Log.d(TAG, fileName + " Directory could not be created");
             return null;
         }
+    }
+
+    public void setupVaultDirectory()
+    {
+        createVaultFilesDirectory();
+        createVaultRemovedDirectory();
+        createVaultTempDirectory();
     }
 
     private String getFileNameWithoutExtension(String fileName)
