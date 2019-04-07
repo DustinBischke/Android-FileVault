@@ -4,12 +4,15 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
 public class SetPasswordActivity extends AppCompatActivity
 {
+    private final String TAG = "FileVault";
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -73,7 +76,7 @@ public class SetPasswordActivity extends AppCompatActivity
                 }
                 catch (Exception ex)
                 {
-                    // TODO Log error
+                    Log.d(TAG, ex.getMessage());
                 }
             }
             else

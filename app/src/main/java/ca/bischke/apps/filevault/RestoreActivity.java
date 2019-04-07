@@ -447,16 +447,10 @@ public class RestoreActivity extends AppCompatActivity
     }
 
     @Override
-    public void onFileClick(int position)
-    {
-        // TODO
-    }
+    public void onFileClick(int position) {}
 
     @Override
-    public void onFileLongClick(int position)
-    {
-        // TODO
-    }
+    public void onFileLongClick(int position) {}
 
     @Override
     public void onMenuClick(int position)

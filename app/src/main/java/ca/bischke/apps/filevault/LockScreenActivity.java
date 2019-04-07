@@ -18,6 +18,8 @@ import java.util.Arrays;
 
 public class LockScreenActivity extends AppCompatActivity
 {
+    private final String TAG = "FileVault";
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -84,7 +86,7 @@ public class LockScreenActivity extends AppCompatActivity
             }
             catch (Exception ex)
             {
-                // TODO Log error
+                Log.d(TAG, ex.getMessage());
             }
         }
     }

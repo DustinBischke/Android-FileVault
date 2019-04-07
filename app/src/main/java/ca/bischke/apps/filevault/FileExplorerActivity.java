@@ -240,6 +240,7 @@ public class FileExplorerActivity extends AppCompatActivity
                 break;
             case R.id.nav_backup:
                 startBackupIntent();
+                break;
             case R.id.nav_settings:
                 buttonSettings();
                 break;
@@ -451,7 +452,7 @@ public class FileExplorerActivity extends AppCompatActivity
     }
 
     @Override
-    public void onMenuClick(int position)
+    public void onMenuClick(final int position)
     {
         FileListViewHolder fileViewHolder = (FileListViewHolder) recyclerView.findViewHolderForAdapterPosition(position);
         ImageButton menuButton = fileViewHolder.getButtonFileMenu();
@@ -498,6 +499,8 @@ public class FileExplorerActivity extends AppCompatActivity
                         break;
                     case R.id.file_encrypt:
                         moveFileToVault(file);
+                        fileList.remove(position);
+                        fileAdapter.notifyDataSetChanged();
                     default:
                         break;
                 }

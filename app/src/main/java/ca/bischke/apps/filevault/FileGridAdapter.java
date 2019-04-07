@@ -38,7 +38,6 @@ public class FileGridAdapter extends RecyclerView.Adapter<FileGridViewHolder>
         return new FileGridViewHolder(view, fileListener);
     }
 
-    // TODO Match List Adapter
     @Override
     public void onBindViewHolder(@NonNull final FileGridViewHolder fileViewHolder, int i)
     {
@@ -49,10 +48,30 @@ public class FileGridAdapter extends RecyclerView.Adapter<FileGridViewHolder>
         textFileName.setText(file.getName());
 
         ImageView imageFileIcon = fileViewHolder.getImageFileIcon();
+        imageFileIcon.setScaleType(ImageView.ScaleType.CENTER);
 
         if (fileManager.getThumbnailFromVaultSubdirectory(directory) != null)
         {
             new ThumbnailAsyncTask().execute(imageFileIcon, directory);
+        }
+        else
+        {
+            if (FileTypes.isImage(file))
+            {
+                imageFileIcon.setImageResource(R.drawable.ic_image_72dp);
+            }
+            else if (FileTypes.isVideo(file))
+            {
+                imageFileIcon.setImageResource(R.drawable.ic_video_72dp);
+            }
+            else if (FileTypes.isAudio(file))
+            {
+                imageFileIcon.setImageResource(R.drawable.ic_audio_72dp);
+            }
+            else
+            {
+                imageFileIcon.setImageResource(R.drawable.ic_file_72dp);
+            }
         }
     }
 
