@@ -5,21 +5,54 @@
     <item
         android:id="@+id/nav_file_vault"
         android:icon="@drawable/ic_lock_24dp"
-        android:title="@string/app_name" />
+        android:orderInCategory="1"
+        android:title="@string/vault" />
 
     <item
         android:id="@+id/nav_file_explorer"
         android:icon="@drawable/ic_folder_24dp"
+        android:orderInCategory="2"
         android:title="@string/file_explorer" />
 
     <item
-        android:id="@+id/nav_backup"
-        android:icon="@drawable/ic_cloud_upload_white_24dp"
-        android:title="Backup" />
+        android:id="@+id/nav_cloud"
+        android:orderInCategory="3"
+        android:title="@string/cloud">
+
+        <menu>
+            <item
+                android:id="@+id/nav_account"
+                android:icon="@drawable/ic_account_24dp"
+                android:orderInCategory="1"
+                android:title="@string/account" />
+
+            <item
+                android:id="@+id/nav_backup"
+                android:icon="@drawable/ic_cloud_upload_24dp"
+                android:orderInCategory="2"
+                android:title="@string/backup" />
+
+            <item
+                android:id="@+id/nav_restore"
+                android:icon="@drawable/ic_cloud_download_24dp"
+                android:orderInCategory="3"
+                android:title="@string/restore" />
+
+        </menu>
+    </item>
 
     <item
-        android:id="@+id/nav_settings"
-        android:icon="@drawable/ic_settings_24dp"
-        android:title="@string/settings" />
+        android:id="@+id/nav_other"
+        android:orderInCategory="4"
+        android:title="@string/other">
 
+        <menu>
+            <item
+                android:id="@+id/nav_settings"
+                android:icon="@drawable/ic_settings_24dp"
+                android:orderInCategory="1"
+                android:title="@string/settings" />
+
+        </menu>
+    </item>
 </menu>
