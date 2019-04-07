@@ -38,14 +38,14 @@ import com.google.firebase.storage.UploadTask;
 import java.io.File;
 import java.util.ArrayList;
 
-public class BackupActivity extends AppCompatActivity
+public class RestoreActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, FileListener
 {
     private final String TAG = "FileVault";
     private FileManager fileManager;
     private RecyclerView recyclerView;
-    private ArrayList<File> fileList;
-    private FileBackupAdapter fileAdapter;
+    private ArrayList<DataSnapshot> fileList;
+    private FileRestoreAdapter fileAdapter;
     private FirebaseAuth firebaseAuth;
     private FirebaseUser firebaseUser;
     private FirebaseDatabase firebaseDatabase;
@@ -71,12 +71,12 @@ public class BackupActivity extends AppCompatActivity
         }
 
         // Sets Activity Layout
-        setContentView(R.layout.activity_backup);
+        setContentView(R.layout.activity_restore);
 
         // Sets Toolbar
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        setTitle(getString(R.string.backup));
+        setTitle(getString(R.string.restore));
 
         // Sets Drawer Layout
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
@@ -144,7 +144,7 @@ public class BackupActivity extends AppCompatActivity
 
         // Setup File Adapter
         fileList = new ArrayList<>();
-        fileAdapter = new FileBackupAdapter(this, fileList, this, userReference);
+        fileAdapter = new FileRestoreAdapter(this, fileList, this, userReference);
         fileAdapter.setHasStableIds(true);
         recyclerView.setAdapter(fileAdapter);
 
@@ -236,29 +236,45 @@ public class BackupActivity extends AppCompatActivity
         startSettingsIntent();
     }
 
-    public void buttonBackup(View view)
+    public void buttonRestore(View view)
     {
-        backupFiles();
+        restoreFiles();
     }
 
     private void listFiles()
     {
-        scrollToTop();
-        fileList.clear();
-
-        File vault = fileManager.getVaultFilesDirectory();
-        ArrayList<File> files = fileManager.getFilesInDirectory(vault);
-        files = fileManager.getSortedFiles(files, sortByName);
-
-        for (File file : files)
+        databaseReference.orderByValue().addListenerForSingleValueEvent(new ValueEventListener()
         {
-            displayFile(file);
-        }
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot)
+            {
+                if (dataSnapshot.getChildrenCount() > 0)
+                {
+                    for (DataSnapshot data : dataSnapshot.getChildren())
+                    {
+                        displayFile(data);
+                    }
+                }
+                else
+                {
+                    Toast toast = Toast.makeText(getApplicationContext(), "No files found", Toast.LENGTH_SHORT);
+                    toast.show();
+
+                    Log.d(TAG, "No files found");
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError)
+            {
+                Log.d(TAG, databaseError.toString());
+            }
+        });
     }
 
-    private void displayFile(File file)
+    private void displayFile(DataSnapshot dataSnapshot)
     {
-        new FileAsyncTask().execute(file);
+        new FileAsyncTask().execute(dataSnapshot);
     }
 
     private void scrollToTop()
@@ -271,26 +287,49 @@ public class BackupActivity extends AppCompatActivity
         return (firebaseUser != null && firebaseUser.isEmailVerified());
     }
 
-    private void backupFiles()
+    private void restoreFiles()
     {
-        File vault = fileManager.getVaultFilesDirectory();
-        ArrayList<File> directories = fileManager.getFilesInDirectory(vault);
-
-        for (File directory : directories)
+        databaseReference.orderByValue().addListenerForSingleValueEvent(new ValueEventListener()
         {
-            backupUpdatedFiles(directory);
-        }
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot)
+            {
+                if (dataSnapshot.getChildrenCount() > 0)
+                {
+                    restoreMissingFiles(dataSnapshot.getChildren());
+                }
+                else
+                {
+                    Toast toast = Toast.makeText(getApplicationContext(), "No files found", Toast.LENGTH_SHORT);
+                    toast.show();
+
+                    Log.d(TAG, "No files found");
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError)
+            {
+                Log.d(TAG, databaseError.toString());
+            }
+        });
     }
 
-    private void backupUpdatedFiles(File directory)
+    private void restoreMissingFiles(Iterable<DataSnapshot> files)
     {
-        ArrayList<File> files = fileManager.getFilesInDirectory(directory);
-        String directoryName = directory.getName();
-
-        for (final File file : files)
+        for (DataSnapshot dataSnapshot : files)
         {
-            final Uri uri = Uri.fromFile(file);
-            final String reference = directoryName + File.separator + uri.getLastPathSegment();
+            String reference = dataSnapshot.getValue().toString();
+            String[] parts = reference.split("/");
+
+            File directory = new File(fileManager.getVaultFilesDirectory() + File.separator + parts[0]);
+
+            if (!directory.exists())
+            {
+                directory.mkdirs();
+            }
+
+            final File file = new File(directory + File.separator + parts[1]);
 
             final String fileName = file.getName();
             final StorageReference fileReference = userReference.child(reference);
@@ -301,25 +340,33 @@ public class BackupActivity extends AppCompatActivity
                 @Override
                 public void onSuccess(StorageMetadata storageMetadata)
                 {
-                    if (storageMetadata.getSizeBytes() == file.length())
+                    if (file.exists())
                     {
-                        Log.d(TAG, fileName + " is up to date");
-                    }
-                    else
-                    {
-                        if (storageMetadata.getCreationTimeMillis() > file.lastModified())
-                        {
-                            Log.d(TAG, fileName + " is older than uploaded version");
-                        }
-                        else if (storageMetadata.getCreationTimeMillis() < file.lastModified())
-                        {
-                            Log.d(TAG, fileName + " is newer than uploaded version");
-                            uploadFile(uri, fileReference, reference);
-                        }
-                        else
+                        if (storageMetadata.getSizeBytes() == file.length())
                         {
                             Log.d(TAG, fileName + " is up to date");
                         }
+                        else
+                        {
+                            if (storageMetadata.getCreationTimeMillis() > file.lastModified())
+                            {
+                                Log.d(TAG, fileName + " is older than uploaded version");
+                                downloadFile(file, fileReference);
+                            }
+                            else if (storageMetadata.getCreationTimeMillis() < file.lastModified())
+                            {
+                                Log.d(TAG, fileName + " is newer than uploaded version");
+                            }
+                            else
+                            {
+                                Log.d(TAG, fileName + " is up to date");
+                            }
+                        }
+                    }
+                    else
+                    {
+                        Log.d(TAG, fileName + " is not on local device");
+                        downloadFile(file, fileReference);
                     }
                 }
             }).addOnFailureListener(new OnFailureListener()
@@ -327,47 +374,37 @@ public class BackupActivity extends AppCompatActivity
                 @Override
                 public void onFailure(@NonNull Exception e)
                 {
-                    Log.d(TAG, fileName + " is not backed up");
-                    uploadFile(uri, fileReference, reference);
+                    Log.d(TAG, fileName + " is not uploaded");
                 }
             });
         }
     }
 
-    private void uploadFile(final Uri uri, final StorageReference fileReference, final String reference)
+    private void downloadFile(final File file, StorageReference fileReference)
     {
-        UploadTask uploadTask = fileReference.putFile(uri);
-        final String fileName = uri.getLastPathSegment();
+        final String fileName = file.getName();
 
-        uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>()
+        fileReference.getFile(file).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>()
         {
             @Override
-            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot)
+            public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot)
             {
-                Toast toast = Toast.makeText(getApplicationContext(), fileName + " uploaded successfully", Toast.LENGTH_SHORT);
+                Toast toast = Toast.makeText(getApplicationContext(), fileName + " downloaded successfully", Toast.LENGTH_SHORT);
                 toast.show();
 
-                Log.d(TAG, fileName + " uploaded successfully");
-
-                writeToDatabase(reference);
+                Log.d(TAG, fileName + " downloaded successfully");
             }
         }).addOnFailureListener(new OnFailureListener()
         {
             @Override
             public void onFailure(@NonNull Exception e)
             {
-                Toast toast = Toast.makeText(getApplicationContext(), fileName + " failed to upload", Toast.LENGTH_SHORT);
+                Toast toast = Toast.makeText(getApplicationContext(), fileName + " failed to download", Toast.LENGTH_SHORT);
                 toast.show();
 
-                Log.d(TAG,  fileName + " failed to upload: " + e.getMessage());
+                Log.d(TAG,  fileName + " failed to download: " + e.getMessage());
             }
         });
-    }
-
-    private void writeToDatabase(String reference)
-    {
-        DatabaseReference newFileReference = databaseReference.push();
-        newFileReference.setValue(reference);
     }
 
     private void startAccountIntent()
@@ -421,16 +458,16 @@ public class BackupActivity extends AppCompatActivity
     @Override
     public void onMenuClick(int position)
     {
-        File directory = fileAdapter.getDataFromPosition(position);
-        backupUpdatedFiles(directory);
+        DataSnapshot dataSnapshot = fileAdapter.getDataFromPosition(position);
+
     }
 
-    private class FileAsyncTask extends AsyncTask<File, Void, Void>
+    private class FileAsyncTask extends AsyncTask<DataSnapshot, Void, Void>
     {
         @Override
-        protected Void doInBackground(File... files)
+        protected Void doInBackground(DataSnapshot... dataSnapshots)
         {
-            fileList.add(files[0]);
+            fileList.add(dataSnapshots[0]);
             return null;
         }
 

@@ -225,8 +225,15 @@ public class VaultActivity extends AppCompatActivity
             case R.id.nav_file_explorer:
                 startFileExplorer();
                 break;
+            case R.id.nav_account:
+                buttonAccount();
+                break;
             case R.id.nav_backup:
                 buttonBackup();
+                break;
+            case R.id.nav_restore:
+                buttonRestore();
+                break;
             case R.id.nav_settings:
                 buttonSettings();
                 break;
@@ -306,6 +313,18 @@ public class VaultActivity extends AppCompatActivity
         if (isVerifiedUser())
         {
             startBackupIntent();
+        }
+        else
+        {
+            startAccountIntent();
+        }
+    }
+
+    private void buttonRestore()
+    {
+        if (isVerifiedUser())
+        {
+            startRestoreIntent();
         }
         else
         {
@@ -456,6 +475,14 @@ public class VaultActivity extends AppCompatActivity
     private void startBackupIntent()
     {
         Intent intent = new Intent(this, BackupActivity.class);
+        intent.putExtra("ENCRYPTION_KEY", encryptionKey);
+        startActivity(intent);
+        finish();
+    }
+
+    private void startRestoreIntent()
+    {
+        Intent intent = new Intent(this, RestoreActivity.class);
         intent.putExtra("ENCRYPTION_KEY", encryptionKey);
         startActivity(intent);
         finish();

@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".BackupActivity">
+    tools:context=".RestoreActivity">
 
     <android.support.design.widget.CoordinatorLayout
         android:layout_width="match_parent"
@@ -40,12 +40,12 @@
             android:id="@+id/layout_fab"
             style="@style/LayoutFloatingActionButtons">
 
-        <android.support.design.widget.FloatingActionButton
-            android:id="@+id/fab_camera"
-            style="@style/FloatingActionButton"
-            android:onClick="buttonBackup"
-            app:backgroundTint="@color/colorPrimary"
-            app:srcCompat="@drawable/ic_cloud_upload_white_24dp" />
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/fab_add_file"
+                style="@style/FloatingActionButton"
+                android:onClick="buttonRestore"
+                app:backgroundTint="@color/colorPrimary"
+                app:srcCompat="@drawable/ic_cloud_download_white_24dp" />
 
         </LinearLayout>
     </android.support.design.widget.CoordinatorLayout>
