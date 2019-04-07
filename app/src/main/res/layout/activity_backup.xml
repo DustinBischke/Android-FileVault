@@ -7,28 +7,53 @@
     android:layout_height="match_parent"
     tools:context=".BackupActivity">
 
-    <android.support.v4.widget.DrawerLayout
-        android:id="@+id/drawer_layout"
-        style="@style/DrawerLayout"
-        tools:openDrawer="start">
+    <android.support.design.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-        <LinearLayout
-            android:id="@+id/layout_screen"
-            style="@style/LayoutScreen">
+        <android.support.v4.widget.DrawerLayout
+            android:id="@+id/drawer_layout"
+            style="@style/DrawerLayout"
+            tools:openDrawer="start">
+
+            <LinearLayout
+                android:id="@+id/layout_screen"
+                style="@style/LayoutScreen">
+
+                <include
+                    android:id="@+id/toolbar"
+                    layout="@layout/toolbar_main" />
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/recycler_view"
+                    style="@style/RecyclerView" />
+
+            </LinearLayout>
 
             <include
-                android:id="@+id/toolbar"
-                layout="@layout/toolbar_main" />
+                android:id="@+id/nav_view"
+                layout="@layout/nav_view_main" />
 
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/recycler_view"
-                style="@style/RecyclerView" />
+        </android.support.v4.widget.DrawerLayout>
+
+        <LinearLayout
+            android:id="@+id/layout_fab"
+            style="@style/LayoutFloatingActionButtons">
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fab_camera"
+            style="@style/FloatingActionButton"
+            android:onClick="buttonBackup"
+            app:backgroundTint="@color/colorPrimary"
+            app:srcCompat="@drawable/ic_cloud_upload_white_24dp" />
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fab_add_file"
+            style="@style/FloatingActionButton"
+            android:onClick="buttonRestore"
+            app:backgroundTint="@color/colorPrimary"
+            app:srcCompat="@drawable/ic_cloud_download_white_24dp" />
 
         </LinearLayout>
-
-        <include
-            android:id="@+id/nav_view"
-            layout="@layout/nav_view_main" />
-
-    </android.support.v4.widget.DrawerLayout>
+    </android.support.design.widget.CoordinatorLayout>
 </android.support.constraint.ConstraintLayout>

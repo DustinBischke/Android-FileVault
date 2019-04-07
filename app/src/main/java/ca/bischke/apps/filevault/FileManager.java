@@ -24,7 +24,6 @@ public class FileManager
     private final File vaultDirectory = new File(vaultPath);
     private final File vaultFilesDirectory = new File(vaultDirectory + File.separator + "Files");
     private final File vaultTempDirectory = new File(vaultDirectory + File.separator + "Temp");
-    private final File vaultFileList = new File(vaultDirectory + File.separator + "FileVault-Files.txt");
     private File currentDirectory;
 
     public FileManager()
@@ -50,11 +49,6 @@ public class FileManager
     public File getVaultTempDirectory()
     {
         return vaultTempDirectory;
-    }
-
-    public File getVaultFileList()
-    {
-        return vaultFileList;
     }
 
     public File getCurrentDirectory()
