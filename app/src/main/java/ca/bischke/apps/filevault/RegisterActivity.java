@@ -10,6 +10,7 @@ import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -87,7 +88,6 @@ public class RegisterActivity extends AppCompatActivity
         return true;
     }
 
-    // TODO Improve error display layout
     public void buttonRegister(View view)
     {
         String email = editTextEmail.getText().toString();
@@ -112,7 +112,6 @@ public class RegisterActivity extends AppCompatActivity
             return;
         }
 
-        // TODO Password requirements
         if (password.length() < 6)
         {
             editTextPassword.setError("Password must be greater than 6 characters");
@@ -160,7 +159,6 @@ public class RegisterActivity extends AppCompatActivity
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task)
                     {
-                        // TODO Switch to Activity / Display error
                         if (task.isSuccessful())
                         {
                             firebaseAuth.getCurrentUser().sendEmailVerification()
@@ -175,16 +173,26 @@ public class RegisterActivity extends AppCompatActivity
                                             }
                                             else
                                             {
-                                                Log.d(TAG, "Failed to send email");
+                                                Log.d(TAG, "Failed to send verification email");
                                             }
                                         }
                                     });
 
-                            Log.d(TAG, "Registration successful :)");
+                            Toast toast = Toast.makeText(getApplicationContext(), "Account created. Please verify your email", Toast.LENGTH_SHORT);
+                            toast.show();
+
+                            Log.d(TAG, "Account created. Please verify your email");
+
+                            Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+                            startActivity(intent);
+                            finish();
                         }
                         else
                         {
-                            Log.d(TAG, "Registration failed :(");
+                            Toast toast = Toast.makeText(getApplicationContext(), "Registration failed", Toast.LENGTH_SHORT);
+                            toast.show();
+
+                            Log.d(TAG, "Registration failed");
                         }
                     }
                 });

@@ -9,6 +9,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -83,7 +84,6 @@ public class LoginActivity extends AppCompatActivity
         return true;
     }
 
-    // TODO Improve error display layout
     public void buttonLogin(View view)
     {
         String email = editTextEmail.getText().toString();
@@ -125,25 +125,31 @@ public class LoginActivity extends AppCompatActivity
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task)
                     {
-                        // TODO Switch to Activity / Display error
                         if (task.isSuccessful())
                         {
                             if (firebaseAuth.getCurrentUser().isEmailVerified())
                             {
-                                Log.d(TAG, "Login successful :)");
+                                Toast toast = Toast.makeText(getApplicationContext(), "Logged in", Toast.LENGTH_SHORT);
+                                toast.show();
 
-                                Intent intent = new Intent(getApplicationContext(), VaultActivity.class);
-                                startActivity(intent);
+                                //Intent intent = new Intent(getApplicationContext(), VaultActivity.class);
+                                //startActivity(intent);
                                 finish();
                             }
                             else
                             {
-                                Log.d(TAG, "Please verify your email");
+                                Toast toast = Toast.makeText(getApplicationContext(), "You must verify your email", Toast.LENGTH_SHORT);
+                                toast.show();
+
+                                Log.d(TAG, "You must verify your email");
                             }
                         }
                         else
                         {
-                            Log.d(TAG, "Login failed :(");
+                            Toast toast = Toast.makeText(getApplicationContext(), "Login failed", Toast.LENGTH_SHORT);
+                            toast.show();
+
+                            Log.d(TAG, "Login failed");
                         }
                     }
                 });
