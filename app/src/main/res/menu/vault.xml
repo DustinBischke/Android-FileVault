@@ -6,7 +6,7 @@
         android:id="@+id/action_account"
         android:icon="@drawable/ic_account_24dp"
         android:orderInCategory="1"
-        android:title="@string/backup"
+        android:title="@string/account"
         app:showAsAction="always" />
 
     <item

@@ -155,7 +155,7 @@ public class BackupActivity extends AppCompatActivity
     public boolean onCreateOptionsMenu(Menu menu)
     {
         // Adds Menu to the Toolbar
-        getMenuInflater().inflate(R.menu.vault, menu);
+        getMenuInflater().inflate(R.menu.backup, menu);
         return true;
     }
 
@@ -169,21 +169,11 @@ public class BackupActivity extends AppCompatActivity
         {
             case R.id.action_account:
                 buttonAccount();
-                break;
-            case R.id.action_backup:
-                //buttonBackup();
-                break;
-            case R.id.action_by_name:
-                buttonSortByName();
-                break;
-            case R.id.action_by_date:
-                buttonSortByDate();
-                break;
             case R.id.action_refresh:
                 buttonRefresh();
                 break;
-            // TODO Setup Settings button
             case R.id.action_settings:
+                buttonSettings();
                 break;
             default:
                 break;
@@ -208,8 +198,8 @@ public class BackupActivity extends AppCompatActivity
                 break;
             case R.id.nav_backup:
                 break;
-            // TODO Setup Settings button
             case R.id.nav_settings:
+                buttonSettings();
                 break;
             default:
                 break;
@@ -233,52 +223,17 @@ public class BackupActivity extends AppCompatActivity
 
     private void buttonAccount()
     {
-        if (isVerifiedUser())
-        {
-            Intent intent = new Intent(this, AccountActivity.class);
-            startActivity(intent);
-        }
-        else
-        {
-            Intent intent = new Intent(this, LoginActivity.class);
-            startActivity(intent);
-        }
-    }
-
-    /*private void buttonBackup()
-    {
-        if (isVerifiedUser())
-        {
-            backupFiles();
-            uploadReferenceList();
-        }
-        else
-        {
-            buttonAccount();
-        }
-    }*/
-
-    private void buttonSortByName()
-    {
-        if (!sortByName)
-        {
-            sortByName = true;
-            listFiles();
-        }
-    }
-
-    private void buttonSortByDate()
-    {
-        if (sortByName)
-        {
-            sortByName = false;
-            listFiles();
-        }
+        startAccountIntent();
     }
 
     private void buttonRefresh()
     {
         listFiles();
+    }
+
+    private void buttonSettings()
+    {
+        startSettingsIntent();
     }
 
     public void buttonBackup(View view)
@@ -399,8 +354,7 @@ public class BackupActivity extends AppCompatActivity
 
                 Log.d(TAG, fileName + " uploaded successfully");
 
-                DatabaseReference newFileReference = databaseReference.push();
-                newFileReference.setValue(reference);
+                writeToDatabase(reference);
             }
         }).addOnFailureListener(new OnFailureListener()
         {
@@ -415,9 +369,15 @@ public class BackupActivity extends AppCompatActivity
         });
     }
 
+    private void writeToDatabase(String reference)
+    {
+        DatabaseReference newFileReference = databaseReference.push();
+        newFileReference.setValue(reference);
+    }
+
     private void restoreFiles()
     {
-        databaseReference.addListenerForSingleValueEvent(new ValueEventListener()
+        databaseReference.orderByValue().addListenerForSingleValueEvent(new ValueEventListener()
         {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot)
@@ -535,6 +495,20 @@ public class BackupActivity extends AppCompatActivity
         });
     }
 
+    private void startAccountIntent()
+    {
+        if (isVerifiedUser())
+        {
+            Intent intent = new Intent(this, AccountActivity.class);
+            startActivity(intent);
+        }
+        else
+        {
+            Intent intent = new Intent(this, LoginActivity.class);
+            startActivity(intent);
+        }
+    }
+
     private void startVault()
     {
         Intent intent = new Intent(this, VaultActivity.class);
@@ -549,6 +523,12 @@ public class BackupActivity extends AppCompatActivity
         intent.putExtra("ENCRYPTION_KEY", encryptionKey);
         startActivity(intent);
         finish();
+    }
+
+    private void startSettingsIntent()
+    {
+        Intent intent = new Intent(this, SettingsActivity.class);
+        startActivity(intent);
     }
 
     @Override
