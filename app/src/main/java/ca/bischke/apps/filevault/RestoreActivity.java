@@ -243,6 +243,9 @@ public class RestoreActivity extends AppCompatActivity
 
     private void listFiles()
     {
+        scrollToTop();
+        fileList.clear();
+
         databaseReference.orderByValue().addListenerForSingleValueEvent(new ValueEventListener()
         {
             @Override
@@ -459,6 +462,7 @@ public class RestoreActivity extends AppCompatActivity
     public void onMenuClick(int position)
     {
         DataSnapshot dataSnapshot = fileAdapter.getDataFromPosition(position);
+        // TODO
 
     }
 

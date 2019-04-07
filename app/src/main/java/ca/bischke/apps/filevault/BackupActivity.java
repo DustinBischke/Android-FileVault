@@ -252,7 +252,10 @@ public class BackupActivity extends AppCompatActivity
 
         for (File file : files)
         {
-            displayFile(file);
+            if (file.isDirectory() && file.listFiles().length > 0)
+            {
+                displayFile(file);
+            }
         }
     }
 

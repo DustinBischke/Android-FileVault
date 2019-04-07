@@ -108,7 +108,7 @@ public class FileBackupAdapter extends RecyclerView.Adapter<FileBackupViewHolder
                 {
                     if (storageMetadata.getCreationTimeMillis() > file.lastModified())
                     {
-                        buttonFileBackup.setImageResource(R.drawable.ic_cloud_download_24dp);
+                        buttonFileBackup.setImageResource(R.drawable.ic_cloud_upload_red_24dp);
                     }
                     else if (storageMetadata.getCreationTimeMillis() < file.lastModified())
                     {

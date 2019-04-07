@@ -1,7 +1,6 @@
 package ca.bischke.apps.filevault;
 
 import android.content.Context;
-import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.text.format.Formatter;
@@ -113,7 +112,7 @@ public class FileRestoreAdapter extends RecyclerView.Adapter<FileBackupViewHolde
                         }
                         else if (storageMetadata.getCreationTimeMillis() < file.lastModified())
                         {
-                            buttonFileBackup.setImageResource(R.drawable.ic_cloud_upload_24dp);
+                            buttonFileBackup.setImageResource(R.drawable.ic_cloud_download_red_24dp);
                         }
                         else
                         {
