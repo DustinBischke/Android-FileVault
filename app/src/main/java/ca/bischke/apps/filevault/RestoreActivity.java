@@ -1,5 +1,6 @@
 package ca.bischke.apps.filevault;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -8,6 +9,7 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DividerItemDecoration;
@@ -238,7 +240,27 @@ public class RestoreActivity extends AppCompatActivity
 
     public void buttonRestore(View view)
     {
-        restoreFiles();
+        if (fileList.size() > 0)
+        {
+            new AlertDialog.Builder(this)
+                    .setTitle("Backup Files")
+                    .setMessage("Are you sure you want to restore all files?")
+                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener()
+                    {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i)
+                        {
+                            restoreFiles();
+                        }
+                    })
+                    .setNegativeButton(android.R.string.no, null)
+                    .show();
+        }
+        else
+        {
+            Toast toast = Toast.makeText(this, "No files to backup", Toast.LENGTH_SHORT);
+            toast.show();
+        }
     }
 
     private void listFiles()
