@@ -22,10 +22,10 @@ public class WelcomeActivity extends AppCompatActivity
             finish();
         }
 
-        KeyStore keyStore = new KeyStore(this);
+        Preferences preferences = new Preferences(this);
 
         // If Password already exists, switch to Lockscreen
-        if (keyStore.exists(getString(R.string.preference_pass)))
+        if (preferences.exists(getString(R.string.preference_pass)))
         {
             Intent intent = new Intent(this, LockScreenActivity.class);
             startActivity(intent);

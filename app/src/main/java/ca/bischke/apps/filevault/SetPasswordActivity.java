@@ -67,8 +67,8 @@ public class SetPasswordActivity extends AppCompatActivity
                     String key = getString(R.string.preference_pass);
                     byte[] hashPassword = Hash.getHashBytes(password);
 
-                    KeyStore keyStore = new KeyStore(this);
-                    keyStore.setBytes(key, hashPassword);
+                    Preferences preferences = new Preferences(this);
+                    preferences.setBytes(key, hashPassword);
 
                     Intent intent = new Intent(this, SetupCompleteActivity.class);
                     intent.putExtra("ENCRYPTION_KEY", password);

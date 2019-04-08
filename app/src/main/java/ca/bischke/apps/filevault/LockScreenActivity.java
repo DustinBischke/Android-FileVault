@@ -2,7 +2,6 @@ package ca.bischke.apps.filevault;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -13,7 +12,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
-import java.io.File;
 import java.util.Arrays;
 
 public class LockScreenActivity extends AppCompatActivity
@@ -52,8 +50,8 @@ public class LockScreenActivity extends AppCompatActivity
                 String key = getString(R.string.preference_pass);
                 byte[] hashPassword = Hash.getHashBytes(password);
 
-                KeyStore keyStore = new KeyStore(this);
-                byte[] savedPassword = keyStore.getBytes(key);
+                Preferences preferences = new Preferences(this);
+                byte[] savedPassword = preferences.getBytes(key);
 
                 if (Arrays.equals(hashPassword, savedPassword))
                 {

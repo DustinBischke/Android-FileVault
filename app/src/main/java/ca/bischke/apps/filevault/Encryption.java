@@ -22,14 +22,14 @@ import javax.crypto.spec.PBEKeySpec;
 public class Encryption
 {
     private Context context;
-    private KeyStore keyStore;
+    private Preferences preferences;
     private IvParameterSpec iv;
     private byte[] salt;
 
     public Encryption(Context context)
     {
         this.context = context;
-        this.keyStore = new KeyStore(context);
+        this.preferences = new Preferences(context);
     }
 
     private byte[] getRandomByteArray(int size)
@@ -46,12 +46,12 @@ public class Encryption
         if (iv == null)
         {
             String key = context.getString(R.string.preference_iv);
-            byte[] ivBytes = keyStore.getBytes(key);
+            byte[] ivBytes = preferences.getBytes(key);
 
             if (ivBytes == null)
             {
                 ivBytes = getRandomByteArray(16);
-                keyStore.setBytes(key, ivBytes);
+                preferences.setBytes(key, ivBytes);
             }
 
             iv = new IvParameterSpec(ivBytes);
@@ -65,12 +65,12 @@ public class Encryption
         if (salt == null)
         {
             String key = context.getString(R.string.preference_salt);
-            byte[] saltBytes = keyStore.getBytes(key);
+            byte[] saltBytes = preferences.getBytes(key);
 
             if (saltBytes == null)
             {
                 saltBytes = getRandomByteArray(16);
-                keyStore.setBytes(key, saltBytes);
+                preferences.setBytes(key, saltBytes);
             }
 
             salt = saltBytes;

@@ -34,4 +34,41 @@ public class Preferences
         editor.putBoolean(key, value);
         editor.apply();
     }
+
+    public String getString(String key)
+    {
+        if (exists(key))
+        {
+            return sharedPreferences.getString(key, null);
+        }
+
+        return null;
+    }
+
+    public void setString(String key, String value)
+    {
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString(key, value);
+        editor.apply();
+    }
+
+    public byte[] getBytes(String key)
+    {
+        if (exists(key))
+        {
+            String valueString = sharedPreferences.getString(key, null);
+            return Converter.getByteArrayFromString(valueString);
+        }
+
+        return null;
+    }
+
+    public void setBytes(String key, byte[] valueBytes)
+    {
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+
+        String value = Converter.getStringFromByteArray(valueBytes);
+        editor.putString(key, value);
+        editor.apply();
+    }
 }
