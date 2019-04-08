@@ -6,7 +6,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-public class FileBackupViewHolder extends RecyclerView.ViewHolder
+public class FileCloudViewHolder extends RecyclerView.ViewHolder
         implements View.OnClickListener, View.OnLongClickListener
 {
     private FileListener fileListener;
@@ -16,7 +16,7 @@ public class FileBackupViewHolder extends RecyclerView.ViewHolder
     private ImageView imageFileIcon;
     private ImageButton buttonFileBackup;
 
-    public FileBackupViewHolder(View view, final FileListener fileListener)
+    public FileCloudViewHolder(View view, final FileListener fileListener)
     {
         super(view);
 

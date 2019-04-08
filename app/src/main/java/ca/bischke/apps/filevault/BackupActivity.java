@@ -26,12 +26,8 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageMetadata;
 import com.google.firebase.storage.StorageReference;
@@ -47,7 +43,7 @@ public class BackupActivity extends AppCompatActivity
     private FileManager fileManager;
     private RecyclerView recyclerView;
     private ArrayList<File> fileList;
-    private FileBackupAdapter fileAdapter;
+    private FileCloudAdapter fileAdapter;
     private FirebaseAuth firebaseAuth;
     private FirebaseUser firebaseUser;
     private FirebaseDatabase firebaseDatabase;
@@ -146,7 +142,7 @@ public class BackupActivity extends AppCompatActivity
 
         // Setup File Adapter
         fileList = new ArrayList<>();
-        fileAdapter = new FileBackupAdapter(this, fileList, this, userReference);
+        fileAdapter = new FileCloudAdapter(this, fileList, this, userReference);
         fileAdapter.setHasStableIds(true);
         recyclerView.setAdapter(fileAdapter);
 
@@ -244,9 +240,9 @@ public class BackupActivity extends AppCompatActivity
         if (fileList.size() > 0)
         {
             new AlertDialog.Builder(this)
-                    .setTitle("Backup Files")
-                    .setMessage("Are you sure you want to backup all files?")
-                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener()
+                    .setTitle(R.string.backup_dialog_title)
+                    .setMessage(R.string.backup_dialog_message)
+                    .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener()
                     {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i)
@@ -254,12 +250,12 @@ public class BackupActivity extends AppCompatActivity
                             backupFiles();
                         }
                     })
-                    .setNegativeButton(android.R.string.no, null)
+                    .setNegativeButton(R.string.cancel, null)
                     .show();
         }
         else
         {
-            Toast toast = Toast.makeText(this, "No files to backup", Toast.LENGTH_SHORT);
+            Toast toast = Toast.makeText(this, R.string.backup_no_files, Toast.LENGTH_SHORT);
             toast.show();
         }
     }

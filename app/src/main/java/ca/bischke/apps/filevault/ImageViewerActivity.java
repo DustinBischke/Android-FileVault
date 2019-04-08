@@ -135,7 +135,7 @@ public class ImageViewerActivity extends AppCompatActivity
     public boolean onCreateOptionsMenu(Menu menu)
     {
         // Adds Menu to the Toolbar
-        getMenuInflater().inflate(R.menu.viewimage, menu);
+        getMenuInflater().inflate(R.menu.view_file, menu);
         return true;
     }
 

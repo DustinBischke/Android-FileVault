@@ -29,7 +29,7 @@
                 android:layout_marginRight="16dp"
                 android:layout_marginEnd="16dp"
                 android:textSize="16sp"
-                android:text="Use External Intents" />
+                android:text="@string/settings_external_intents" />
         </LinearLayout>
     </LinearLayout>
 </android.support.constraint.ConstraintLayout>

@@ -243,9 +243,9 @@ public class RestoreActivity extends AppCompatActivity
         if (fileList.size() > 0)
         {
             new AlertDialog.Builder(this)
-                    .setTitle("Backup Files")
-                    .setMessage("Are you sure you want to restore all files?")
-                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener()
+                    .setTitle(R.string.restore_dialog_title)
+                    .setMessage(R.string.restore_dialog_message)
+                    .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener()
                     {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i)
@@ -253,12 +253,12 @@ public class RestoreActivity extends AppCompatActivity
                             restoreFiles();
                         }
                     })
-                    .setNegativeButton(android.R.string.no, null)
+                    .setNegativeButton(R.string.cancel, null)
                     .show();
         }
         else
         {
-            Toast toast = Toast.makeText(this, "No files to backup", Toast.LENGTH_SHORT);
+            Toast toast = Toast.makeText(this, R.string.restore_no_files, Toast.LENGTH_SHORT);
             toast.show();
         }
     }

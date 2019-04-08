@@ -23,7 +23,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-public class FileBackupAdapter extends RecyclerView.Adapter<FileBackupViewHolder>
+public class FileCloudAdapter extends RecyclerView.Adapter<FileCloudViewHolder>
 {
     private Context context;
     private List<File> fileList;
@@ -31,7 +31,7 @@ public class FileBackupAdapter extends RecyclerView.Adapter<FileBackupViewHolder
     private StorageReference userReference;
     private FileManager fileManager;
 
-    public FileBackupAdapter(Context context, List<File> fileList, FileListener fileListener, StorageReference userReference)
+    public FileCloudAdapter(Context context, List<File> fileList, FileListener fileListener, StorageReference userReference)
     {
         this.context = context;
         this.fileList = fileList;
@@ -42,14 +42,14 @@ public class FileBackupAdapter extends RecyclerView.Adapter<FileBackupViewHolder
 
     @NonNull
     @Override
-    public FileBackupViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i)
+    public FileCloudViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i)
     {
-        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.file_list_backup, viewGroup, false);
-        return new FileBackupViewHolder(view, fileListener);
+        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.file_list_cloud, viewGroup, false);
+        return new FileCloudViewHolder(view, fileListener);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull final FileBackupViewHolder fileViewHolder, int i)
+    public void onBindViewHolder(@NonNull final FileCloudViewHolder fileViewHolder, int i)
     {
         File directory = fileList.get(i);
         final File file = fileManager.getMainFileFromVaultSubdirectory(directory);

@@ -282,7 +282,7 @@
         <item name="android:padding">8dp</item>
         <item name="android:textColor">@color/colorWhite</item>
         <item name="android:background">@drawable/edittext_password</item>
-        <item name="android:textCursorDrawable">@drawable/edittext_password_cursor</item>
+        <item name="android:textCursorDrawable">@drawable/edittext_cursor</item>
     </style>
 
     <style name="EditTextLogin" parent="EditText">

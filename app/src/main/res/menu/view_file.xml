@@ -6,7 +6,7 @@
         android:id="@+id/action_encrypt"
         android:icon="@drawable/ic_encrypt_white_24dp"
         android:orderInCategory="100"
-        android:title="Encrypt"
+        android:title="@string/encrypt"
         android:visible="true"
         app:showAsAction="always" />
 

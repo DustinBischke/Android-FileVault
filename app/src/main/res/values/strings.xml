@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">File Vault</string>
-    <string name="welcome_title">Welcome to FileVault!</string>
-    <string name="welcome_description">FileVault allows you to encrypt your photos, videos, and personal files on your device</string>
+    <string name="welcome_title">Welcome to File Vault!</string>
+    <string name="welcome_description">File Vault allows you to encrypt your photos, videos, and personal files on your device</string>
     <string name="welcome_start">Let\'s get started!</string>
     <string name="new_user">New User</string>
     <string name="set_password_title">Set your password</string>
@@ -20,11 +20,11 @@
     <string name="incorrect_password">Incorrect password</string>
     <string name="unlock">Unlock</string>
     <string name="decrypting">Decrypting Files…</string>
-    <string name="permissions_title">FileVault needs access to your file storage</string>
-    <string name="permissions_description">This allows FileVault to access and encrypt your photos, videos, and personal files</string>
+    <string name="permissions_title">File Vault needs access to your file storage</string>
+    <string name="permissions_description">This allows File Vault to access and encrypt your photos, videos, and personal files</string>
     <string name="grant_access">Grant Access</string>
     <string name="finished_title">Setup complete!</string>
-    <string name="finished_description">FileVault is now configured and ready for use. You may now encrypt your files :)</string>
+    <string name="finished_description">File Vault is now configured and ready for use. You may now encrypt your files :)</string>
     <string name="finished_continue">Continue</string>
     <string name="internal_storage">Internal Storage</string>
     <string name="file_name">File Name</string>
@@ -38,8 +38,15 @@
     <string name="vault">Vault</string>
     <string name="file_explorer">File Explorer</string>
     <string name="backup">Backup</string>
+    <string name="backup_dialog_title">Backup Files</string>
+    <string name="backup_dialog_message">Are you sure you want to backup all files?</string>
+    <string name="backup_no_files">No files to backup</string>
     <string name="restore">Restore</string>
+    <string name="restore_dialog_title">Restore Files</string>
+    <string name="restore_dialog_message">Are you sure you want to restore all files?</string>
+    <string name="restore_no_files">No files to restore</string>
     <string name="settings">Settings</string>
+    <string name="settings_external_intents">Use External Intents</string>
     <string name="cloud">Cloud</string>
     <string name="other">Other</string>
     <string name="sort">Sort</string>
@@ -52,5 +59,7 @@
     <string name="preference_iv">FileVault-IV</string>
     <string name="preference_salt">FileVault-Salt</string>
     <string name="preference_external_intents">FileVault-Intents</string>
+    <string name="yes">Yes</string>
+    <string name="cancel">Cancel</string>
     <string name="exit">Exit</string>
 </resources>

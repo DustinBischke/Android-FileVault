@@ -4,7 +4,6 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.text.format.Formatter;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,7 +23,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-public class FileRestoreAdapter extends RecyclerView.Adapter<FileBackupViewHolder>
+public class FileRestoreAdapter extends RecyclerView.Adapter<FileCloudViewHolder>
 {
     private Context context;
     private List<DataSnapshot> fileList;
@@ -43,14 +42,14 @@ public class FileRestoreAdapter extends RecyclerView.Adapter<FileBackupViewHolde
 
     @NonNull
     @Override
-    public FileBackupViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i)
+    public FileCloudViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i)
     {
-        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.file_list_backup, viewGroup, false);
-        return new FileBackupViewHolder(view, fileListener);
+        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.file_list_cloud, viewGroup, false);
+        return new FileCloudViewHolder(view, fileListener);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull final FileBackupViewHolder fileViewHolder, int i)
+    public void onBindViewHolder(@NonNull final FileCloudViewHolder fileViewHolder, int i)
     {
         DataSnapshot dataSnapshot = fileList.get(i);
 
