@@ -41,12 +41,19 @@ public class LockScreenActivity extends AppCompatActivity
     public void buttonUnlock(View view)
     {
         EditText textPassword = findViewById(R.id.edittext_password);
-        final String password = textPassword.getText().toString();
+        String pass = textPassword.getText().toString();
 
-        if (!password.equals(""))
+        if (!pass.equals(""))
         {
             try
             {
+                if (pass.length() % 2 != 0)
+                {
+                    pass += "0";
+                }
+
+                final String password = pass;
+
                 String key = getString(R.string.preference_pass);
                 byte[] hashPassword = Hash.getHashBytes(password);
 

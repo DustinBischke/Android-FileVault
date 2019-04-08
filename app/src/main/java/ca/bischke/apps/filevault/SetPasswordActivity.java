@@ -63,7 +63,11 @@ public class SetPasswordActivity extends AppCompatActivity
             {
                 try
                 {
-                    // TODO Fix password not working with password length 5, 9, 13
+                    if (password.length() % 2 != 0)
+                    {
+                        password += "0";
+                    }
+
                     String key = getString(R.string.preference_pass);
                     byte[] hashPassword = Hash.getHashBytes(password);
 
