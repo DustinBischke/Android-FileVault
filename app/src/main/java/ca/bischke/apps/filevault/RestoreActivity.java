@@ -318,69 +318,74 @@ public class RestoreActivity extends AppCompatActivity
         });
     }
 
-    private void restoreMissingFiles(Iterable<DataSnapshot> files)
+    private void restoreMissingFiles(Iterable<DataSnapshot> dataSnapshots)
     {
-        for (DataSnapshot dataSnapshot : files)
+        for (DataSnapshot dataSnapshot : dataSnapshots)
         {
-            String reference = dataSnapshot.getValue().toString();
-            String[] parts = reference.split("/");
+            restoreMissingFile(dataSnapshot);
+        }
+    }
 
-            File directory = new File(fileManager.getVaultFilesDirectory() + File.separator + parts[0]);
+    private void restoreMissingFile(DataSnapshot dataSnapshot)
+    {
+        String reference = dataSnapshot.getValue().toString();
+        String[] parts = reference.split("/");
 
-            if (!directory.exists())
+        File directory = new File(fileManager.getVaultFilesDirectory() + File.separator + parts[0]);
+
+        if (!directory.exists())
+        {
+            directory.mkdirs();
+        }
+
+        final File file = new File(directory + File.separator + parts[1]);
+
+        final String fileName = file.getName();
+        final StorageReference fileReference = userReference.child(reference);
+
+        // Checks if File already exists
+        fileReference.getMetadata().addOnSuccessListener(new OnSuccessListener<StorageMetadata>()
+        {
+            @Override
+            public void onSuccess(StorageMetadata storageMetadata)
             {
-                directory.mkdirs();
-            }
-
-            final File file = new File(directory + File.separator + parts[1]);
-
-            final String fileName = file.getName();
-            final StorageReference fileReference = userReference.child(reference);
-
-            // Checks if File already exists
-            fileReference.getMetadata().addOnSuccessListener(new OnSuccessListener<StorageMetadata>()
-            {
-                @Override
-                public void onSuccess(StorageMetadata storageMetadata)
+                if (file.exists())
                 {
-                    if (file.exists())
+                    if (storageMetadata.getSizeBytes() == file.length())
                     {
-                        if (storageMetadata.getSizeBytes() == file.length())
-                        {
-                            Log.d(TAG, fileName + " is up to date");
-                        }
-                        else
-                        {
-                            if (storageMetadata.getCreationTimeMillis() > file.lastModified())
-                            {
-                                Log.d(TAG, fileName + " is older than uploaded version");
-                                downloadFile(file, fileReference);
-                            }
-                            else if (storageMetadata.getCreationTimeMillis() < file.lastModified())
-                            {
-                                Log.d(TAG, fileName + " is newer than uploaded version");
-                            }
-                            else
-                            {
-                                Log.d(TAG, fileName + " is up to date");
-                            }
-                        }
+                        Log.d(TAG, fileName + " is up to date");
                     }
                     else
                     {
-                        Log.d(TAG, fileName + " is not on local device");
-                        downloadFile(file, fileReference);
+                        if (storageMetadata.getCreationTimeMillis() > file.lastModified())
+                        {
+                            Log.d(TAG, fileName + " is older than uploaded version");
+                            downloadFile(file, fileReference);
+                        }
+                        else if (storageMetadata.getCreationTimeMillis() < file.lastModified())
+                        {
+                            Log.d(TAG, fileName + " is newer than uploaded version");
+                        }
+                        else
+                        {
+                            Log.d(TAG, fileName + " is up to date");
+                        }
                     }
                 }
-            }).addOnFailureListener(new OnFailureListener()
-            {
-                @Override
-                public void onFailure(@NonNull Exception e)
+                else
                 {
-                    Log.d(TAG, fileName + " is not uploaded");
+                    Log.d(TAG, fileName + " is not on local device");
+                    downloadFile(file, fileReference);
                 }
-            });
-        }
+            }
+        }).addOnFailureListener(new OnFailureListener()
+        {
+            @Override
+            public void onFailure(@NonNull Exception e)
+            {
+                Log.d(TAG, fileName + " is not uploaded");
+            }
+        });
     }
 
     private void downloadFile(final File file, StorageReference fileReference)
@@ -456,8 +461,7 @@ public class RestoreActivity extends AppCompatActivity
     public void onMenuClick(int position)
     {
         DataSnapshot dataSnapshot = fileAdapter.getDataFromPosition(position);
-        // TODO
-
+        restoreMissingFile(dataSnapshot);
     }
 
     private class FileAsyncTask extends AsyncTask<DataSnapshot, Void, Void>
