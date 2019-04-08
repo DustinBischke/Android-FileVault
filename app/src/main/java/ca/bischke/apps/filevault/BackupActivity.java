@@ -137,7 +137,7 @@ public class BackupActivity extends AppCompatActivity
         {
             Log.d(TAG, "Logged in as: " + firebaseUser.getEmail());
 
-            String reference = "user/" + firebaseUser.getUid();
+            String reference = "user/" + firebaseUser.getUid() + "/files";
             userReference = storageReference.child(reference);
             databaseReference = firebaseDatabase.getReference(reference);
         }
@@ -149,6 +149,7 @@ public class BackupActivity extends AppCompatActivity
         recyclerView.setAdapter(fileAdapter);
 
         listFiles();
+        writeKeyToDatabase();
     }
 
     @Override
@@ -371,6 +372,21 @@ public class BackupActivity extends AppCompatActivity
     {
         DatabaseReference newFileReference = databaseReference.push();
         newFileReference.setValue(reference);
+    }
+
+    private void writeKeyToDatabase()
+    {
+        Preferences preferences = new Preferences(this);
+        DatabaseReference keyReference = firebaseDatabase.getReference("user/" + firebaseUser.getUid());
+
+        String key = Converter.getStringFromByteArray(preferences.getBytes(getString(R.string.preference_pass)));
+        keyReference.child("key").setValue(key);
+
+        String salt = Converter.getStringFromByteArray(preferences.getBytes(getString(R.string.preference_salt)));
+        keyReference.child("salt").setValue(salt);
+
+        String iv = Converter.getStringFromByteArray(preferences.getBytes(getString(R.string.preference_iv)));
+        keyReference.child("iv").setValue(iv);
     }
 
     private void startAccountIntent()

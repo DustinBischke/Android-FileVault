@@ -137,7 +137,7 @@ public class RestoreActivity extends AppCompatActivity
         {
             Log.d(TAG, "Logged in as: " + firebaseUser.getEmail());
 
-            String reference = "user/" + firebaseUser.getUid();
+            String reference = "user/" + firebaseUser.getUid() + "/files";
             userReference = storageReference.child(reference);
             databaseReference = firebaseDatabase.getReference(reference);
         }
