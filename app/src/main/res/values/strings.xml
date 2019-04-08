@@ -3,6 +3,7 @@
     <string name="welcome_title">Welcome to FileVault!</string>
     <string name="welcome_description">FileVault allows you to encrypt your photos, videos, and personal files on your device</string>
     <string name="welcome_start">Let\'s get started!</string>
+    <string name="new_user">New User</string>
     <string name="set_password_title">Set your password</string>
     <string name="register">Register</string>
     <string name="already_registered">Already registered? Click here to login</string>

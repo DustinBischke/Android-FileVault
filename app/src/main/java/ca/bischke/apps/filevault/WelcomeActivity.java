@@ -37,9 +37,16 @@ public class WelcomeActivity extends AppCompatActivity
         setContentView(R.layout.activity_welcome);
     }
 
-    public void buttonStart(View view)
+    public void buttonNewUser(View view)
     {
         Intent intent = new Intent(this, SetPasswordActivity.class);
+        startActivity(intent);
+    }
+
+    public void buttonLogin(View view)
+    {
+        Intent intent = new Intent(this, LoginActivity.class);
+        intent.putExtra("SETUP", true);
         startActivity(intent);
     }
 }

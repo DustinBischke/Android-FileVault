@@ -43,10 +43,16 @@
                 android:layout_height="24dp" />
 
             <Button
-                android:id="@+id/button_start"
+                android:id="@+id/button_new_user"
                 style="@style/ButtonWhite"
-                android:onClick="buttonStart"
-                android:text="@string/welcome_start" />
+                android:onClick="buttonNewUser"
+                android:text="@string/new_user" />
+
+            <Button
+                android:id="@+id/button_login"
+                style="@style/ButtonWhite"
+                android:onClick="buttonLogin"
+                android:text="@string/login" />
 
         </LinearLayout>
     </LinearLayout>
