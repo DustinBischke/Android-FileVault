@@ -54,7 +54,7 @@ public class LockScreenActivity extends AppCompatActivity
 
                 final String password = pass;
 
-                String key = getString(R.string.preference_pass);
+                String key = getString(R.string.preference_key);
                 byte[] hashPassword = Hash.getHashBytes(password);
 
                 Preferences preferences = new Preferences(this);
@@ -85,7 +85,7 @@ public class LockScreenActivity extends AppCompatActivity
                 }
                 else
                 {
-                    Toast toast = Toast.makeText(this, getString(R.string.incorrect_password), Toast.LENGTH_SHORT);
+                    Toast toast = Toast.makeText(this, getString(R.string.incorrect_key), Toast.LENGTH_SHORT);
                     toast.show();
                 }
             }

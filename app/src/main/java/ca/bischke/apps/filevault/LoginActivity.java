@@ -1,7 +1,6 @@
 package ca.bischke.apps.filevault;
 
 import android.content.Intent;
-import android.opengl.Visibility;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -163,7 +162,7 @@ public class LoginActivity extends AppCompatActivity
                                     String reference = "user/" + firebaseUser.getUid();
                                     databaseReference = firebaseDatabase.getReference(reference);
 
-                                    restoreValue("key", getString(R.string.preference_pass));
+                                    restoreValue("key", getString(R.string.preference_key));
                                     restoreValue("salt", getString(R.string.preference_salt));
                                     restoreValue("iv", getString(R.string.preference_iv));
 

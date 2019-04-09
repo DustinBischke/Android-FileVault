@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".SetPasswordActivity">
+    tools:context=".SetKeyActivity">
 
     <LinearLayout
         android:id="@+id/layout_screen"
@@ -31,12 +31,12 @@
             <TextView
                 android:id="@+id/text_set_password_title"
                 style="@style/TextLargeWhite"
-                android:text="@string/set_password_title" />
+                android:text="@string/set_key_title" />
 
             <TextView
                 android:id="@+id/text_password"
                 style="@style/TextSmallAccent"
-                android:text="@string/password" />
+                android:text="@string/key" />
 
             <EditText
                 android:id="@+id/edittext_password"
@@ -49,7 +49,7 @@
             <TextView
                 android:id="@+id/text_confirm_password"
                 style="@style/TextSmallAccent"
-                android:text="@string/confirm_password" />
+                android:text="@string/confirm_key" />
 
             <EditText
                 android:id="@+id/edittext_confirm_password"
@@ -63,7 +63,7 @@
                 android:id="@+id/button_set_password"
                 style="@style/ButtonWhite"
                 android:onClick="buttonSetPassword"
-                android:text="@string/set_password" />
+                android:text="@string/set_key" />
 
         </LinearLayout>
     </LinearLayout>

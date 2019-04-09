@@ -25,7 +25,7 @@ public class WelcomeActivity extends AppCompatActivity
         Preferences preferences = new Preferences(this);
 
         // If Password already exists, switch to Lockscreen
-        if (preferences.exists(getString(R.string.preference_pass)))
+        if (preferences.exists(getString(R.string.preference_key)))
         {
             Intent intent = new Intent(this, LockScreenActivity.class);
             startActivity(intent);
@@ -39,7 +39,7 @@ public class WelcomeActivity extends AppCompatActivity
 
     public void buttonNewUser(View view)
     {
-        Intent intent = new Intent(this, SetPasswordActivity.class);
+        Intent intent = new Intent(this, SetKeyActivity.class);
         startActivity(intent);
     }
 

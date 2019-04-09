@@ -397,7 +397,7 @@ public class BackupActivity extends AppCompatActivity
         Preferences preferences = new Preferences(this);
         DatabaseReference keyReference = firebaseDatabase.getReference("user/" + firebaseUser.getUid());
 
-        String key = Converter.getStringFromByteArray(preferences.getBytes(getString(R.string.preference_pass)));
+        String key = Converter.getStringFromByteArray(preferences.getBytes(getString(R.string.preference_key)));
         keyReference.child("key").setValue(key);
 
         String salt = Converter.getStringFromByteArray(preferences.getBytes(getString(R.string.preference_salt)));

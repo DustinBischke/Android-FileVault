@@ -9,7 +9,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
-public class SetPasswordActivity extends AppCompatActivity
+public class SetKeyActivity extends AppCompatActivity
 {
     private final String TAG = "FileVault";
 
@@ -29,7 +29,7 @@ public class SetPasswordActivity extends AppCompatActivity
         }
 
         // Sets Activity Layout
-        setContentView(R.layout.activity_set_password);
+        setContentView(R.layout.activity_set_key);
 
         // Adds the Toolbar to the Layout
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -68,7 +68,7 @@ public class SetPasswordActivity extends AppCompatActivity
                         password += "0";
                     }
 
-                    String key = getString(R.string.preference_pass);
+                    String key = getString(R.string.preference_key);
                     byte[] hashPassword = Hash.getHashBytes(password);
 
                     Preferences preferences = new Preferences(this);
@@ -85,7 +85,7 @@ public class SetPasswordActivity extends AppCompatActivity
             }
             else
             {
-                Toast toast = Toast.makeText(this, getString(R.string.password_no_match), Toast.LENGTH_SHORT);
+                Toast toast = Toast.makeText(this, getString(R.string.key_no_match), Toast.LENGTH_SHORT);
                 toast.show();
             }
         }

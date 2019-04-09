@@ -31,12 +31,12 @@
             <TextView
                 android:id="@+id/text_enter_password"
                 style="@style/TextLargeWhite"
-                android:text="@string/enter_password" />
+                android:text="@string/enter_key" />
 
             <TextView
                 android:id="@+id/text_password"
                 style="@style/TextSmallAccent"
-                android:text="@string/password" />
+                android:text="@string/key" />
 
             <EditText
                 android:id="@+id/edittext_password"
