@@ -199,6 +199,9 @@ public class RestoreActivity extends AppCompatActivity
                 startFileExplorer();
                 break;
             case R.id.nav_backup:
+                startBackupIntent();
+                break;
+            case R.id.nav_restore:
                 break;
             case R.id.nav_settings:
                 buttonSettings();
@@ -462,6 +465,14 @@ public class RestoreActivity extends AppCompatActivity
     private void startFileExplorer()
     {
         Intent intent = new Intent(this, FileExplorerActivity.class);
+        intent.putExtra("ENCRYPTION_KEY", encryptionKey);
+        startActivity(intent);
+        finish();
+    }
+
+    private void startBackupIntent()
+    {
+        Intent intent = new Intent(this, BackupActivity.class);
         intent.putExtra("ENCRYPTION_KEY", encryptionKey);
         startActivity(intent);
         finish();
