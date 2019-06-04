@@ -11,4 +11,5 @@ File Vault is a file encryption and cloud backup application for Android mobile 
 ## Requirements
 * Android v4.0.3 (Ice Cream Sandwich) or newer.
 
-Additional information available at: http://dev.itcarlow.ie/C00223244
+## Documentation
+http://dev.itcarlow.ie/C00223244
